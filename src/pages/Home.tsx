@@ -1,4 +1,4 @@
-import { Zap, Dumbbell, Activity, Timer, MoreHorizontal, TrendingUp, Plus } from 'lucide-react';
+import { Zap, Dumbbell, Activity, Timer, MoreHorizontal, TrendingUp, Plus, Trash2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useState } from 'react';
 import { AddExerciseModal } from '@/components/features/AddExerciseModal';
@@ -6,12 +6,14 @@ import { LogEntryModal } from '@/components/features/LogEntryModal';
 import { useTranslation } from 'react-i18next';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/db/db';
-import { startOfDay, endOfDay } from 'date-fns';
+import { startOfDay, endOfDay, subDays, isSameDay, format, eachDayOfInterval } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 export default function HomePage() {
   const { t } = useTranslation();
   const [isAddExerciseOpen, setIsAddExerciseOpen] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState<any>(null);
+  const [weeklyMetric, setWeeklyMetric] = useState<'reps' | 'time'>('reps');
 
   // Fetch exercises from DB
   const exercises = useLiveQuery(() => db.exercises.toArray());
@@ -28,6 +30,7 @@ export default function HomePage() {
 
     let totalReps = 0;
     let totalTime = 0;
+    const exerciseTotals: Record<string, number> = {};
 
     // Get exercises to know units
     const allExercises = await db.exercises.toArray();
@@ -35,6 +38,13 @@ export default function HomePage() {
 
     logs.forEach(log => {
       const exercise = exerciseMap.get(log.exerciseId);
+      
+      // Initialize if not exists
+      if (!exerciseTotals[log.exerciseId]) {
+        exerciseTotals[log.exerciseId] = 0;
+      }
+      exerciseTotals[log.exerciseId] += log.value;
+
       if (exercise?.unit === 'reps') {
         totalReps += log.value;
       } else if (exercise?.unit === 'seconds') {
@@ -42,7 +52,78 @@ export default function HomePage() {
       }
     });
 
-    return { totalReps, totalTime };
+    return { totalReps, totalTime, exerciseTotals };
+  }, []);
+
+  // Calculate Weekly Performance
+  const weeklyPerformance = useLiveQuery(async () => {
+    const end = endOfDay(new Date());
+    const start = subDays(startOfDay(new Date()), 6);
+    const days = eachDayOfInterval({ start, end });
+    
+    const logs = await db.logs
+      .where('date')
+      .between(start, end)
+      .toArray();
+
+    const allExercises = await db.exercises.toArray();
+    const exerciseMap = new Map(allExercises.map(e => [e.id, e]));
+
+    const data = days.map(day => {
+        const dayLogs = logs.filter(l => isSameDay(l.date, day));
+        const value = dayLogs.reduce((acc, log) => {
+            const ex = exerciseMap.get(log.exerciseId);
+            if (weeklyMetric === 'reps' && ex?.unit === 'reps') {
+                return acc + log.value;
+            } else if (weeklyMetric === 'time' && ex?.unit === 'seconds') {
+                return acc + (log.value / 60); // minutes
+            }
+            return acc;
+        }, 0);
+        return {
+            day: format(day, 'EEEEE'), // Single letter day
+            fullDay: format(day, 'EEE'),
+            value: Math.round(value),
+            isToday: isSameDay(day, new Date())
+        };
+    });
+
+    const maxValue = Math.max(...data.map(d => d.value), 1); // Avoid division by zero
+
+    return { data, maxValue };
+  }, [weeklyMetric]);
+
+  // Calculate Streak
+  const streak = useLiveQuery(async () => {
+    const logs = await db.logs.orderBy('date').reverse().toArray();
+    if (!logs.length) return 0;
+
+    const uniqueDates = Array.from(new Set(logs.map(l => startOfDay(l.date).toISOString()))).map(d => new Date(d));
+    
+    if (uniqueDates.length === 0) return 0;
+
+    const today = startOfDay(new Date());
+    const yesterday = subDays(today, 1);
+    
+    // Check if the most recent log is today or yesterday
+    const lastLogDate = uniqueDates[0];
+    if (!isSameDay(lastLogDate, today) && !isSameDay(lastLogDate, yesterday)) {
+        return 0;
+    }
+
+    let currentStreak = 0;
+    let checkDate = isSameDay(lastLogDate, today) ? today : yesterday;
+
+    for (const date of uniqueDates) {
+        if (isSameDay(date, checkDate)) {
+            currentStreak++;
+            checkDate = subDays(checkDate, 1);
+        } else {
+            // Gap found
+            break;
+        }
+    }
+    return currentStreak;
   }, []);
 
   // Get user settings for goals
@@ -66,6 +147,15 @@ export default function HomePage() {
     }
   };
 
+  const handleDeleteExercise = async (e: React.MouseEvent, id: string) => {
+      e.stopPropagation(); // Prevent opening the modal
+      if (confirm(t('home.confirmDeleteExercise') || 'Are you sure you want to delete this exercise?')) {
+          await db.exercises.delete(id);
+          // Optional: Delete associated logs?
+          // await db.logs.where('exerciseId').equals(id).delete();
+      }
+  };
+
   return (
     <div className="flex flex-col min-h-full">
       {/* Header */}
@@ -79,13 +169,12 @@ export default function HomePage() {
             />
           </div>
           <div className="flex flex-col">
-            <h2 className="text-foreground text-lg font-bold leading-tight">Hello!</h2>
+            <h2 className="text-foreground text-lg font-bold leading-tight">{t('home.hello')}</h2>
             <p className="text-primary text-xs font-semibold flex items-center gap-1">
-              <span>🔥</span> 5 days streak
+              <span>🔥</span> {streak || 0} {t('home.streak')}
             </p>
           </div>
         </div>
-        {/* Bell icon removed */}
       </header>
 
       <div className="px-4 py-2 space-y-6">
@@ -99,9 +188,9 @@ export default function HomePage() {
             <div className="flex w-full items-start justify-between">
               <div className="flex flex-col gap-1 z-10">
                 <p className="text-white/80 text-sm font-medium">{t('home.dailyGoal')}</p>
-                <h3 className="text-2xl font-bold">{totalProgress}% Complete</h3>
+                <h3 className="text-2xl font-bold">{totalProgress}% {t('home.complete')}</h3>
                 <p className="text-white/80 text-xs mt-2 max-w-[160px]">
-                  Keep going! You're doing great today.
+                  {t('home.keepGoing')}
                 </p>
               </div>
               <div className="relative size-24 flex items-center justify-center">
@@ -126,7 +215,6 @@ export default function HomePage() {
                 <span className="text-[10px] text-white/60 uppercase font-bold tracking-widest">Mins</span>
               </div>
             </div>
-            {/* View Details button removed */}
           </div>
           {/* Decorative blur */}
           <div className="absolute -right-4 -bottom-4 size-32 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
@@ -136,20 +224,38 @@ export default function HomePage() {
         <div>
           <div className="flex items-center justify-between pb-4">
             <h2 className="text-foreground text-lg font-bold tracking-tight">{t('home.quickAdd')}</h2>
-            <button className="text-primary text-sm font-semibold hover:text-primary/80">View All</button>
+            {/* View All button removed */}
           </div>
           <div className="grid grid-cols-2 gap-4">
             {exercises?.map((exercise) => {
               const Icon = getIcon(exercise.icon);
+              const dailyTotal = todayStats?.exerciseTotals?.[exercise.id] || 0;
+              const displayTotal = exercise.unit === 'seconds' ? Math.round(dailyTotal / 60) + 'm' : dailyTotal;
+
               return (
                 <motion.button 
                   key={exercise.id}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setSelectedExercise(exercise)}
-                  className="group flex flex-col gap-3 p-4 bg-card rounded-xl border border-border text-left transition-all shadow-sm hover:shadow-md"
+                  className="group relative flex flex-col gap-3 p-4 bg-card rounded-xl border border-border text-left transition-all shadow-sm hover:shadow-md"
                 >
-                  <div className="size-12 rounded-lg flex items-center justify-center bg-primary/10 text-primary" style={{ backgroundColor: `${exercise.color}20`, color: exercise.color }}>
-                    <Icon className="size-6" />
+                  <div className="flex justify-between items-start w-full">
+                      <div className="size-12 rounded-lg flex items-center justify-center bg-primary/10 text-primary" style={{ backgroundColor: `${exercise.color}20`, color: exercise.color }}>
+                        <Icon className="size-6" />
+                      </div>
+                      <div className="flex flex-col items-end gap-1">
+                          <div 
+                            onClick={(e) => handleDeleteExercise(e, exercise.id)}
+                            className="p-1.5 rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
+                          >
+                              <Trash2 className="size-4" />
+                          </div>
+                          {dailyTotal > 0 && (
+                            <span className="text-xs font-bold text-foreground bg-muted px-2 py-0.5 rounded-full">
+                                {displayTotal}
+                            </span>
+                          )}
+                      </div>
                   </div>
                   <div>
                     <p className="text-foreground text-base font-bold">{exercise.name}</p>
@@ -180,19 +286,52 @@ export default function HomePage() {
         <div className="bg-card rounded-xl border border-border p-4 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-foreground">{t('home.weeklyPerformance')}</h3>
-            <TrendingUp className="size-5 text-muted-foreground" />
+            <div className="flex bg-muted rounded-lg p-1">
+                <button 
+                    onClick={() => setWeeklyMetric('reps')}
+                    className={cn(
+                        "px-2 py-0.5 text-[10px] font-bold rounded-md transition-all",
+                        weeklyMetric === 'reps' ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                    )}
+                >
+                    {t('home.reps')}
+                </button>
+                <button 
+                    onClick={() => setWeeklyMetric('time')}
+                    className={cn(
+                        "px-2 py-0.5 text-[10px] font-bold rounded-md transition-all",
+                        weeklyMetric === 'time' ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                    )}
+                >
+                    {t('home.mins')}
+                </button>
+            </div>
           </div>
           <div className="flex items-end justify-between h-24 gap-2 px-1">
-            <div className="w-full bg-muted rounded-t-sm h-[40%]"></div>
-            <div className="w-full bg-muted rounded-t-sm h-[60%]"></div>
-            <div className="w-full bg-muted rounded-t-sm h-[30%]"></div>
-            <div className="w-full bg-muted rounded-t-sm h-[80%]"></div>
-            <div className="w-full bg-primary rounded-t-sm h-[95%]"></div>
-            <div className="w-full bg-primary/40 rounded-t-sm h-[45%]"></div>
-            <div className="w-full bg-muted rounded-t-sm h-[20%]"></div>
+            {weeklyPerformance?.data.map((day, index) => (
+                <div key={index} className="flex flex-col items-center gap-2 flex-1 h-full justify-end group">
+                    <div className="relative w-full flex items-end justify-center h-full">
+                        <div 
+                            className={cn(
+                                "w-full rounded-t-sm transition-all duration-500",
+                                day.isToday ? "bg-primary" : "bg-muted group-hover:bg-primary/50"
+                            )}
+                            style={{ height: `${(day.value / (weeklyPerformance.maxValue || 1)) * 100}%` }}
+                        ></div>
+                        {/* Tooltip-ish value on hover */}
+                        <div className="absolute -top-6 opacity-0 group-hover:opacity-100 transition-opacity text-[10px] font-bold bg-foreground text-background px-1.5 py-0.5 rounded">
+                            {day.value}
+                        </div>
+                    </div>
+                </div>
+            ))}
           </div>
           <div className="flex justify-between mt-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-1">
-            <span>M</span><span>T</span><span>W</span><span>T</span><span className="text-primary font-black">F</span><span>S</span><span>S</span>
+            {weeklyPerformance?.data.map((day, index) => (
+                <span key={index} className={cn(day.isToday && "text-primary font-black")}>
+                    {day.day}
+                </span>
+            ))}
           </div>
         </div>
       </div>

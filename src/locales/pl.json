@@ -19,11 +19,18 @@
     "settings": "Ustawienia"
   },
   "home": {
+    "hello": "Cześć!",
+    "streak": "dni z rzędu",
+    "complete": "Ukończono",
+    "keepGoing": "Tak trzymaj! Świetnie ci idzie.",
+    "viewAll": "Zobacz Wszystkie",
     "dailyGoal": "Dzienny Cel",
     "quickAdd": "Szybkie Dodawanie",
     "weeklyPerformance": "Wyniki Tygodniowe",
     "addExercise": "Dodaj Ćwiczenie",
-    "logWorkout": "Zaloguj Trening"
+    "logWorkout": "Zaloguj Trening",
+    "reps": "Powt.",
+    "mins": "Min"
   },
   "stats": {
     "title": "Statystyki",
@@ -34,13 +41,16 @@
     "avgPerDay": "Średnia Dziennie",
     "totalVolume": "Całkowita Objętość",
     "bestDay": "Najlepszy Dzień",
-    "dailyActivity": "Dzienna Aktywność (min)",
+    "dailyActivity": "Dzienna Aktywność",
     "weeklyComparison": "Porównanie Tygodniowe",
     "overallProgress": "Całkowity Postęp",
     "perExerciseBreakdown": "Szczegóły ćwiczeń",
     "vsLastPeriod": "vs ost. okres",
     "repsTotal": "Powtórzeń Razem",
-    "total": "Razem"
+    "total": "Razem",
+    "totalReps": "Łącznie Powtórzeń",
+    "totalMinutes": "Łącznie Minut",
+    "active": "Aktywny"
   },
   "goals": {
     "title": "Cele",
@@ -48,7 +58,11 @@
     "activeGoals": "Aktywne Cele",
     "goalHistory": "Historia Celów",
     "completed": "Ukończone",
-    "inProgress": "W Trakcie"
+    "inProgress": "W Trakcie",
+    "goal": "Cel",
+    "keepGoing": "Tak trzymaj!",
+    "noActiveGoals": "Brak aktywnych celów.",
+    "createOne": "Stwórz nowy!"
   },
   "settings": {
     "title": "Ustawienia",
@@ -81,7 +95,8 @@
       "icon": "Ikona",
       "unit": "Jednostka",
       "reps": "Powtórzenia",
-      "time": "Czas"
+      "time": "Czas",
+      "create": "Utwórz Ćwiczenie"
     },
     "logEntry": {
       "reps": "Powtórzenia",
@@ -91,7 +106,70 @@
       "saveWorkout": "Zapisz Trening",
       "start": "Start",
       "stop": "Stop",
-      "reset": "Reset"
+      "reset": "Reset",
+      "save": "Zapisz",
+      "cancel": "Anuluj"
+    },
+    "addGoal": {
+      "title": "Dodaj Nowy Cel",
+      "goalType": "Typ Celu",
+      "daily": "Dzienny",
+      "weekly": "Tygodniowy",
+      "targetExercise": "Docelowe Ćwiczenie",
+      "metric": "Metryka",
+      "target": "Cel",
+      "goalTitle": "Tytuł Celu",
+      "create": "Utwórz Cel",
+      "selectExercise": "Wybierz ćwiczenie",
+      "enterTitle": "np. 100 Pompek Dziennie"
+    }
+  },
+  "terms": {
+    "title": "Warunki Użytkowania",
+    "effectiveDate": "Data Obowiązywania",
+    "section1": {
+      "title": "1. Akceptacja Warunków",
+      "content": "Uzyskując dostęp i korzystając z aplikacji FitCounter, zgadzasz się na przestrzeganie niniejszych Warunków Użytkowania."
+    },
+    "section2": {
+      "title": "2. Wyłączenie Odpowiedzialności",
+      "content": "FitCounter jest dostarczany „tak jak jest” bez żadnych gwarancji. Nie ponosimy odpowiedzialności za jakiekolwiek szkody, problemy zdrowotne lub utratę danych wynikające z korzystania z tej aplikacji. Używasz jej na własne ryzyko."
+    },
+    "section3": {
+      "title": "3. Przechowywanie Danych",
+      "content": "Wszystkie dane są przechowywane lokalnie na Twoim urządzeniu. Nie przesyłamy, nie przechowujemy ani nie przetwarzamy Twoich danych osobowych na zewnętrznych serwerach."
+    },
+    "section4": {
+      "title": "4. Rozstrzyganie Sporów",
+      "content": "Wszelkie spory wynikające z korzystania z tej aplikacji będą rozstrzygane wyłącznie przez właściwe sądy w Gdańsku, Polska."
+    },
+    "section5": {
+      "title": "5. Zmiany Warunków",
+      "content": "Zastrzegamy sobie prawo do zmiany niniejszych warunków w dowolnym momencie. Dalsze korzystanie z aplikacji oznacza akceptację nowych warunków."
+    }
+  },
+  "privacy": {
+    "title": "Polityka Prywatności",
+    "effectiveDate": "Data Obowiązywania",
+    "section1": {
+      "title": "1. Gromadzenie Danych",
+      "content": "FitCounter nie gromadzi, nie przesyła ani nie udostępnia żadnych danych osobowych. Aplikacja działa całkowicie offline."
+    },
+    "section2": {
+      "title": "2. Lokalne Przechowywanie",
+      "content": "Wszystkie dzienniki treningowe, cele i ustawienia są przechowywane lokalnie w pamięci Twojego urządzenia (IndexedDB/LocalStorage). Masz pełną kontrolę nad swoimi danymi."
+    },
+    "section3": {
+      "title": "3. Brak Udostępniania Osobom Trzecim",
+      "content": "Ponieważ nie gromadzimy danych, nie udostępniamy żadnych danych osobom trzecim, reklamodawcom ani dostawcom analityki."
+    },
+    "section4": {
+      "title": "4. Bezpieczeństwo Danych",
+      "content": "Twoje dane pozostają na Twoim urządzeniu. Zalecamy zabezpieczenie urządzenia kodem dostępu lub biometrią w celu ochrony informacji."
+    },
+    "section5": {
+      "title": "5. Kontakt",
+      "content": "Jeśli masz jakiekolwiek pytania dotyczące tej Polityki Prywatności, skontaktuj się z nami."
     }
   }
 }

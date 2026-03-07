@@ -19,11 +19,18 @@
     "settings": "Settings"
   },
   "home": {
+    "hello": "Hello!",
+    "streak": "days streak",
+    "complete": "Complete",
+    "keepGoing": "Keep going! You're doing great today.",
+    "viewAll": "View All",
     "dailyGoal": "Daily Goal",
     "quickAdd": "Quick Add",
     "weeklyPerformance": "Weekly Performance",
     "addExercise": "Add Exercise",
-    "logWorkout": "Log Workout"
+    "logWorkout": "Log Workout",
+    "reps": "Reps",
+    "mins": "Mins"
   },
   "stats": {
     "title": "Statistics",
@@ -34,13 +41,16 @@
     "avgPerDay": "Avg per Day",
     "totalVolume": "Total Volume",
     "bestDay": "Best Day",
-    "dailyActivity": "Daily Activity (mins)",
+    "dailyActivity": "Daily Activity",
     "weeklyComparison": "Weekly Comparison",
     "overallProgress": "Overall Progress",
     "perExerciseBreakdown": "Per-exercise breakdown",
     "vsLastPeriod": "vs last period",
     "repsTotal": "Reps Total",
-    "total": "Total"
+    "total": "Total",
+    "totalReps": "Total Reps",
+    "totalMinutes": "Total Minutes",
+    "active": "Active"
   },
   "goals": {
     "title": "Goals",
@@ -48,7 +58,11 @@
     "activeGoals": "Active Goals",
     "goalHistory": "Goal History",
     "completed": "Completed",
-    "inProgress": "In Progress"
+    "inProgress": "In Progress",
+    "goal": "Goal",
+    "keepGoing": "Keep going!",
+    "noActiveGoals": "No active goals.",
+    "createOne": "Create one!"
   },
   "settings": {
     "title": "Settings",
@@ -81,7 +95,8 @@
       "icon": "Icon",
       "unit": "Unit",
       "reps": "Reps",
-      "time": "Time"
+      "time": "Time",
+      "create": "Create Exercise"
     },
     "logEntry": {
       "reps": "Reps",
@@ -91,7 +106,70 @@
       "saveWorkout": "Save Workout",
       "start": "Start",
       "stop": "Stop",
-      "reset": "Reset"
+      "reset": "Reset",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "addGoal": {
+      "title": "Add New Goal",
+      "goalType": "Goal Type",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "targetExercise": "Target Exercise",
+      "metric": "Metric",
+      "target": "Target",
+      "goalTitle": "Goal Title",
+      "create": "Create Goal",
+      "selectExercise": "Select an exercise",
+      "enterTitle": "e.g. 100 Pushups Daily"
+    }
+  },
+  "terms": {
+    "title": "Terms of Use",
+    "effectiveDate": "Effective Date",
+    "section1": {
+      "title": "1. Acceptance of Terms",
+      "content": "By accessing and using the FitCounter application, you agree to be bound by these Terms of Use."
+    },
+    "section2": {
+      "title": "2. Disclaimer of Liability",
+      "content": "FitCounter is provided \"as is\" without any warranties. We are not responsible for any damages, health issues, or data loss resulting from the use of this application. Use it at your own risk."
+    },
+    "section3": {
+      "title": "3. Data Storage",
+      "content": "All data is stored locally on your device. We do not transmit, store, or process your personal data on external servers."
+    },
+    "section4": {
+      "title": "4. Dispute Resolution",
+      "content": "Any disputes arising from the use of this application shall be resolved exclusively by the competent courts in Gdańsk, Poland."
+    },
+    "section5": {
+      "title": "5. Changes to Terms",
+      "content": "We reserve the right to modify these terms at any time. Continued use of the application constitutes acceptance of the new terms."
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "effectiveDate": "Effective Date",
+    "section1": {
+      "title": "1. Data Collection",
+      "content": "FitCounter does not collect, transmit, or share any personal information. The application operates entirely offline."
+    },
+    "section2": {
+      "title": "2. Local Storage",
+      "content": "All workout logs, goals, and settings are stored locally in your device's memory (IndexedDB/LocalStorage). You have full control over your data."
+    },
+    "section3": {
+      "title": "3. No Third-Party Sharing",
+      "content": "Since we do not collect data, we do not share any data with third parties, advertisers, or analytics providers."
+    },
+    "section4": {
+      "title": "4. Data Security",
+      "content": "Your data remains on your device. We recommend securing your device with a passcode or biometrics to protect your information."
+    },
+    "section5": {
+      "title": "5. Contact",
+      "content": "If you have any questions about this Privacy Policy, please contact us."
     }
   }
 }

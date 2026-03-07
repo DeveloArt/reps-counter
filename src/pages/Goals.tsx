@@ -1,12 +1,16 @@
-import { ArrowLeft, Settings, PlusCircle, Dumbbell, Timer, Activity, MoreHorizontal, ChevronLeft, ChevronRight, Check, X } from 'lucide-react';
+import { ArrowLeft, Settings, PlusCircle, Dumbbell, Timer, Activity, MoreHorizontal, ChevronLeft, ChevronRight, Check, X, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/db/db';
-import { startOfDay, endOfDay, startOfWeek, endOfWeek } from 'date-fns';
+import { startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval, format, isSameDay, isToday, addMonths, subMonths } from 'date-fns';
+import { useState } from 'react';
+import { AddGoalModal } from '@/components/features/AddGoalModal';
 
 export default function GoalsPage() {
   const { t } = useTranslation();
+  const [isAddGoalOpen, setIsAddGoalOpen] = useState(false);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   // Fetch active goals
   const goals = useLiveQuery(() => db.goals.filter(g => g.isActive).toArray());
@@ -21,7 +25,6 @@ export default function GoalsPage() {
 
     const result = [];
     for (const goal of goals) {
-      let progress = 0;
       let start, end;
 
       if (goal.type === 'daily') {
@@ -31,7 +34,6 @@ export default function GoalsPage() {
         start = startOfWeek(new Date(), { weekStartsOn: 1 });
         end = endOfWeek(new Date(), { weekStartsOn: 1 });
       } else {
-        // Monthly not implemented yet, fallback to daily
         start = startOfDay(new Date());
         end = endOfDay(new Date());
       }
@@ -44,7 +46,6 @@ export default function GoalsPage() {
           .filter(l => l.exerciseId === goal.exerciseId)
           .toArray();
       } else {
-        // General goal (e.g. total reps), fetch all logs
         logs = await db.logs
           .where('date')
           .between(start, end)
@@ -53,15 +54,59 @@ export default function GoalsPage() {
 
       let currentVal = 0;
       logs.forEach(log => {
-        // If goal metric matches log unit (reps vs reps, time vs seconds)
-        // Simplified: assuming metric matches exercise unit for now
-        currentVal += log.value;
+        // Simple metric matching
+        if (goal.metric === 'reps' && (!goal.exerciseId || exerciseMap.get(goal.exerciseId)?.unit === 'reps')) {
+             currentVal += log.value;
+        } else if (goal.metric === 'time' && (!goal.exerciseId || exerciseMap.get(goal.exerciseId)?.unit === 'seconds')) {
+             currentVal += log.value;
+        } else if (!goal.metric) {
+             currentVal += log.value;
+        }
       });
 
       result.push({ ...goal, currentVal });
     }
     return result;
-  }, [goals]);
+  }, [goals, exercises]); // Re-run if goals or exercises change
+
+  // History Logic
+  const historyData = useLiveQuery(async () => {
+    const start = startOfMonth(currentMonth);
+    const end = endOfMonth(currentMonth);
+    const days = eachDayOfInterval({ start, end });
+    
+    // Get settings for daily goals
+    const settings = await db.settings.get(1);
+    const goalReps = settings?.dailyGoalReps || 100;
+    const goalTime = settings?.dailyGoalTime || 600;
+
+    const logs = await db.logs.where('date').between(start, end).toArray();
+    
+    // Map logs to days
+    const dayStats = days.map(day => {
+      const dayLogs = logs.filter(l => isSameDay(l.date, day));
+      let totalReps = 0;
+      let totalTime = 0;
+      
+      dayLogs.forEach(l => {
+         const ex = exerciseMap.get(l.exerciseId);
+         if (ex?.unit === 'reps') totalReps += l.value;
+         if (ex?.unit === 'seconds') totalTime += l.value;
+      });
+
+      const progressReps = Math.min(100, (totalReps / goalReps) * 100);
+      const progressTime = Math.min(100, (totalTime / goalTime) * 100);
+      const score = (progressReps + progressTime) / 2;
+
+      return {
+        date: day,
+        score,
+        met: score >= 100
+      };
+    });
+
+    return dayStats;
+  }, [currentMonth, exercises]); // Re-run when month changes
 
   const getIcon = (iconName: string | undefined) => {
     switch (iconName) {
@@ -70,6 +115,12 @@ export default function GoalsPage() {
       case 'Timer': return Timer;
       default: return Activity;
     }
+  };
+
+  const handleDeleteGoal = async (id: string) => {
+      if (confirm(t('goals.confirmDelete'))) {
+          await db.goals.delete(id);
+      }
   };
 
   return (
@@ -85,41 +136,32 @@ export default function GoalsPage() {
         </button>
       </div>
 
-      {/* Progress Summary Card */}
-      <div className="px-4 py-2">
-        <div className="bg-primary rounded-xl p-6 text-white shadow-lg shadow-primary/20 relative overflow-hidden">
-          <div className="relative z-10">
-            <p className="text-sm opacity-80 font-light">{t('goals.overallProgress')}</p>
-            <h2 className="text-3xl font-bold mt-1">78%</h2>
-            <div className="mt-4 h-2 bg-white/20 rounded-full overflow-hidden">
-              <div className="h-full bg-white rounded-full" style={{ width: '78%' }}></div>
-            </div>
-            <p className="text-xs mt-3 opacity-90">You're 12% ahead of last week. Keep it up!</p>
-          </div>
-          {/* Abstract Pattern Decoration */}
-          <div className="absolute -right-4 -bottom-4 opacity-10">
-            <Activity className="size-32" />
-          </div>
-        </div>
-      </div>
-
       {/* Active Goals Section */}
       <div className="px-4 pt-6 pb-2 flex justify-between items-center">
         <h2 className="text-xl font-bold tracking-tight text-foreground">{t('goals.activeGoals')}</h2>
-        <button className="text-primary text-sm font-semibold flex items-center gap-1 hover:bg-primary/5 px-2 py-1 rounded-lg transition-colors">
+        <button 
+          onClick={() => setIsAddGoalOpen(true)}
+          className="text-primary text-sm font-semibold flex items-center gap-1 hover:bg-primary/5 px-2 py-1 rounded-lg transition-colors"
+        >
           <PlusCircle className="size-4" />
           {t('common.add')}
         </button>
       </div>
 
       <div className="flex flex-col gap-4 p-4">
+        {goalsWithProgress?.length === 0 && (
+            <div className="text-center p-8 text-muted-foreground bg-muted/30 rounded-xl border-2 border-dashed border-border">
+                <p>No active goals.</p>
+                <button onClick={() => setIsAddGoalOpen(true)} className="text-primary font-bold mt-2">Create one!</button>
+            </div>
+        )}
         {goalsWithProgress?.map((goal) => {
           const exercise = goal.exerciseId ? exerciseMap.get(goal.exerciseId) : null;
           const Icon = getIcon(exercise?.icon);
           const progress = Math.min(100, (goal.currentVal / goal.targetValue) * 100);
 
           return (
-            <div key={goal.id} className="bg-card p-4 rounded-xl border border-primary/10 shadow-sm">
+            <div key={goal.id} className="bg-card p-4 rounded-xl border border-border shadow-sm">
               <div className="flex gap-6 justify-between items-start mb-3">
                 <div className="flex gap-3 items-center">
                   <div className="p-2 bg-primary/10 rounded-lg" style={{ backgroundColor: exercise ? `${exercise.color}20` : undefined }}>
@@ -130,9 +172,11 @@ export default function GoalsPage() {
                     <p className="text-muted-foreground text-xs capitalize">{goal.type} Goal</p>
                   </div>
                 </div>
-                <p className="text-primary text-sm font-bold bg-primary/10 px-2 py-1 rounded">
-                  {goal.currentVal}/{goal.targetValue}
-                </p>
+                <div className="flex flex-col items-end gap-1">
+                    <p className="text-primary text-sm font-bold bg-primary/10 px-2 py-1 rounded">
+                    {goal.currentVal}/{goal.targetValue}
+                    </p>
+                </div>
               </div>
               <div className="rounded-full bg-muted h-2 w-full overflow-hidden">
                 <div 
@@ -144,8 +188,11 @@ export default function GoalsPage() {
                 <p className="text-primary text-xs font-medium">
                   {progress >= 100 ? 'Completed!' : 'Keep going!'}
                 </p>
-                <button className="text-muted-foreground hover:text-primary transition-colors">
-                  <MoreHorizontal className="size-5" />
+                <button 
+                    onClick={() => handleDeleteGoal(goal.id)}
+                    className="text-muted-foreground hover:text-destructive transition-colors"
+                >
+                  <Trash2 className="size-4" />
                 </button>
               </div>
             </div>
@@ -158,14 +205,20 @@ export default function GoalsPage() {
         <h2 className="text-xl font-bold tracking-tight text-foreground">{t('goals.goalHistory')}</h2>
       </div>
       <div className="px-4 pb-4">
-        <div className="bg-card rounded-xl p-4 border border-primary/10 shadow-sm">
+        <div className="bg-card rounded-xl p-4 border border-border shadow-sm">
           <div className="flex justify-between items-center mb-4">
-            <p className="font-semibold text-foreground">October 2023</p>
+            <p className="font-semibold text-foreground capitalize">{format(currentMonth, 'MMMM yyyy')}</p>
             <div className="flex gap-2">
-              <button className="size-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors">
+              <button 
+                onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
+                className="size-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors text-foreground"
+              >
                 <ChevronLeft className="size-4" />
               </button>
-              <button className="size-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors">
+              <button 
+                onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
+                className="size-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors text-foreground"
+              >
                 <ChevronRight className="size-4" />
               </button>
             </div>
@@ -176,50 +229,47 @@ export default function GoalsPage() {
             ))}
           </div>
           <div className="grid grid-cols-7 gap-2">
-            {/* Week 1 - Placeholder days */}
-            {[26, 27, 28, 29, 30].map(d => (
-              <div key={d} className="aspect-square flex items-center justify-center text-xs text-muted-foreground/50">{d}</div>
+            {/* Empty cells for start of month */}
+            {Array.from({ length: startOfMonth(currentMonth).getDay() }).map((_, i) => (
+                <div key={`empty-${i}`} className="aspect-square"></div>
             ))}
-            <div className="aspect-square flex items-center justify-center text-xs rounded-lg bg-green-100 text-green-600 font-bold">
-              <Check className="size-4" />
-            </div>
-            <div className="aspect-square flex items-center justify-center text-xs rounded-lg bg-green-100 text-green-600 font-bold">
-              <Check className="size-4" />
-            </div>
-            
-            {/* Week 2 */}
-            <div className="aspect-square flex items-center justify-center text-xs rounded-lg bg-red-100 text-red-600 font-bold">
-              <X className="size-4" />
-            </div>
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="aspect-square flex items-center justify-center text-xs rounded-lg bg-green-100 text-green-600 font-bold">
-                <Check className="size-4" />
-              </div>
-            ))}
-            <div className="aspect-square flex items-center justify-center text-xs rounded-lg bg-red-100 text-red-600 font-bold">
-              <X className="size-4" />
-            </div>
-            <div className="aspect-square flex items-center justify-center text-xs rounded-lg bg-green-100 text-green-600 font-bold">
-              <Check className="size-4" />
-            </div>
 
-            {/* Current Week */}
-            <div className="aspect-square flex items-center justify-center text-xs rounded-lg bg-green-100 text-green-600 font-bold">
-              <Check className="size-4" />
-            </div>
-            <div className="aspect-square flex items-center justify-center text-xs rounded-lg bg-green-100 text-green-600 font-bold">
-              <Check className="size-4" />
-            </div>
-            <div className="aspect-square flex items-center justify-center text-xs rounded-lg bg-muted text-foreground font-bold ring-2 ring-primary relative">
-              12
-              <div className="absolute -bottom-1 w-1 h-1 bg-primary rounded-full"></div>
-            </div>
-            {[13, 14, 15, 16].map(d => (
-              <div key={d} className="aspect-square flex items-center justify-center text-xs text-muted-foreground">{d}</div>
-            ))}
+            {historyData?.map((day, i) => {
+                const isFuture = day.date > new Date();
+                const isTodayDate = isToday(day.date);
+                
+                let content;
+                let className = "aspect-square flex items-center justify-center text-xs rounded-lg font-bold transition-all";
+                
+                if (isFuture) {
+                    className += " text-muted-foreground/30";
+                    content = format(day.date, 'd');
+                } else if (day.score >= 100) {
+                    className += " bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400";
+                    content = <Check className="size-4" />;
+                } else if (day.score > 0) {
+                    className += " bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400";
+                    content = <span className="text-[10px]">{Math.round(day.score)}%</span>;
+                } else {
+                    className += " bg-muted text-muted-foreground";
+                    content = format(day.date, 'd');
+                }
+
+                if (isTodayDate) {
+                    className += " ring-2 ring-primary ring-offset-2 ring-offset-background";
+                }
+
+                return (
+                    <div key={i} className={className}>
+                        {content}
+                    </div>
+                );
+            })}
           </div>
         </div>
       </div>
+
+      <AddGoalModal isOpen={isAddGoalOpen} onClose={() => setIsAddGoalOpen(false)} />
     </div>
   );
 }

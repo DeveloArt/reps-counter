@@ -9,6 +9,7 @@ export default function SettingsPage() {
   const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(
     (localStorage.getItem('theme') as 'light' | 'dark' | 'system') || 'system'
   );
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -31,8 +32,39 @@ export default function SettingsPage() {
     localStorage.setItem('theme', theme);
   }, [theme]);
 
+  useEffect(() => {
+    if ('Notification' in window) {
+        setNotificationsEnabled(Notification.permission === 'granted');
+    }
+  }, []);
+
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
+  };
+
+  const handleNotificationToggle = async () => {
+    if (!('Notification' in window)) {
+        alert('This browser does not support desktop notifications');
+        return;
+    }
+
+    if (Notification.permission === 'granted') {
+        // If already granted, we can't really "revoke" it programmatically in most browsers, 
+        // but we can update our app state to stop sending them.
+        // For this demo, we'll just toggle the UI state.
+        setNotificationsEnabled(!notificationsEnabled);
+    } else if (Notification.permission !== 'denied') {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+            setNotificationsEnabled(true);
+            new Notification('FitCounter', {
+                body: t('settings.dailyNotificationsDesc'),
+                icon: '/pwa-192x192.png'
+            });
+        }
+    } else {
+        alert('Notifications are blocked. Please enable them in your browser settings.');
+    }
   };
 
   return (
@@ -60,11 +92,16 @@ export default function SettingsPage() {
               </div>
               <label className="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full border-none bg-muted p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary transition-all">
                 <div className="h-full w-[27px] rounded-full bg-white shadow-md"></div>
-                <input defaultChecked className="invisible absolute" type="checkbox" />
+                <input 
+                    className="invisible absolute" 
+                    type="checkbox" 
+                    checked={notificationsEnabled}
+                    onChange={handleNotificationToggle}
+                />
               </label>
             </div>
             
-            <div className="relative flex w-full flex-col items-start justify-between gap-3 p-5 rounded-xl border border-primary/10 bg-card shadow-sm">
+            <div className="relative flex w-full flex-col items-start justify-between gap-3 p-5 rounded-xl border border-primary/10 bg-card shadow-sm opacity-50 pointer-events-none">
               <div className="flex w-full items-center justify-between">
                 <p className="text-foreground text-base font-medium leading-normal">{t('settings.reminderFrequency')}</p>
                 <span className="font-bold text-sm bg-primary/10 px-2 py-0.5 rounded text-primary">3/day</span>
