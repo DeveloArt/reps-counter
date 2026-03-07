@@ -81,7 +81,12 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
                 <Minus className="size-8" />
               </button>
               <div className="text-center min-w-[100px]">
-                <span className="text-7xl font-bold text-foreground tabular-nums">{value}</span>
+                <input
+                  type="number"
+                  value={value}
+                  onChange={(e) => setValue(Number(e.target.value))}
+                  className="text-7xl font-bold text-foreground tabular-nums bg-transparent text-center w-[180px] focus:outline-none border-none p-0 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                />
               </div>
               <button 
                 onClick={increment}
