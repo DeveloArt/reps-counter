@@ -1,0 +1,97 @@
+{
+  "common": {
+    "back": "Wróć",
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "add": "Dodaj",
+    "close": "Zamknij",
+    "loading": "Ładowanie...",
+    "error": "Błąd",
+    "success": "Sukces"
+  },
+  "nav": {
+    "home": "Start",
+    "stats": "Statystyki",
+    "add": "Dodaj",
+    "goals": "Cele",
+    "settings": "Ustawienia"
+  },
+  "home": {
+    "dailyGoal": "Dzienny Cel",
+    "quickAdd": "Szybkie Dodawanie",
+    "weeklyPerformance": "Wyniki Tygodniowe",
+    "addExercise": "Dodaj Ćwiczenie",
+    "logWorkout": "Zaloguj Trening"
+  },
+  "stats": {
+    "title": "Statystyki",
+    "week": "Tydzień",
+    "month": "Miesiąc",
+    "year": "Rok",
+    "totalExercises": "Wszystkie Ćwiczenia",
+    "avgPerDay": "Średnia Dziennie",
+    "totalVolume": "Całkowita Objętość",
+    "bestDay": "Najlepszy Dzień",
+    "dailyActivity": "Dzienna Aktywność (min)",
+    "weeklyComparison": "Porównanie Tygodniowe",
+    "overallProgress": "Całkowity Postęp",
+    "perExerciseBreakdown": "Szczegóły ćwiczeń",
+    "vsLastPeriod": "vs ost. okres",
+    "repsTotal": "Powtórzeń Razem",
+    "total": "Razem"
+  },
+  "goals": {
+    "title": "Cele",
+    "overallProgress": "Całkowity Postęp",
+    "activeGoals": "Aktywne Cele",
+    "goalHistory": "Historia Celów",
+    "completed": "Ukończone",
+    "inProgress": "W Trakcie"
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "reminders": "Przypomnienia",
+    "dailyNotifications": "Codzienne Powiadomienia",
+    "dailyNotificationsDesc": "Przypomnij o zalogowaniu danych",
+    "reminderFrequency": "Częstotliwość Przypomnień",
+    "appearance": "Wygląd",
+    "light": "Jasny",
+    "dark": "Ciemny",
+    "system": "Systemowy",
+    "language": "Język",
+    "dataManagement": "Zarządzanie Danymi",
+    "exportCSV": "Eksportuj do CSV",
+    "exportCSVDesc": "Zrób kopię zapasową",
+    "importData": "Importuj Dane",
+    "importDataDesc": "Przywróć z pliku .csv",
+    "resetData": "Zresetuj Wszystkie Dane",
+    "resetDataDesc": "Ta akcja jest nieodwracalna",
+    "about": "O FitCounter",
+    "version": "Wersja",
+    "terms": "Warunki Użytkowania",
+    "privacy": "Polityka Prywatności"
+  },
+  "modals": {
+    "addExercise": {
+      "title": "Nowe Ćwiczenie",
+      "namePlaceholder": "Nazwa Ćwiczenia",
+      "color": "Kolor",
+      "icon": "Ikona",
+      "unit": "Jednostka",
+      "reps": "Powtórzenia",
+      "time": "Czas"
+    },
+    "logEntry": {
+      "reps": "Powtórzenia",
+      "time": "Czas",
+      "notes": "Notatki",
+      "notesPlaceholder": "Dodaj notatki...",
+      "saveWorkout": "Zapisz Trening",
+      "start": "Start",
+      "stop": "Stop",
+      "reset": "Reset"
+    }
+  }
+}

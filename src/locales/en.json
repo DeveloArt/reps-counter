@@ -1,0 +1,97 @@
+{
+  "common": {
+    "back": "Back",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  },
+  "nav": {
+    "home": "Home",
+    "stats": "Stats",
+    "add": "Add",
+    "goals": "Goals",
+    "settings": "Settings"
+  },
+  "home": {
+    "dailyGoal": "Daily Goal",
+    "quickAdd": "Quick Add",
+    "weeklyPerformance": "Weekly Performance",
+    "addExercise": "Add Exercise",
+    "logWorkout": "Log Workout"
+  },
+  "stats": {
+    "title": "Statistics",
+    "week": "Week",
+    "month": "Month",
+    "year": "Year",
+    "totalExercises": "Total Exercises",
+    "avgPerDay": "Avg per Day",
+    "totalVolume": "Total Volume",
+    "bestDay": "Best Day",
+    "dailyActivity": "Daily Activity (mins)",
+    "weeklyComparison": "Weekly Comparison",
+    "overallProgress": "Overall Progress",
+    "perExerciseBreakdown": "Per-exercise breakdown",
+    "vsLastPeriod": "vs last period",
+    "repsTotal": "Reps Total",
+    "total": "Total"
+  },
+  "goals": {
+    "title": "Goals",
+    "overallProgress": "Overall Progress",
+    "activeGoals": "Active Goals",
+    "goalHistory": "Goal History",
+    "completed": "Completed",
+    "inProgress": "In Progress"
+  },
+  "settings": {
+    "title": "Settings",
+    "reminders": "Reminders",
+    "dailyNotifications": "Daily Notifications",
+    "dailyNotificationsDesc": "Get reminded to log your fitness data",
+    "reminderFrequency": "Reminder Frequency",
+    "appearance": "Appearance",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System",
+    "language": "Language",
+    "dataManagement": "Data Management",
+    "exportCSV": "Export to CSV",
+    "exportCSVDesc": "Backup your local data",
+    "importData": "Import Data",
+    "importDataDesc": "Restore from .csv file",
+    "resetData": "Reset All Data",
+    "resetDataDesc": "This action is permanent",
+    "about": "About FitCounter",
+    "version": "Version",
+    "terms": "Terms of Use",
+    "privacy": "Privacy Policy"
+  },
+  "modals": {
+    "addExercise": {
+      "title": "New Exercise",
+      "namePlaceholder": "Exercise Name",
+      "color": "Color",
+      "icon": "Icon",
+      "unit": "Unit",
+      "reps": "Reps",
+      "time": "Time"
+    },
+    "logEntry": {
+      "reps": "Reps",
+      "time": "Time",
+      "notes": "Notes",
+      "notesPlaceholder": "Add notes here...",
+      "saveWorkout": "Save Workout",
+      "start": "Start",
+      "stop": "Stop",
+      "reset": "Reset"
+    }
+  }
+}
