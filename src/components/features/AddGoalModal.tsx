@@ -38,7 +38,7 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
         id: crypto.randomUUID(),
         title: title || (exerciseId ? `${type === 'daily' ? 'Daily' : 'Weekly'} ${exercises?.find(e => e.id === exerciseId)?.name}` : 'New Goal'),
         type,
-        targetValue,
+        targetValue: metric === 'time' ? targetValue * 60 : targetValue,
         metric,
         exerciseId: exerciseId || undefined,
         startDate: new Date(),
@@ -132,7 +132,7 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
           </div>
           
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Target {metric === 'time' ? '(seconds)' : '(count)'}</label>
+            <label className="text-sm font-medium text-foreground">Target {metric === 'time' ? '(minutes)' : '(count)'}</label>
             <input
               type="number"
               min="1"

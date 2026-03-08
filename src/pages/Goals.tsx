@@ -131,9 +131,7 @@ export default function GoalsPage() {
           <ArrowLeft className="size-6 text-foreground" />
         </button>
         <h1 className="text-lg font-bold leading-tight tracking-tight flex-1 text-center text-foreground">{t('goals.title')}</h1>
-        <button className="flex size-10 items-center justify-center rounded-full hover:bg-primary/10 transition-colors">
-          <Settings className="size-6 text-foreground" />
-        </button>
+        <div className="size-10" />
       </div>
 
       {/* Active Goals Section */}
@@ -174,7 +172,9 @@ export default function GoalsPage() {
                 </div>
                 <div className="flex flex-col items-end gap-1">
                     <p className="text-primary text-sm font-bold bg-primary/10 px-2 py-1 rounded">
-                    {goal.currentVal}/{goal.targetValue}
+                    {goal.metric === 'time' 
+                      ? `${Math.round(goal.currentVal / 60)}/${Math.round(goal.targetValue / 60)}m` 
+                      : `${goal.currentVal}/${goal.targetValue}`}
                     </p>
                 </div>
               </div>
