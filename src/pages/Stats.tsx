@@ -42,32 +42,52 @@ export default function StatsPage() {
     const exercises = await db.exercises.toArray();
     const logs = await db.logs.toArray();
 
-    // Total Exercises
-    const totalExercisesCount = exercises.length;
+    // Calculate Totals for the selected period
+    let start, end;
+    let daysCount = 1;
 
-    // Avg Time Per Day (of days with workouts)
-    // Use timestamps for unique days
-    const daysWithWorkouts = new Set(logs.map(l => startOfDay(l.timestamp).getTime())).size;
-    const totalTime = logs.reduce((acc, log) => {
-        const ex = exercises.find(e => e.id === log.exerciseId);
-        return ex?.unit === 'seconds' ? acc + log.value : acc;
-    }, 0);
-    const avgTimePerDay = daysWithWorkouts ? Math.round((totalTime / 60) / daysWithWorkouts) : 0;
+    if (activeTab === 'week') {
+        end = endOfDay(currentDate);
+        start = subDays(startOfDay(currentDate), 6);
+        daysCount = 7;
+    } else if (activeTab === 'month') {
+        start = startOfMonth(currentDate);
+        end = endOfMonth(currentDate);
+        daysCount = currentDate.getDate(); // Days elapsed in current month
+    } else {
+        start = startOfYear(currentDate);
+        end = endOfYear(currentDate);
+        const diffTime = Math.abs(currentDate.getTime() - start.getTime());
+        daysCount = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; 
+    }
 
-    // Data filtering based on activeTab
+    const periodLogs = logs.filter(l => l.timestamp >= start.getTime() && l.timestamp <= end.getTime());
+
+    let totalReps = 0;
+    let totalTime = 0; // seconds
+
+    periodLogs.forEach(l => {
+        const ex = exercises.find(e => e.id === l.exerciseId);
+        if (ex?.unit === 'reps') totalReps += l.value;
+        if (ex?.unit === 'seconds') totalTime += l.value;
+    });
+
+    const avgRepsPerDay = Math.round(totalReps / daysCount);
+    const avgMinutesPerDay = Math.round((totalTime / 60) / daysCount);
+    const totalMinutes = Math.round(totalTime / 60);
+
+    // ... (keep existing chart data preparation logic, but ensure it uses the same filtering if needed, strictly speaking the chart logic below re-filters, which is fine but slightly inefficient. I will leave the chart logic as is for now to minimize risk, just updating the summary stats)
+
+    // Data filtering based on activeTab (Existing logic preserved/adapted)
     let dailyData = [];
     let weeklyData = [];
     
     if (activeTab === 'week') {
-        // Daily Activity: Last 7 days
-        const end = endOfDay(currentDate);
-        const start = subDays(startOfDay(currentDate), 6);
+        // ... (existing week logic)
         const interval = eachDayOfInterval({ start, end });
-        
         dailyData = interval.map(day => {
             const dayStart = startOfDay(day).getTime();
             const dayEnd = endOfDay(day).getTime();
-            // Filter by timestamp range
             const dayLogs = logs.filter(l => l.timestamp >= dayStart && l.timestamp <= dayEnd);
             
             const value = dayLogs.reduce((acc, l) => {
@@ -97,11 +117,8 @@ export default function StatsPage() {
         }
 
     } else if (activeTab === 'month') {
-        // Daily Activity: Days of current month
-        const start = startOfMonth(currentDate);
-        const end = endOfMonth(currentDate);
+        // ... (existing month logic)
         const interval = eachDayOfInterval({ start, end });
-
         dailyData = interval.map(day => {
             const dayStart = startOfDay(day).getTime();
             const dayEnd = endOfDay(day).getTime();
@@ -134,11 +151,8 @@ export default function StatsPage() {
         }
 
     } else if (activeTab === 'year') {
-        // Daily Activity: Months of current year
-        const start = startOfYear(currentDate);
-        const end = endOfYear(currentDate);
+        // ... (existing year logic)
         const interval = eachMonthOfInterval({ start, end });
-
         dailyData = interval.map(month => {
             const monthStart = startOfMonth(month).getTime();
             const monthEnd = endOfMonth(month).getTime();
@@ -171,22 +185,13 @@ export default function StatsPage() {
         }
     }
 
-    // Exercise Breakdown
-    const exerciseBreakdown = exercises.map(ex => {
-        const exLogs = logs.filter(l => l.exerciseId === ex.id);
-        const total = exLogs.reduce((acc, l) => acc + l.value, 0);
-        return {
-            ...ex,
-            total
-        };
-    }).sort((a, b) => b.total - a.total).slice(0, 5);
-
     return {
-        totalExercisesCount,
-        avgTimePerDay,
+        totalReps,
+        avgRepsPerDay,
+        totalMinutes,
+        avgMinutesPerDay,
         dailyData,
-        weeklyData,
-        exerciseBreakdown
+        weeklyData
     };
   }, [activeTab, activityMetric, currentDate]);
 
@@ -241,13 +246,38 @@ export default function StatsPage() {
       <div className="flex flex-col gap-6 px-4 py-6">
         {/* Key Summary Cards */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="flex flex-col gap-1 p-4 bg-card rounded-xl shadow-sm border border-border">
-            <p className="text-muted-foreground text-xs font-medium">{t('stats.totalExercises')}</p>
-            <p className="text-xl font-bold text-foreground">{stats?.totalExercisesCount || 0}</p>
+          {/* Reps Section */}
+          <div className="flex flex-col gap-3 p-4 bg-card rounded-xl shadow-sm border border-border">
+            <div className="flex items-center gap-2 text-primary">
+                <Dumbbell className="size-4" />
+                <p className="text-sm font-bold">{t('home.reps')}</p>
+            </div>
+            <div className="flex flex-col gap-1">
+                <p className="text-2xl font-bold text-foreground">{stats?.totalReps?.toLocaleString() || 0}</p>
+                <p className="text-xs text-muted-foreground">{t('stats.total')}</p>
+            </div>
+            <div className="h-px bg-border w-full"></div>
+            <div className="flex flex-col gap-0.5">
+                <p className="text-sm font-bold text-foreground">{stats?.avgRepsPerDay?.toLocaleString() || 0}</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wide">{t('stats.avgPerDay')}</p>
+            </div>
           </div>
-          <div className="flex flex-col gap-1 p-4 bg-card rounded-xl shadow-sm border border-border">
-            <p className="text-muted-foreground text-xs font-medium">{t('stats.avgPerDay')}</p>
-            <p className="text-xl font-bold text-foreground">{stats?.avgTimePerDay || 0}m</p>
+
+          {/* Time Section */}
+          <div className="flex flex-col gap-3 p-4 bg-card rounded-xl shadow-sm border border-border">
+            <div className="flex items-center gap-2 text-primary">
+                <Timer className="size-4" />
+                <p className="text-sm font-bold">{t('home.mins')}</p>
+            </div>
+            <div className="flex flex-col gap-1">
+                <p className="text-2xl font-bold text-foreground">{stats?.totalMinutes?.toLocaleString() || 0}</p>
+                <p className="text-xs text-muted-foreground">{t('stats.total')}</p>
+            </div>
+            <div className="h-px bg-border w-full"></div>
+            <div className="flex flex-col gap-0.5">
+                <p className="text-sm font-bold text-foreground">{stats?.avgMinutesPerDay?.toLocaleString() || 0}m</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wide">{t('stats.avgPerDay')}</p>
+            </div>
           </div>
         </div>
 
@@ -374,35 +404,6 @@ export default function StatsPage() {
                 />
               </BarChart>
             </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Exercise Breakdown */}
-        <div className="flex flex-col gap-4">
-          <h3 className="text-foreground text-lg font-bold leading-tight tracking-tight">{t('stats.perExerciseBreakdown')}</h3>
-          <div className="flex flex-col gap-2">
-            {stats?.exerciseBreakdown.map((ex) => {
-                const Icon = ex.icon === 'Dumbbell' ? Dumbbell : ex.icon === 'Timer' ? Timer : Activity;
-                return (
-                    <div key={ex.id} className="flex items-center justify-between p-4 bg-card rounded-xl border border-border">
-                    <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary" style={{ backgroundColor: `${ex.color}20`, color: ex.color }}>
-                        <Icon className="size-6" />
-                        </div>
-                        <div>
-                        <p className="text-sm font-bold text-foreground">{ex.name}</p>
-                        <p className="text-xs text-muted-foreground">{ex.total} {ex.unit === 'seconds' ? 'seconds' : 'reps'}</p>
-                        </div>
-                    </div>
-                    <div className="flex flex-col items-end">
-                        <div className="flex items-center gap-1 text-emerald-600">
-                        <p className="text-sm font-bold">{t('stats.active')}</p>
-                        <TrendingUp className="size-4" />
-                        </div>
-                    </div>
-                    </div>
-                );
-            })}
           </div>
         </div>
       </div>
