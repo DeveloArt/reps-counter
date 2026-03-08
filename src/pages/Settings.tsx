@@ -1,36 +1,15 @@
-import { ArrowLeft, Sun, Moon, Monitor, Info, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Sun, Moon, Monitor, Info, ChevronRight, Trash2, Download, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useTheme } from '@/context/ThemeContext';
+import { db } from '@/db/db';
 
 export default function SettingsPage() {
   const { t, i18n } = useTranslation();
-  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>(
-    (localStorage.getItem('theme') as 'light' | 'dark' | 'system') || 'system'
-  );
+  const { theme, setTheme } = useTheme();
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-
-  useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
-
-    if (theme === 'system') {
-      const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      const applySystemTheme = () => {
-        const systemTheme = mediaQuery.matches ? 'dark' : 'light';
-        root.classList.remove('light', 'dark');
-        root.classList.add(systemTheme);
-      };
-
-      applySystemTheme();
-      mediaQuery.addEventListener('change', applySystemTheme);
-      return () => mediaQuery.removeEventListener('change', applySystemTheme);
-    } else {
-      root.classList.add(theme);
-    }
-    localStorage.setItem('theme', theme);
-  }, [theme]);
 
   useEffect(() => {
     if ('Notification' in window) {
@@ -64,6 +43,19 @@ export default function SettingsPage() {
         }
     } else {
         alert('Notifications are blocked. Please enable them in your browser settings.');
+    }
+  };
+
+  const handleResetData = async () => {
+    if (confirm(t('settings.resetDataDesc') || 'Are you sure? This action is permanent.')) {
+      try {
+        await db.delete();
+        await db.open();
+        window.location.reload();
+      } catch (error) {
+        console.error("Failed to reset data:", error);
+        alert("Failed to reset data");
+      }
     }
   };
 
@@ -188,6 +180,28 @@ export default function SettingsPage() {
           >
             <div className="size-8 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-xs">PL</div>
             <span className={cn("text-sm font-medium", i18n.language === 'pl' ? "font-bold text-foreground" : "text-muted-foreground")}>Polski</span>
+          </button>
+        </div>
+
+        {/* Data Management Section */}
+        <div className="px-4 pt-6 pb-2">
+          <h3 className="text-foreground text-sm font-semibold uppercase tracking-wider opacity-60">{t('settings.dataManagement')}</h3>
+        </div>
+        <div className="px-4 flex flex-col gap-3">
+          <button 
+            onClick={handleResetData}
+            className="flex items-center justify-between p-4 rounded-xl border border-destructive/20 bg-destructive/5 hover:bg-destructive/10 transition-all group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="size-10 rounded-full bg-destructive/10 flex items-center justify-center text-destructive group-hover:bg-destructive group-hover:text-white transition-colors">
+                <Trash2 className="size-5" />
+              </div>
+              <div className="flex flex-col items-start">
+                <span className="text-base font-bold text-foreground">{t('settings.resetData')}</span>
+                <span className="text-xs text-muted-foreground">{t('settings.resetDataDesc')}</span>
+              </div>
+            </div>
+            <ChevronRight className="size-5 text-muted-foreground" />
           </button>
         </div>
 

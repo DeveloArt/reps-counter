@@ -11,22 +11,25 @@ import GoalsPage from '@/pages/Goals';
 import SettingsPage from '@/pages/Settings';
 import TermsPage from '@/pages/Terms';
 import PrivacyPage from '@/pages/Privacy';
+import { ThemeProvider } from '@/context/ThemeContext';
 import './i18n';
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/stats" element={<StatsPage />} />
-          <Route path="/goals" element={<GoalsPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/terms" element={<TermsPage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/add" element={<HomePage />} /> {/* Placeholder for now */}
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <BrowserRouter>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/stats" element={<StatsPage />} />
+            <Route path="/goals" element={<GoalsPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/add" element={<HomePage />} /> {/* Placeholder for now */}
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }

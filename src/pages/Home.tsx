@@ -1,6 +1,6 @@
 import { Zap, Dumbbell, Activity, Timer, MoreHorizontal, TrendingUp, Plus, Trash2 } from 'lucide-react';
 import { motion } from 'motion/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AddExerciseModal } from '@/components/features/AddExerciseModal';
 import { LogEntryModal } from '@/components/features/LogEntryModal';
 import { useTranslation } from 'react-i18next';
@@ -14,17 +14,42 @@ export default function HomePage() {
   const [isAddExerciseOpen, setIsAddExerciseOpen] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState<any>(null);
   const [weeklyMetric, setWeeklyMetric] = useState<'reps' | 'time'>('reps');
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  // Force update current date when app becomes visible or on interval
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        setCurrentDate(new Date());
+      }
+    };
+
+    // Check every minute if the day has changed
+    const interval = setInterval(() => {
+        const now = new Date();
+        if (!isSameDay(now, currentDate)) {
+            setCurrentDate(now);
+        }
+    }, 60000);
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        clearInterval(interval);
+    };
+  }, [currentDate]);
 
   // Fetch exercises from DB
   const exercises = useLiveQuery(() => db.exercises.toArray());
 
   // Fetch today's logs to calculate stats
   const todayStats = useLiveQuery(async () => {
-    const start = startOfDay(new Date());
-    const end = endOfDay(new Date());
+    const start = startOfDay(currentDate).getTime();
+    const end = endOfDay(currentDate).getTime();
     
+    // Use timestamp index for reliable date filtering
     const logs = await db.logs
-      .where('date')
+      .where('timestamp')
       .between(start, end)
       .toArray();
 
@@ -53,24 +78,30 @@ export default function HomePage() {
     });
 
     return { totalReps, totalTime, exerciseTotals };
-  }, []);
+  }, [currentDate]);
 
   // Calculate Weekly Performance
   const weeklyPerformance = useLiveQuery(async () => {
-    const end = endOfDay(new Date());
-    const start = subDays(startOfDay(new Date()), 6);
+    const end = endOfDay(currentDate);
+    const start = subDays(startOfDay(currentDate), 6);
     const days = eachDayOfInterval({ start, end });
     
+    // Use timestamp for range query
     const logs = await db.logs
-      .where('date')
-      .between(start, end)
+      .where('timestamp')
+      .between(start.getTime(), end.getTime())
       .toArray();
 
     const allExercises = await db.exercises.toArray();
     const exerciseMap = new Map(allExercises.map(e => [e.id, e]));
 
     const data = days.map(day => {
-        const dayLogs = logs.filter(l => isSameDay(l.date, day));
+        // Filter using timestamp comparison to be safe
+        const dayStart = startOfDay(day).getTime();
+        const dayEnd = endOfDay(day).getTime();
+        
+        const dayLogs = logs.filter(l => l.timestamp >= dayStart && l.timestamp <= dayEnd);
+        
         const value = dayLogs.reduce((acc, log) => {
             const ex = exerciseMap.get(log.exerciseId);
             if (weeklyMetric === 'reps' && ex?.unit === 'reps') {
@@ -84,59 +115,85 @@ export default function HomePage() {
             day: format(day, 'EEEEE'), // Single letter day
             fullDay: format(day, 'EEE'),
             value: Math.round(value),
-            isToday: isSameDay(day, new Date())
+            isToday: isSameDay(day, currentDate)
         };
     });
 
     const maxValue = Math.max(...data.map(d => d.value), 1); // Avoid division by zero
 
     return { data, maxValue };
-  }, [weeklyMetric]);
+  }, [weeklyMetric, currentDate]);
 
   // Calculate Streak
   const streak = useLiveQuery(async () => {
-    const logs = await db.logs.orderBy('date').reverse().toArray();
+    const logs = await db.logs.orderBy('timestamp').reverse().toArray();
     if (!logs.length) return 0;
 
-    const uniqueDates = Array.from(new Set(logs.map(l => startOfDay(l.date).toISOString()))).map(d => new Date(d));
+    // Use timestamps for unique date calculation
+    const uniqueDays = new Set(logs.map(l => startOfDay(l.timestamp).getTime()));
+    const sortedUniqueDays = Array.from(uniqueDays).sort((a, b) => b - a); // Descending
     
-    if (uniqueDates.length === 0) return 0;
+    if (sortedUniqueDays.length === 0) return 0;
 
-    const today = startOfDay(new Date());
-    const yesterday = subDays(today, 1);
+    const todayStart = startOfDay(currentDate).getTime();
+    const yesterdayStart = subDays(startOfDay(currentDate), 1).getTime();
     
     // Check if the most recent log is today or yesterday
-    const lastLogDate = uniqueDates[0];
-    if (!isSameDay(lastLogDate, today) && !isSameDay(lastLogDate, yesterday)) {
+    const lastLogDay = sortedUniqueDays[0];
+    if (lastLogDay !== todayStart && lastLogDay !== yesterdayStart) {
         return 0;
     }
 
     let currentStreak = 0;
-    let checkDate = isSameDay(lastLogDate, today) ? today : yesterday;
+    let checkDay = lastLogDay === todayStart ? todayStart : yesterdayStart;
 
-    for (const date of uniqueDates) {
-        if (isSameDay(date, checkDate)) {
+    for (const day of sortedUniqueDays) {
+        if (day === checkDay) {
             currentStreak++;
-            checkDate = subDays(checkDate, 1);
+            checkDay = subDays(checkDay, 1).getTime();
         } else {
             // Gap found
             break;
         }
     }
     return currentStreak;
-  }, []);
+  }, [currentDate]);
 
-  // Get user settings for goals
+  // Get user settings for goals (fallback)
   const settings = useLiveQuery(() => db.settings.get(1));
+  const dailyGoals = useLiveQuery(() => db.goals.where({ type: 'daily', isActive: true }).toArray());
 
   const dailyGoalReps = settings?.dailyGoalReps || 100;
   const dailyGoalTime = settings?.dailyGoalTime || 600; // 10 mins
 
-  const progressReps = todayStats ? Math.min(100, (todayStats.totalReps / dailyGoalReps) * 100) : 0;
-  const progressTime = todayStats ? Math.min(100, (todayStats.totalTime / dailyGoalTime) * 100) : 0;
-  
-  // Combined progress (simple average for now)
-  const totalProgress = Math.round((progressReps + progressTime) / 2);
+  // Calculate progress based on active daily goals
+  let totalProgress = 0;
+
+  if (dailyGoals && dailyGoals.length > 0 && todayStats) {
+    const sumPercentages = dailyGoals.reduce((acc, goal) => {
+      let currentValue = 0;
+      
+      if (goal.exerciseId) {
+        // Specific exercise goal
+        currentValue = todayStats.exerciseTotals?.[goal.exerciseId] || 0;
+      } else {
+        // Global goal
+        if (goal.metric === 'reps') currentValue = todayStats.totalReps || 0;
+        else if (goal.metric === 'time') currentValue = todayStats.totalTime || 0;
+      }
+
+      // Calculate percentage for this goal, capped at 100%
+      const percentage = Math.min(1, currentValue / (goal.targetValue || 1));
+      return acc + percentage;
+    }, 0);
+
+    totalProgress = Math.round((sumPercentages / dailyGoals.length) * 100);
+  } else {
+    // Fallback to legacy settings if no specific goals exist
+    const progressReps = todayStats ? Math.min(100, (todayStats.totalReps / dailyGoalReps) * 100) : 0;
+    const progressTime = todayStats ? Math.min(100, (todayStats.totalTime / dailyGoalTime) * 100) : 0;
+    totalProgress = Math.round((progressReps + progressTime) / 2);
+  }
 
   const getIcon = (iconName: string) => {
     switch (iconName) {

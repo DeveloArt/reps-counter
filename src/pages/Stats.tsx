@@ -2,10 +2,10 @@ import { ArrowLeft, TrendingUp, Dumbbell, Activity, Timer } from 'lucide-react';
 import { Area, AreaChart, Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/db/db';
-import { startOfWeek, endOfWeek, subWeeks, format, eachDayOfInterval, startOfDay, endOfDay, subDays, isSameDay, startOfMonth, endOfMonth, subMonths, startOfYear, endOfYear, subYears, eachMonthOfInterval } from 'date-fns';
+import { startOfDay, endOfDay, subDays, isSameDay, startOfMonth, endOfMonth, subMonths, startOfYear, endOfYear, subYears, eachMonthOfInterval, startOfWeek, endOfWeek, format, eachDayOfInterval, subWeeks } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
 export default function StatsPage() {
@@ -13,6 +13,30 @@ export default function StatsPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'week' | 'month' | 'year'>('week');
   const [activityMetric, setActivityMetric] = useState<'reps' | 'time'>('reps');
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  // Force update current date when app becomes visible or on interval
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        setCurrentDate(new Date());
+      }
+    };
+
+    // Check every minute if the day has changed
+    const interval = setInterval(() => {
+        const now = new Date();
+        if (!isSameDay(now, currentDate)) {
+            setCurrentDate(now);
+        }
+    }, 60000);
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        clearInterval(interval);
+    };
+  }, [currentDate]);
 
   const stats = useLiveQuery(async () => {
     const exercises = await db.exercises.toArray();
@@ -22,7 +46,8 @@ export default function StatsPage() {
     const totalExercisesCount = exercises.length;
 
     // Avg Time Per Day (of days with workouts)
-    const daysWithWorkouts = new Set(logs.map(l => startOfDay(l.date).toISOString())).size;
+    // Use timestamps for unique days
+    const daysWithWorkouts = new Set(logs.map(l => startOfDay(l.timestamp).getTime())).size;
     const totalTime = logs.reduce((acc, log) => {
         const ex = exercises.find(e => e.id === log.exerciseId);
         return ex?.unit === 'seconds' ? acc + log.value : acc;
@@ -35,12 +60,16 @@ export default function StatsPage() {
     
     if (activeTab === 'week') {
         // Daily Activity: Last 7 days
-        const end = endOfDay(new Date());
-        const start = subDays(startOfDay(new Date()), 6);
+        const end = endOfDay(currentDate);
+        const start = subDays(startOfDay(currentDate), 6);
         const interval = eachDayOfInterval({ start, end });
         
         dailyData = interval.map(day => {
-            const dayLogs = logs.filter(l => isSameDay(l.date, day));
+            const dayStart = startOfDay(day).getTime();
+            const dayEnd = endOfDay(day).getTime();
+            // Filter by timestamp range
+            const dayLogs = logs.filter(l => l.timestamp >= dayStart && l.timestamp <= dayEnd);
+            
             const value = dayLogs.reduce((acc, l) => {
                 const ex = exercises.find(e => e.id === l.exerciseId);
                 if (activityMetric === 'reps' && ex?.unit === 'reps') return acc + l.value;
@@ -52,9 +81,12 @@ export default function StatsPage() {
 
         // Weekly Comparison: Last 4 weeks
         for (let i = 3; i >= 0; i--) {
-            const weekStart = startOfWeek(subWeeks(new Date(), i), { weekStartsOn: 1 });
-            const weekEnd = endOfWeek(subWeeks(new Date(), i), { weekStartsOn: 1 });
-            const weekLogs = logs.filter(l => l.date >= weekStart && l.date <= weekEnd);
+            const weekStart = startOfWeek(subWeeks(currentDate, i), { weekStartsOn: 1 });
+            const weekEnd = endOfWeek(subWeeks(currentDate, i), { weekStartsOn: 1 });
+            const weekStartTs = weekStart.getTime();
+            const weekEndTs = weekEnd.getTime();
+            
+            const weekLogs = logs.filter(l => l.timestamp >= weekStartTs && l.timestamp <= weekEndTs);
             const value = weekLogs.reduce((acc, l) => {
                 const ex = exercises.find(e => e.id === l.exerciseId);
                 if (activityMetric === 'reps' && ex?.unit === 'reps') return acc + l.value;
@@ -66,12 +98,15 @@ export default function StatsPage() {
 
     } else if (activeTab === 'month') {
         // Daily Activity: Days of current month
-        const start = startOfMonth(new Date());
-        const end = endOfMonth(new Date());
+        const start = startOfMonth(currentDate);
+        const end = endOfMonth(currentDate);
         const interval = eachDayOfInterval({ start, end });
 
         dailyData = interval.map(day => {
-            const dayLogs = logs.filter(l => isSameDay(l.date, day));
+            const dayStart = startOfDay(day).getTime();
+            const dayEnd = endOfDay(day).getTime();
+            const dayLogs = logs.filter(l => l.timestamp >= dayStart && l.timestamp <= dayEnd);
+            
             const value = dayLogs.reduce((acc, l) => {
                 const ex = exercises.find(e => e.id === l.exerciseId);
                 if (activityMetric === 'reps' && ex?.unit === 'reps') return acc + l.value;
@@ -83,9 +118,12 @@ export default function StatsPage() {
 
         // Weekly Comparison: Last 6 months
         for (let i = 5; i >= 0; i--) {
-            const monthStart = startOfMonth(subMonths(new Date(), i));
-            const monthEnd = endOfMonth(subMonths(new Date(), i));
-            const monthLogs = logs.filter(l => l.date >= monthStart && l.date <= monthEnd);
+            const monthStart = startOfMonth(subMonths(currentDate, i));
+            const monthEnd = endOfMonth(subMonths(currentDate, i));
+            const monthStartTs = monthStart.getTime();
+            const monthEndTs = monthEnd.getTime();
+
+            const monthLogs = logs.filter(l => l.timestamp >= monthStartTs && l.timestamp <= monthEndTs);
             const value = monthLogs.reduce((acc, l) => {
                 const ex = exercises.find(e => e.id === l.exerciseId);
                 if (activityMetric === 'reps' && ex?.unit === 'reps') return acc + l.value;
@@ -97,14 +135,15 @@ export default function StatsPage() {
 
     } else if (activeTab === 'year') {
         // Daily Activity: Months of current year
-        const start = startOfYear(new Date());
-        const end = endOfYear(new Date());
+        const start = startOfYear(currentDate);
+        const end = endOfYear(currentDate);
         const interval = eachMonthOfInterval({ start, end });
 
         dailyData = interval.map(month => {
-            const monthStart = startOfMonth(month);
-            const monthEnd = endOfMonth(month);
-            const monthLogs = logs.filter(l => l.date >= monthStart && l.date <= monthEnd);
+            const monthStart = startOfMonth(month).getTime();
+            const monthEnd = endOfMonth(month).getTime();
+            const monthLogs = logs.filter(l => l.timestamp >= monthStart && l.timestamp <= monthEnd);
+            
             const value = monthLogs.reduce((acc, l) => {
                 const ex = exercises.find(e => e.id === l.exerciseId);
                 if (activityMetric === 'reps' && ex?.unit === 'reps') return acc + l.value;
@@ -116,9 +155,12 @@ export default function StatsPage() {
 
         // Weekly Comparison: Last 5 years
         for (let i = 4; i >= 0; i--) {
-            const yearStart = startOfYear(subYears(new Date(), i));
-            const yearEnd = endOfYear(subYears(new Date(), i));
-            const yearLogs = logs.filter(l => l.date >= yearStart && l.date <= yearEnd);
+            const yearStart = startOfYear(subYears(currentDate, i));
+            const yearEnd = endOfYear(subYears(currentDate, i));
+            const yearStartTs = yearStart.getTime();
+            const yearEndTs = yearEnd.getTime();
+
+            const yearLogs = logs.filter(l => l.timestamp >= yearStartTs && l.timestamp <= yearEndTs);
             const value = yearLogs.reduce((acc, l) => {
                 const ex = exercises.find(e => e.id === l.exerciseId);
                 if (activityMetric === 'reps' && ex?.unit === 'reps') return acc + l.value;
@@ -146,7 +188,7 @@ export default function StatsPage() {
         weeklyData,
         exerciseBreakdown
     };
-  }, [activeTab, activityMetric]);
+  }, [activeTab, activityMetric, currentDate]);
 
   return (
     <div className="flex flex-col min-h-full pb-20 bg-background">
