@@ -55,7 +55,7 @@
   "goals": {
     "title": "Cele",
     "overallProgress": "Całkowity Postęp",
-    "activeGoals": "Aktywne Cele",
+    "activeGoals": "Aktywne cele",
     "goalHistory": "Historia Celów",
     "completed": "Ukończone",
     "inProgress": "W Trakcie",
@@ -118,10 +118,10 @@
       "targetExercise": "Docelowe Ćwiczenie",
       "metric": "Metryka",
       "target": "Cel",
-      "goalTitle": "Tytuł Celu",
+      "goalTitle": "Nawyk, który chcesz dodać",
       "create": "Utwórz Cel",
       "selectExercise": "Wybierz ćwiczenie",
-      "enterTitle": "np. 100 Pompek Dziennie"
+      "enterTitle": "Zazwyczaj po kliknięciu przycisku \"start\" w mikrofalówce robię..."
     }
   },
   "terms": {

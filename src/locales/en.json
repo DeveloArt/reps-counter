@@ -55,7 +55,7 @@
   "goals": {
     "title": "Goals",
     "overallProgress": "Overall Progress",
-    "activeGoals": "Active Goals",
+    "activeGoals": "Active goals",
     "goalHistory": "Goal History",
     "completed": "Completed",
     "inProgress": "In Progress",
@@ -118,10 +118,10 @@
       "targetExercise": "Target Exercise",
       "metric": "Metric",
       "target": "Target",
-      "goalTitle": "Goal Title",
+      "goalTitle": "Habit to add",
       "create": "Create Goal",
       "selectExercise": "Select an exercise",
-      "enterTitle": "e.g. 100 Pushups Daily"
+      "enterTitle": "Usually after I click \"start\" on the microwave I do..."
     }
   },
   "terms": {

@@ -4,6 +4,7 @@ import { db, type Exercise } from '@/db/db';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Target, Calendar, Dumbbell, Clock, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface AddGoalModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface AddGoalModalProps {
 }
 
 export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
+  const { t } = useTranslation();
   const exercises = useLiveQuery(() => db.exercises.toArray());
   
   const [title, setTitle] = useState('');
@@ -51,7 +53,7 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Create New Goal">
+    <Modal isOpen={isOpen} onClose={onClose} title={t('modals.addGoal.title')}>
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         
         {/* Goal Type */}
@@ -65,7 +67,7 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
             )}
           >
             <Calendar className="size-6" />
-            <span className="text-xs font-bold uppercase">Daily</span>
+            <span className="text-xs font-bold uppercase">{t('modals.addGoal.daily')}</span>
           </button>
           <button
             type="button"
@@ -76,13 +78,13 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
             )}
           >
             <Calendar className="size-6" />
-            <span className="text-xs font-bold uppercase">Weekly</span>
+            <span className="text-xs font-bold uppercase">{t('modals.addGoal.weekly')}</span>
           </button>
         </div>
 
         {/* Exercise Selection */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Target Exercise (Optional)</label>
+          <label className="text-sm font-medium text-foreground">{t('modals.addGoal.targetExercise')}</label>
           <select
             value={exerciseId}
             onChange={(e) => {
@@ -96,7 +98,7 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
             }}
             className="w-full p-3 rounded-xl bg-muted border-transparent focus:border-primary focus:ring-0 text-foreground"
           >
-            <option value="">Any Exercise</option>
+            <option value="">{t('modals.addGoal.selectExercise')}</option>
             {exercises?.map(ex => (
               <option key={ex.id} value={ex.id}>{ex.name}</option>
             ))}
@@ -106,7 +108,7 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
         {/* Metric & Value */}
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Metric</label>
+            <label className="text-sm font-medium text-foreground">{t('modals.addGoal.metric')}</label>
             <div className="flex bg-muted rounded-xl p-1">
               <button
                 type="button"
@@ -116,7 +118,7 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
                   metric === 'reps' ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
                 )}
               >
-                Reps
+                {t('home.reps')}
               </button>
               <button
                 type="button"
@@ -126,13 +128,13 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
                   metric === 'time' ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"
                 )}
               >
-                Time
+                {t('home.mins')}
               </button>
             </div>
           </div>
           
           <div className="space-y-2">
-            <label className="text-sm font-medium text-foreground">Target {metric === 'time' ? '(minutes)' : '(count)'}</label>
+            <label className="text-sm font-medium text-foreground">{t('modals.addGoal.target')} {metric === 'time' ? `(${t('home.mins')})` : ''}</label>
             <input
               type="number"
               min="1"
@@ -145,12 +147,12 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
 
         {/* Title */}
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Goal Title</label>
+          <label className="text-sm font-medium text-foreground">{t('modals.addGoal.goalTitle')}</label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="e.g. Morning Routine"
+            placeholder={t('modals.addGoal.enterTitle')}
             className="w-full p-3 rounded-xl bg-muted border-transparent focus:border-primary focus:ring-0 text-foreground"
           />
         </div>
@@ -160,7 +162,7 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
           className="w-full bg-primary text-primary-foreground font-bold py-4 rounded-xl mt-2 flex items-center justify-center gap-2 active:scale-95 transition-transform"
         >
           <Check className="size-5" />
-          Create Goal
+          {t('modals.addGoal.create')}
         </button>
       </form>
     </Modal>
