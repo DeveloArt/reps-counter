@@ -3,6 +3,7 @@ import { Modal } from '@/components/ui/Modal';
 import { Dumbbell, Activity, Timer, Plus, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { db } from '@/db/db';
+import { useTranslation } from 'react-i18next';
 
 interface AddExerciseModalProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ const COLORS = [
 ];
 
 export function AddExerciseModal({ isOpen, onClose }: AddExerciseModalProps) {
+  const { t } = useTranslation();
   const [name, setName] = useState('');
   const [unit, setUnit] = useState<'reps' | 'seconds'>('reps');
   const [selectedColor, setSelectedColor] = useState(COLORS[0]);
@@ -52,22 +54,22 @@ export function AddExerciseModal({ isOpen, onClose }: AddExerciseModalProps) {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Add New Exercise">
+    <Modal isOpen={isOpen} onClose={onClose} title={t('modals.addExercise.title')}>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Exercise Name</label>
+          <label className="text-sm font-medium text-foreground">{t('modals.addExercise.nameLabel')}</label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="e.g., Pushups"
+            placeholder={t('modals.addExercise.namePlaceholder')}
             className="w-full px-4 py-3 rounded-xl bg-muted border-transparent focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all outline-none text-foreground placeholder:text-muted-foreground"
             autoFocus
           />
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Unit Type</label>
+          <label className="text-sm font-medium text-foreground">{t('modals.addExercise.unitLabel')}</label>
           <div className="grid grid-cols-2 gap-2 p-1 bg-muted rounded-xl">
             <button
               type="button"
@@ -77,7 +79,7 @@ export function AddExerciseModal({ isOpen, onClose }: AddExerciseModalProps) {
                 unit === 'reps' ? "bg-card text-primary shadow-sm" : "text-muted-foreground hover:text-foreground"
               )}
             >
-              Reps
+              {t('modals.addExercise.reps')}
             </button>
             <button
               type="button"
@@ -87,13 +89,13 @@ export function AddExerciseModal({ isOpen, onClose }: AddExerciseModalProps) {
                 unit === 'seconds' ? "bg-card text-primary shadow-sm" : "text-muted-foreground hover:text-foreground"
               )}
             >
-              Seconds
+              {t('modals.addExercise.time')}
             </button>
           </div>
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Icon</label>
+          <label className="text-sm font-medium text-foreground">{t('modals.addExercise.iconLabel')}</label>
           <div className="flex gap-3">
             {ICONS.map(({ name, icon: Icon }) => (
               <button
@@ -112,7 +114,7 @@ export function AddExerciseModal({ isOpen, onClose }: AddExerciseModalProps) {
         </div>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">Color</label>
+          <label className="text-sm font-medium text-foreground">{t('modals.addExercise.colorLabel')}</label>
           <div className="flex flex-wrap gap-3">
             {COLORS.map((color) => (
               <button
@@ -136,7 +138,7 @@ export function AddExerciseModal({ isOpen, onClose }: AddExerciseModalProps) {
           className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 active:scale-95 transition-all flex items-center justify-center gap-2"
         >
           <Plus className="size-5" />
-          Create Exercise
+          {t('modals.addExercise.create')}
         </button>
       </form>
     </Modal>

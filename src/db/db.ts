@@ -21,6 +21,7 @@ interface LogEntry {
 interface Goal {
   id: string;
   title: string;
+  trigger?: string; // The "When [X]" part of the habit
   type: 'daily' | 'weekly' | 'monthly';
   targetValue: number;
   exerciseId?: string; // If specific to an exercise
@@ -44,6 +45,15 @@ const db = new Dexie('FitCounterDB') as Dexie & {
   goals: EntityTable<Goal, 'id'>;
   settings: EntityTable<UserSettings, 'id'>;
 };
+
+db.version(2).stores({
+  exercises: 'id, name, isArchived',
+  logs: 'id, exerciseId, date, timestamp',
+  goals: 'id, type, isActive',
+  settings: 'id'
+}).upgrade(tx => {
+  // Upgrade existing goals to have a default trigger if needed, or just leave it undefined
+});
 
 db.version(1).stores({
   exercises: 'id, name, isArchived',

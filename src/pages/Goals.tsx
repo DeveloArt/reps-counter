@@ -4,13 +4,18 @@ import { useTranslation } from 'react-i18next';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/db/db';
 import { startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval, format, isSameDay, isToday, addMonths, subMonths } from 'date-fns';
+import { pl, enUS } from 'date-fns/locale';
 import { useState } from 'react';
 import { AddGoalModal } from '@/components/features/AddGoalModal';
+import { useNavigate } from 'react-router-dom';
 
 export default function GoalsPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [isAddGoalOpen, setIsAddGoalOpen] = useState(false);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  
+  const locale = i18n.language === 'pl' ? pl : enUS;
 
   // Fetch active goals
   const goals = useLiveQuery(() => db.goals.filter(g => g.isActive).toArray());
@@ -123,11 +128,24 @@ export default function GoalsPage() {
       }
   };
 
+  // Generate week days for calendar header (Mon-Sun)
+  const weekDays = eachDayOfInterval({
+    start: startOfWeek(new Date(), { weekStartsOn: 1 }),
+    end: endOfWeek(new Date(), { weekStartsOn: 1 })
+  }).map(day => format(day, 'EEEEE', { locale }));
+
+  // Calculate empty cells for start of month (assuming Monday start)
+  const startMonthDay = startOfMonth(currentMonth).getDay();
+  const emptyCells = (startMonthDay + 6) % 7;
+
   return (
     <div className="flex flex-col min-h-full pb-20 bg-background">
       {/* Header */}
       <div className="flex items-center p-4 justify-between sticky top-0 bg-background/80 backdrop-blur-md z-10">
-        <button className="flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-primary/10 cursor-pointer transition-colors">
+        <button 
+          onClick={() => navigate(-1)}
+          className="flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-primary/10 cursor-pointer transition-colors"
+        >
           <ArrowLeft className="size-6 text-foreground" />
         </button>
         <h1 className="text-lg font-bold leading-tight tracking-tight flex-1 text-center text-foreground">{t('goals.title')}</h1>
@@ -148,9 +166,12 @@ export default function GoalsPage() {
 
       <div className="flex flex-col gap-4 p-4">
         {goalsWithProgress?.length === 0 && (
-            <div className="text-center p-8 text-muted-foreground bg-muted/30 rounded-xl border-2 border-dashed border-border">
-                <p>No active goals.</p>
-                <button onClick={() => setIsAddGoalOpen(true)} className="text-primary font-bold mt-2">Create one!</button>
+            <div className="text-center p-8 text-muted-foreground bg-muted/30 rounded-xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-2">
+                <p>{t('goals.noGoals')}</p>
+                <button onClick={() => setIsAddGoalOpen(true)} className="text-primary font-bold mt-2 flex items-center gap-2 hover:bg-primary/10 px-4 py-2 rounded-lg transition-colors">
+                  <PlusCircle className="size-5" />
+                  {t('goals.createOne')}
+                </button>
             </div>
         )}
         {goalsWithProgress?.map((goal) => {
@@ -160,18 +181,25 @@ export default function GoalsPage() {
 
           return (
             <div key={goal.id} className="bg-card p-4 rounded-xl border border-border shadow-sm">
-              <div className="flex gap-6 justify-between items-start mb-3">
-                <div className="flex gap-3 items-center">
-                  <div className="p-2 bg-primary/10 rounded-lg" style={{ backgroundColor: exercise ? `${exercise.color}20` : undefined }}>
+              <div className="flex gap-4 justify-between items-start mb-3">
+                <div className="flex gap-3 items-start flex-1 min-w-0">
+                  <div className="p-2 bg-primary/10 rounded-lg shrink-0" style={{ backgroundColor: exercise ? `${exercise.color}20` : undefined }}>
                     <Icon className="size-6 text-primary" style={{ color: exercise?.color }} />
                   </div>
-                  <div>
-                    <p className="text-foreground text-base font-semibold">{goal.title}</p>
-                    <p className="text-muted-foreground text-xs capitalize">{goal.type} Goal</p>
+                  <div className="flex flex-col min-w-0">
+                    {goal.trigger && (
+                      <p className="text-xs font-bold text-primary mb-0.5 uppercase tracking-wide truncate">
+                        {t('goals.when')} {goal.trigger}
+                      </p>
+                    )}
+                    <p className="text-foreground text-base font-semibold truncate">{goal.title}</p>
+                    <p className="text-muted-foreground text-xs capitalize">
+                      {goal.type === 'daily' ? t('goals.dailyGoal') : t('goals.weeklyGoal')}
+                    </p>
                   </div>
                 </div>
-                <div className="flex flex-col items-end gap-1">
-                    <p className="text-primary text-sm font-bold bg-primary/10 px-2 py-1 rounded">
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                    <p className="text-primary text-sm font-bold bg-primary/10 px-2 py-1 rounded whitespace-nowrap">
                     {goal.metric === 'time' 
                       ? `${Math.round(goal.currentVal / 60)}/${Math.round(goal.targetValue / 60)}m` 
                       : `${goal.currentVal}/${goal.targetValue}`}
@@ -186,11 +214,11 @@ export default function GoalsPage() {
               </div>
               <div className="flex justify-between items-center mt-3">
                 <p className="text-primary text-xs font-medium">
-                  {progress >= 100 ? 'Completed!' : 'Keep going!'}
+                  {progress >= 100 ? t('goals.completed') : t('goals.keepGoing')}
                 </p>
                 <button 
                     onClick={() => handleDeleteGoal(goal.id)}
-                    className="text-muted-foreground hover:text-destructive transition-colors"
+                    className="text-muted-foreground hover:text-destructive transition-colors p-1 rounded-full hover:bg-muted"
                 >
                   <Trash2 className="size-4" />
                 </button>
@@ -207,7 +235,7 @@ export default function GoalsPage() {
       <div className="px-4 pb-4">
         <div className="bg-card rounded-xl p-4 border border-border shadow-sm">
           <div className="flex justify-between items-center mb-4">
-            <p className="font-semibold text-foreground capitalize">{format(currentMonth, 'MMMM yyyy')}</p>
+            <p className="font-semibold text-foreground capitalize">{format(currentMonth, 'MMMM yyyy', { locale })}</p>
             <div className="flex gap-2">
               <button 
                 onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
@@ -224,13 +252,13 @@ export default function GoalsPage() {
             </div>
           </div>
           <div className="grid grid-cols-7 gap-2 text-center text-xs mb-2">
-            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => (
+            {weekDays.map((day, i) => (
               <span key={i} className="text-muted-foreground uppercase">{day}</span>
             ))}
           </div>
           <div className="grid grid-cols-7 gap-2">
             {/* Empty cells for start of month */}
-            {Array.from({ length: startOfMonth(currentMonth).getDay() }).map((_, i) => (
+            {Array.from({ length: emptyCells }).map((_, i) => (
                 <div key={`empty-${i}`} className="aspect-square"></div>
             ))}
 

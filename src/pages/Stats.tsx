@@ -6,14 +6,17 @@ import { useState, useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/db/db';
 import { startOfDay, endOfDay, subDays, isSameDay, startOfMonth, endOfMonth, subMonths, startOfYear, endOfYear, subYears, eachMonthOfInterval, startOfWeek, endOfWeek, format, eachDayOfInterval, subWeeks } from 'date-fns';
+import { pl, enUS } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
 
 export default function StatsPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'week' | 'month' | 'year'>('week');
   const [activityMetric, setActivityMetric] = useState<'reps' | 'time'>('reps');
   const [currentDate, setCurrentDate] = useState(new Date());
+
+  const locale = i18n.language === 'pl' ? pl : enUS;
 
   // Force update current date when app becomes visible or on interval
   useEffect(() => {
@@ -76,14 +79,11 @@ export default function StatsPage() {
     const avgMinutesPerDay = Math.round((totalTime / 60) / daysCount);
     const totalMinutes = Math.round(totalTime / 60);
 
-    // ... (keep existing chart data preparation logic, but ensure it uses the same filtering if needed, strictly speaking the chart logic below re-filters, which is fine but slightly inefficient. I will leave the chart logic as is for now to minimize risk, just updating the summary stats)
-
     // Data filtering based on activeTab (Existing logic preserved/adapted)
     let dailyData = [];
     let weeklyData = [];
     
     if (activeTab === 'week') {
-        // ... (existing week logic)
         const interval = eachDayOfInterval({ start, end });
         dailyData = interval.map(day => {
             const dayStart = startOfDay(day).getTime();
@@ -96,7 +96,7 @@ export default function StatsPage() {
                 if (activityMetric === 'time' && ex?.unit === 'seconds') return acc + (l.value / 60);
                 return acc;
             }, 0);
-            return { day: format(day, 'EEE').toUpperCase(), value: Math.round(value) };
+            return { day: format(day, 'EEE', { locale }).toUpperCase(), value: Math.round(value) };
         });
 
         // Weekly Comparison: Last 4 weeks
@@ -117,7 +117,6 @@ export default function StatsPage() {
         }
 
     } else if (activeTab === 'month') {
-        // ... (existing month logic)
         const interval = eachDayOfInterval({ start, end });
         dailyData = interval.map(day => {
             const dayStart = startOfDay(day).getTime();
@@ -147,11 +146,10 @@ export default function StatsPage() {
                 if (activityMetric === 'time' && ex?.unit === 'seconds') return acc + (l.value / 60);
                 return acc;
             }, 0);
-            weeklyData.push({ week: format(monthStart, 'MMM'), value: Math.round(value) });
+            weeklyData.push({ week: format(monthStart, 'MMM', { locale }), value: Math.round(value) });
         }
 
     } else if (activeTab === 'year') {
-        // ... (existing year logic)
         const interval = eachMonthOfInterval({ start, end });
         dailyData = interval.map(month => {
             const monthStart = startOfMonth(month).getTime();
@@ -164,7 +162,7 @@ export default function StatsPage() {
                 if (activityMetric === 'time' && ex?.unit === 'seconds') return acc + (l.value / 60);
                 return acc;
             }, 0);
-            return { day: format(month, 'MMM'), value: Math.round(value) };
+            return { day: format(month, 'MMM', { locale }), value: Math.round(value) };
         });
 
         // Weekly Comparison: Last 5 years
@@ -193,7 +191,7 @@ export default function StatsPage() {
         dailyData,
         weeklyData
     };
-  }, [activeTab, activityMetric, currentDate]);
+  }, [activeTab, activityMetric, currentDate, locale]);
 
   return (
     <div className="flex flex-col min-h-full pb-20 bg-background">
@@ -259,7 +257,7 @@ export default function StatsPage() {
             <div className="h-px bg-border w-full"></div>
             <div className="flex flex-col gap-0.5">
                 <p className="text-sm font-bold text-foreground">{stats?.avgRepsPerDay?.toLocaleString() || 0}</p>
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wide">{t('stats.avgPerDay')}</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">{t('stats.avgPerDay')}</p>
             </div>
           </div>
 
@@ -276,7 +274,7 @@ export default function StatsPage() {
             <div className="h-px bg-border w-full"></div>
             <div className="flex flex-col gap-0.5">
                 <p className="text-sm font-bold text-foreground">{stats?.avgMinutesPerDay?.toLocaleString() || 0}m</p>
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wide">{t('stats.avgPerDay')}</p>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">{t('stats.avgPerDay')}</p>
             </div>
           </div>
         </div>
@@ -294,7 +292,7 @@ export default function StatsPage() {
                             activityMetric === 'reps' ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
                         )}
                     >
-                        Reps
+                        {t('home.reps')}
                     </button>
                     <button 
                         onClick={() => setActivityMetric('time')}
@@ -303,7 +301,7 @@ export default function StatsPage() {
                             activityMetric === 'time' ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
                         )}
                     >
-                        Mins
+                        {t('home.mins')}
                     </button>
                 </div>
             </div>
@@ -313,7 +311,7 @@ export default function StatsPage() {
                   {stats?.dailyData.reduce((a, b) => a + b.value, 0).toLocaleString()}
               </p>
               <p className="text-muted-foreground text-sm font-medium">
-                {t('stats.total')} {activityMetric === 'reps' ? 'Reps' : 'Mins'}
+                {t('stats.total')} {activityMetric === 'reps' ? t('home.reps') : t('home.mins')}
               </p>
             </div>
           </div>
@@ -363,7 +361,7 @@ export default function StatsPage() {
                             activityMetric === 'reps' ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
                         )}
                     >
-                        Reps
+                        {t('home.reps')}
                     </button>
                     <button 
                         onClick={() => setActivityMetric('time')}
@@ -372,7 +370,7 @@ export default function StatsPage() {
                             activityMetric === 'time' ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
                         )}
                     >
-                        Mins
+                        {t('home.mins')}
                     </button>
                 </div>
             </div>

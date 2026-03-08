@@ -55,14 +55,22 @@
   "goals": {
     "title": "Goals",
     "overallProgress": "Overall Progress",
-    "activeGoals": "Active goals",
+    "activeGoals": "Active Goals",
     "goalHistory": "Goal History",
     "completed": "Completed",
     "inProgress": "In Progress",
     "goal": "Goal",
     "keepGoing": "Keep going!",
     "noActiveGoals": "No active goals.",
-    "createOne": "Create one!"
+    "createOne": "Create one!",
+    "confirmDelete": "Are you sure you want to delete this goal?",
+    "noGoals": "No active goals.",
+    "when": "When",
+    "dailyGoal": "Daily Goal",
+    "weeklyGoal": "Weekly Goal",
+    "enterTitle": "Habit to add",
+    "triggerLabel": "Trigger (When I...)",
+    "triggerPlaceholder": "e.g. Turn on the microwave"
   },
   "settings": {
     "title": "Settings",
@@ -119,9 +127,12 @@
       "metric": "Metric",
       "target": "Target",
       "goalTitle": "Habit to add",
+      "triggerLabel": "Trigger (When I...)",
+      "triggerPlaceholder": "e.g. Turn on the microwave",
       "create": "Create Goal",
       "selectExercise": "Select an exercise",
-      "enterTitle": "Usually after I click \"start\" on the microwave I do..."
+      "enterTitle": "Usually after I click \"start\" on the microwave I do...",
+      "newGoal": "New Goal"
     }
   },
   "terms": {

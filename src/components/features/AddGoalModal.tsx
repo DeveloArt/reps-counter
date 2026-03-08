@@ -16,6 +16,7 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
   const exercises = useLiveQuery(() => db.exercises.toArray());
   
   const [title, setTitle] = useState('');
+  const [trigger, setTrigger] = useState('');
   const [type, setType] = useState<'daily' | 'weekly'>('daily');
   const [targetValue, setTargetValue] = useState<number>(10);
   const [metric, setMetric] = useState<'reps' | 'time'>('reps');
@@ -25,6 +26,7 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
   useEffect(() => {
     if (isOpen) {
       setTitle('');
+      setTrigger('');
       setType('daily');
       setTargetValue(10);
       setMetric('reps');
@@ -36,9 +38,21 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
     e.preventDefault();
     
     try {
+      let generatedTitle = title;
+      if (!generatedTitle) {
+        if (exerciseId) {
+          const exerciseName = exercises?.find(e => e.id === exerciseId)?.name || '';
+          const frequency = type === 'daily' ? t('modals.addGoal.daily') : t('modals.addGoal.weekly');
+          generatedTitle = `${frequency} ${exerciseName}`;
+        } else {
+          generatedTitle = t('modals.addGoal.newGoal');
+        }
+      }
+
       await db.goals.add({
         id: crypto.randomUUID(),
-        title: title || (exerciseId ? `${type === 'daily' ? 'Daily' : 'Weekly'} ${exercises?.find(e => e.id === exerciseId)?.name}` : 'New Goal'),
+        title: generatedTitle,
+        trigger: trigger || undefined,
         type,
         targetValue: metric === 'time' ? targetValue * 60 : targetValue,
         metric,
@@ -80,6 +94,18 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
             <Calendar className="size-6" />
             <span className="text-xs font-bold uppercase">{t('modals.addGoal.weekly')}</span>
           </button>
+        </div>
+
+        {/* Trigger (Anchor) */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-foreground">{t('modals.addGoal.triggerLabel')}</label>
+          <input
+            type="text"
+            value={trigger}
+            onChange={(e) => setTrigger(e.target.value)}
+            placeholder={t('modals.addGoal.triggerPlaceholder')}
+            className="w-full p-3 rounded-xl bg-muted border-transparent focus:border-primary focus:ring-0 text-foreground"
+          />
         </div>
 
         {/* Exercise Selection */}
@@ -145,7 +171,7 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
           </div>
         </div>
 
-        {/* Title */}
+        {/* Title (Optional/Auto-generated) */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">{t('modals.addGoal.goalTitle')}</label>
           <input

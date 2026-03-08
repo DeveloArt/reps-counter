@@ -55,14 +55,22 @@
   "goals": {
     "title": "Cele",
     "overallProgress": "Całkowity Postęp",
-    "activeGoals": "Aktywne cele",
+    "activeGoals": "Aktywne Cele",
     "goalHistory": "Historia Celów",
     "completed": "Ukończone",
     "inProgress": "W Trakcie",
     "goal": "Cel",
     "keepGoing": "Tak trzymaj!",
     "noActiveGoals": "Brak aktywnych celów.",
-    "createOne": "Stwórz nowy!"
+    "createOne": "Stwórz nowy!",
+    "confirmDelete": "Czy na pewno chcesz usunąć ten cel?",
+    "noGoals": "Brak aktywnych celów.",
+    "when": "Gdy",
+    "dailyGoal": "Cel Codzienny",
+    "weeklyGoal": "Cel Tygodniowy",
+    "enterTitle": "Nawyk, który chcesz dodać",
+    "triggerLabel": "Sygnał (Gdy...)",
+    "triggerPlaceholder": "np. Włączam mikrofalę"
   },
   "settings": {
     "title": "Ustawienia",
@@ -119,9 +127,12 @@
       "metric": "Metryka",
       "target": "Cel",
       "goalTitle": "Nawyk, który chcesz dodać",
+      "triggerLabel": "Sygnał (Gdy...)",
+      "triggerPlaceholder": "np. Włączam mikrofalę",
       "create": "Utwórz Cel",
       "selectExercise": "Wybierz ćwiczenie",
-      "enterTitle": "Zazwyczaj po kliknięciu przycisku \"start\" w mikrofalówce robię..."
+      "enterTitle": "Zazwyczaj po kliknięciu przycisku \"start\" w mikrofalówce robię...",
+      "newGoal": "Nowy Cel"
     }
   },
   "terms": {

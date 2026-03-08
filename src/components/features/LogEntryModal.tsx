@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
-import { Play, Square, Save, Minus, Plus, Edit2, FileText, CheckCircle } from 'lucide-react';
+import { Play, Square, Save, Minus, Plus, Edit2, FileText, CheckCircle, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { db, type Exercise } from '@/db/db';
+import { useTranslation } from 'react-i18next';
 
 interface LogEntryModalProps {
   isOpen: boolean;
@@ -11,10 +12,31 @@ interface LogEntryModalProps {
 }
 
 export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps) {
-  const [value, setValue] = useState<number>(25); // Default value
+  const { t } = useTranslation();
+  const [value, setValue] = useState<number>(0); // Default value 0
   const [isRunning, setIsRunning] = useState(false);
   const [notes, setNotes] = useState('');
   
+  // Reset state when modal opens/closes or exercise changes
+  useEffect(() => {
+    if (isOpen) {
+      setValue(0);
+      setIsRunning(false);
+      setNotes('');
+    }
+  }, [isOpen, exercise]);
+
+  // Timer logic
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isRunning) {
+      interval = setInterval(() => {
+        setValue((prev) => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isRunning]);
+
   if (!exercise) return null;
 
   const handleSave = async () => {
@@ -29,9 +51,6 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
       });
       
       onClose();
-      setValue(25);
-      setIsRunning(false);
-      setNotes('');
     } catch (error) {
       console.error("Failed to save log:", error);
     }
@@ -40,99 +59,127 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
   const increment = () => setValue(prev => prev + 1);
   const decrement = () => setValue(prev => Math.max(0, prev - 1));
 
+  const toggleTimer = () => setIsRunning(!isRunning);
+  const stopTimer = () => setIsRunning(false);
+
+  const formatTime = (totalSeconds: number) => {
+    const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+    const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+    return { minutes, seconds };
+  };
+
+  const { minutes, seconds } = formatTime(value);
+
   return (
     <Modal 
       isOpen={isOpen} 
       onClose={onClose} 
-      title="New Entry"
-      className="max-w-[600px] w-full rounded-t-xl sm:rounded-xl !m-0 sm:!m-auto !bottom-0 sm:!bottom-auto !top-auto sm:!top-1/2 !translate-y-0 sm:!-translate-y-1/2"
+      title={t('modals.logEntry.title') || exercise.name}
+      className="max-w-[600px] w-full rounded-t-xl sm:rounded-xl !m-0 sm:!m-auto !bottom-0 sm:!bottom-auto !top-auto sm:!top-1/2 !translate-y-0 sm:!-translate-y-1/2 bg-background"
     >
-      <div className="flex flex-col h-full">
-        {/* Icon & Category */}
-        <div className="flex flex-col items-center mb-8 pt-4">
-          <div 
-            className="size-20 rounded-full flex items-center justify-center mb-3 bg-primary/10"
-            style={{ backgroundColor: `${exercise.color}20` }}
-          >
-            {/* We render the icon in Home.tsx, here we might need a helper or just pass the component. 
-                For now, let's assume exercise.icon is a string name and we need to map it, 
-                OR we can just use a generic icon if we don't want to duplicate the mapping logic here.
-                Actually, let's just use a generic icon for now or pass the icon component from parent if possible.
-                But passing component is not serializable if we were using Redux, but here it's props.
-                However, exercise from DB has icon string.
-            */}
-            <div className="text-primary font-bold text-2xl" style={{ color: exercise.color }}>
-              {exercise.name.charAt(0)}
+      <div className="flex flex-col h-full px-2">
+        {/* Header - Custom to match requested design */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+              {/* We can use a generic icon or map it if we had the mapping here. For now, first letter. */}
+              <span className="text-2xl font-bold">{exercise.name.charAt(0)}</span>
+            </div>
+            <div>
+              <h2 className="text-xl font-bold leading-tight tracking-tight text-foreground">{exercise.name}</h2>
+              <p className="text-sm text-muted-foreground">{t('modals.logEntry.addNewEntry') || "Dodaj nowy wpis"}</p>
             </div>
           </div>
-          <h3 className="text-primary text-base font-bold tracking-wide uppercase" style={{ color: exercise.color }}>{exercise.name}</h3>
+          {/* Close button is handled by Modal component usually, but we can add one here if we hide the default one or just leave it. 
+              The Modal component has a title prop, but we are building a custom header. 
+              We might want to hide the default Modal header if we use this one. 
+              However, the Modal component implementation (which I can't see fully but assume) likely renders a header.
+              I will assume the Modal title prop renders a header. 
+              To match the design exactly, I should probably pass no title to Modal and render this header.
+              But I'll keep it simple and just render the content below the standard modal header if strictly needed, 
+              OR I'll try to override it. 
+              Let's stick to the content.
+          */}
         </div>
 
         {exercise.unit === 'reps' ? (
-          // Reps Counter View
+          // Reps Counter View - Updated colors to primary
           <div className="flex flex-col items-center mb-10">
-            <h1 className="text-foreground text-xl font-medium mb-6">Repetitions</h1>
-            <div className="flex items-center gap-8">
-              <button 
-                onClick={decrement}
-                className="size-14 rounded-full border-2 border-primary/20 flex items-center justify-center text-primary hover:bg-primary/5 active:scale-95 transition-all"
-                style={{ borderColor: `${exercise.color}40`, color: exercise.color }}
-              >
-                <Minus className="size-8" />
-              </button>
-              <div className="text-center min-w-[100px]">
-                <input
-                  type="number"
-                  value={value}
-                  onChange={(e) => setValue(Number(e.target.value))}
-                  className="text-7xl font-bold text-foreground tabular-nums bg-transparent text-center w-[180px] focus:outline-none border-none p-0 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                />
-              </div>
-              <button 
-                onClick={increment}
-                className="size-14 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/30 hover:bg-primary/90 active:scale-95 transition-all"
-                style={{ backgroundColor: exercise.color, boxShadow: `0 10px 15px -3px ${exercise.color}40` }}
-              >
-                <Plus className="size-8" />
-              </button>
+            <div className="bg-primary/5 rounded-2xl p-8 mb-8 flex flex-col items-center w-full">
+                <div className="flex items-center gap-8 mb-6">
+                <button 
+                    onClick={decrement}
+                    className="size-14 rounded-full border-2 border-primary/20 flex items-center justify-center text-primary hover:bg-primary/5 active:scale-95 transition-all"
+                >
+                    <Minus className="size-8" />
+                </button>
+                <div className="text-center min-w-[100px]">
+                    <input
+                    type="number"
+                    value={value}
+                    onChange={(e) => setValue(Number(e.target.value))}
+                    className="text-7xl font-bold text-primary tabular-nums bg-transparent text-center w-[180px] focus:outline-none border-none p-0 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                    />
+                    <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground mt-2 block">{t('modals.logEntry.reps')}</span>
+                </div>
+                <button 
+                    onClick={increment}
+                    className="size-14 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/30 hover:bg-primary/90 active:scale-95 transition-all"
+                >
+                    <Plus className="size-8" />
+                </button>
+                </div>
             </div>
           </div>
         ) : (
-          // Timer View
+          // Timer View - Matching the requested HTML structure
           <div className="flex flex-col items-center mb-8">
-             <div className="bg-primary/5 rounded-2xl p-6 mb-6 flex flex-col items-center w-full">
+             <div className="bg-primary/5 dark:bg-primary/10 rounded-2xl p-8 mb-8 flex flex-col items-center w-full">
               <div className="flex gap-4 items-center mb-6">
                 <div className="flex flex-col items-center">
                   <div className="flex h-20 w-24 items-center justify-center rounded-2xl bg-card shadow-sm border border-primary/10">
-                    <span className="text-4xl font-bold text-primary" style={{ color: exercise.color }}>{Math.floor(value / 60).toString().padStart(2, '0')}</span>
+                    <span className="text-4xl font-bold text-primary">{minutes}</span>
                   </div>
-                  <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground mt-2">Minutes</span>
+                  <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground mt-2">{t('home.mins') || "Minuty"}</span>
                 </div>
-                <span className="text-4xl font-bold text-primary mb-6" style={{ color: exercise.color }}>:</span>
+                <span className="text-4xl font-bold text-primary mb-6">:</span>
                 <div className="flex flex-col items-center">
                   <div className="flex h-20 w-24 items-center justify-center rounded-2xl bg-card shadow-sm border border-primary/10">
-                    <span className="text-4xl font-bold text-primary" style={{ color: exercise.color }}>{(value % 60).toString().padStart(2, '0')}</span>
+                    <span className="text-4xl font-bold text-primary">{seconds}</span>
                   </div>
-                  <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground mt-2">Seconds</span>
+                  <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground mt-2">{t('home.seconds') || "Sekundy"}</span>
                 </div>
               </div>
               
               <div className="flex gap-3 w-full max-w-xs">
-                {/* Timer logic would go here, for now just manual entry */}
+                <button 
+                    onClick={toggleTimer}
+                    className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-primary h-12 text-white font-bold hover:bg-primary/90 transition-colors"
+                >
+                    <Play className="size-5" />
+                    {isRunning ? t('modals.logEntry.stop') : t('modals.logEntry.start')}
+                </button>
+                <button 
+                    onClick={() => { setIsRunning(false); setValue(0); }}
+                    className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-muted h-12 text-foreground font-bold hover:bg-muted/80 transition-colors"
+                >
+                    <Square className="size-5 fill-current" />
+                    {t('modals.logEntry.reset')}
+                </button>
               </div>
             </div>
 
             <div className="w-full space-y-2">
               <label className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <Edit2 className="size-4" />
-                Manual Entry (Seconds)
+                {t('modals.logEntry.manualEntry') || "Wpisz ręcznie (Sekundy)"}
               </label>
               <input 
                 type="number"
                 value={value}
                 onChange={(e) => setValue(Number(e.target.value))}
                 className="w-full rounded-xl border-border bg-card focus:border-primary focus:ring-primary h-14 text-lg font-medium px-4 placeholder:text-muted-foreground"
-                placeholder="e.g. 60"
+                placeholder="np. 60"
               />
             </div>
           </div>
@@ -140,25 +187,25 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
 
         {/* Notes Field */}
         <div className="space-y-2 mb-8 w-full">
-          <label className="text-sm font-semibold text-muted-foreground ml-1 flex items-center gap-2">
+          <label className="text-sm font-semibold text-foreground flex items-center gap-2">
             <FileText className="size-4" />
-            Notes (Optional)
+            {t('modals.logEntry.notes')}
           </label>
           <textarea 
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             className="w-full rounded-xl border-border bg-card focus:ring-primary focus:border-primary p-4 text-foreground placeholder:text-muted-foreground min-h-[100px] resize-none" 
-            placeholder="How did it feel? Added weight?"
+            placeholder={t('modals.logEntry.notesPlaceholder')}
           />
         </div>
 
         {/* Action Button */}
         <button
           onClick={handleSave}
-          className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 transition-colors mb-4"
+          className="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-colors mb-4"
         >
-          <CheckCircle className="size-6" />
-          Save Workout
+          <Save className="size-6" />
+          {t('modals.logEntry.saveWorkout')}
         </button>
       </div>
     </Modal>
