@@ -109,8 +109,7 @@
     "logEntry": {
       "reps": "Powtórzenia",
       "time": "Czas",
-      "notes": "Notatki",
-      "notesPlaceholder": "Dodaj notatki...",
+      "manualEntry": "Wpis ręczny (sekundy)",
       "saveWorkout": "Zapisz Trening",
       "start": "Start",
       "stop": "Stop",

@@ -33,11 +33,19 @@ export function AddExerciseModal({ isOpen, onClose }: AddExerciseModalProps) {
   const [selectedColor, setSelectedColor] = useState(COLORS[0]);
   const [selectedIcon, setSelectedIcon] = useState('Dumbbell');
 
+  // robust ID generator
+  const generateId = () => {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
       await db.exercises.add({
-        id: crypto.randomUUID(),
+        id: generateId(),
         name,
         unit,
         color: selectedColor,
@@ -50,6 +58,7 @@ export function AddExerciseModal({ isOpen, onClose }: AddExerciseModalProps) {
       setSelectedIcon('Dumbbell');
     } catch (error) {
       console.error("Failed to add exercise:", error);
+      alert(t('common.error') + ": " + (error instanceof Error ? error.message : String(error)));
     }
   };
 

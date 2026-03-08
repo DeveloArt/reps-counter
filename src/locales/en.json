@@ -109,8 +109,7 @@
     "logEntry": {
       "reps": "Reps",
       "time": "Time",
-      "notes": "Notes",
-      "notesPlaceholder": "Add notes here...",
+      "manualEntry": "Manual Entry (Seconds)",
       "saveWorkout": "Save Workout",
       "start": "Start",
       "stop": "Stop",

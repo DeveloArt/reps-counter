@@ -122,182 +122,190 @@ export default function GoalsPage() {
     }
   };
 
-  const handleDeleteGoal = async (id: string) => {
-      if (confirm(t('goals.confirmDelete'))) {
-          await db.goals.delete(id);
+  const [goalToDelete, setGoalToDelete] = useState<string | null>(null);
+  
+  // ... (existing code)
+
+  const handleDeleteGoal = (id: string) => {
+      setGoalToDelete(id);
+  };
+
+  const confirmDelete = async () => {
+      if (goalToDelete) {
+          await db.goals.delete(goalToDelete);
+          setGoalToDelete(null);
       }
   };
 
-  // Generate week days for calendar header (Mon-Sun)
-  const weekDays = eachDayOfInterval({
-    start: startOfWeek(new Date(), { weekStartsOn: 1 }),
-    end: endOfWeek(new Date(), { weekStartsOn: 1 })
-  }).map(day => format(day, 'EEEEE', { locale }));
-
-  // Calculate empty cells for start of month (assuming Monday start)
-  const startMonthDay = startOfMonth(currentMonth).getDay();
-  const emptyCells = (startMonthDay + 6) % 7;
+  // ... (existing code)
 
   return (
     <div className="flex flex-col min-h-full pb-20 bg-background">
       {/* Header */}
-      <div className="flex items-center p-4 justify-between sticky top-0 bg-background/80 backdrop-blur-md z-10">
-        <button 
-          onClick={() => navigate(-1)}
-          className="flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-primary/10 cursor-pointer transition-colors"
-        >
-          <ArrowLeft className="size-6 text-foreground" />
-        </button>
-        <h1 className="text-lg font-bold leading-tight tracking-tight flex-1 text-center text-foreground">{t('goals.title')}</h1>
-        <div className="size-10" />
-      </div>
+      <header className="flex items-center justify-between p-4 sticky top-0 bg-background/80 backdrop-blur-md z-10">
+        <div className="flex items-center gap-3">
+          <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-full hover:bg-muted text-foreground">
+            <ArrowLeft className="size-6" />
+          </button>
+          <h1 className="text-xl font-bold text-foreground">{t('goals.title')}</h1>
+        </div>
+        {/* Settings button removed as per request */}
+      </header>
 
-      {/* Active Goals Section */}
-      <div className="px-4 pt-6 pb-2 flex justify-between items-center">
-        <h2 className="text-xl font-bold tracking-tight text-foreground">{t('goals.activeGoals')}</h2>
-        <button 
-          onClick={() => setIsAddGoalOpen(true)}
-          className="text-primary text-sm font-semibold flex items-center gap-1 hover:bg-primary/5 px-2 py-1 rounded-lg transition-colors"
-        >
-          <PlusCircle className="size-4" />
-          {t('common.add')}
-        </button>
-      </div>
-
-      <div className="flex flex-col gap-4 p-4">
-        {goalsWithProgress?.length === 0 && (
-            <div className="text-center p-8 text-muted-foreground bg-muted/30 rounded-xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-2">
-                <p>{t('goals.noGoals')}</p>
-                <button onClick={() => setIsAddGoalOpen(true)} className="text-primary font-bold mt-2 flex items-center gap-2 hover:bg-primary/10 px-4 py-2 rounded-lg transition-colors">
-                  <PlusCircle className="size-5" />
-                  {t('goals.createOne')}
-                </button>
-            </div>
-        )}
-        {goalsWithProgress?.map((goal) => {
-          const exercise = goal.exerciseId ? exerciseMap.get(goal.exerciseId) : null;
-          const Icon = getIcon(exercise?.icon);
-          const progress = Math.min(100, (goal.currentVal / goal.targetValue) * 100);
-
-          return (
-            <div key={goal.id} className="bg-card p-4 rounded-xl border border-border shadow-sm">
-              <div className="flex gap-4 justify-between items-start mb-3">
-                <div className="flex gap-3 items-start flex-1 min-w-0">
-                  <div className="p-2 bg-primary/10 rounded-lg shrink-0" style={{ backgroundColor: exercise ? `${exercise.color}20` : undefined }}>
-                    <Icon className="size-6 text-primary" style={{ color: exercise?.color }} />
-                  </div>
-                  <div className="flex flex-col min-w-0">
-                    {goal.trigger && (
-                      <p className="text-xs font-bold text-primary mb-0.5 uppercase tracking-wide truncate">
-                        {t('goals.when')} {goal.trigger}
-                      </p>
-                    )}
-                    <p className="text-foreground text-base font-semibold truncate">{goal.title}</p>
-                    <p className="text-muted-foreground text-xs capitalize">
-                      {goal.type === 'daily' ? t('goals.dailyGoal') : t('goals.weeklyGoal')}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex flex-col items-end gap-1 shrink-0">
-                    <p className="text-primary text-sm font-bold bg-primary/10 px-2 py-1 rounded whitespace-nowrap">
-                    {goal.metric === 'time' 
-                      ? `${Math.round(goal.currentVal / 60)}/${Math.round(goal.targetValue / 60)}m` 
-                      : `${goal.currentVal}/${goal.targetValue}`}
-                    </p>
-                </div>
-              </div>
-              <div className="rounded-full bg-muted h-2 w-full overflow-hidden">
-                <div 
-                  className="h-full rounded-full bg-primary transition-all duration-500" 
-                  style={{ width: `${progress}%`, backgroundColor: exercise?.color }}
-                ></div>
-              </div>
-              <div className="flex justify-between items-center mt-3">
-                <p className="text-primary text-xs font-medium">
-                  {progress >= 100 ? t('goals.completed') : t('goals.keepGoing')}
-                </p>
-                <button 
-                    onClick={() => handleDeleteGoal(goal.id)}
-                    className="text-muted-foreground hover:text-destructive transition-colors p-1 rounded-full hover:bg-muted"
-                >
-                  <Trash2 className="size-4" />
-                </button>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Goal History Calendar */}
-      <div className="px-4 pt-4 pb-2">
-        <h2 className="text-xl font-bold tracking-tight text-foreground">{t('goals.goalHistory')}</h2>
-      </div>
-      <div className="px-4 pb-4">
-        <div className="bg-card rounded-xl p-4 border border-border shadow-sm">
-          <div className="flex justify-between items-center mb-4">
-            <p className="font-semibold text-foreground capitalize">{format(currentMonth, 'MMMM yyyy', { locale })}</p>
-            <div className="flex gap-2">
-              <button 
-                onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
-                className="size-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors text-foreground"
-              >
-                <ChevronLeft className="size-4" />
-              </button>
-              <button 
-                onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
-                className="size-8 flex items-center justify-center rounded-full hover:bg-muted transition-colors text-foreground"
-              >
-                <ChevronRight className="size-4" />
-              </button>
-            </div>
+      <div className="px-4 space-y-6">
+        {/* Active Goals Section */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-foreground">{t('goals.activeGoals')}</h2>
+            <button 
+              onClick={() => setIsAddGoalOpen(true)}
+              className="flex items-center gap-1 text-primary text-sm font-bold hover:opacity-80 transition-opacity"
+            >
+              <PlusCircle className="size-4" />
+              {t('goals.addGoal')}
+            </button>
           </div>
-          <div className="grid grid-cols-7 gap-2 text-center text-xs mb-2">
-            {weekDays.map((day, i) => (
-              <span key={i} className="text-muted-foreground uppercase">{day}</span>
-            ))}
-          </div>
-          <div className="grid grid-cols-7 gap-2">
-            {/* Empty cells for start of month */}
-            {Array.from({ length: emptyCells }).map((_, i) => (
-                <div key={`empty-${i}`} className="aspect-square"></div>
-            ))}
 
-            {historyData?.map((day, i) => {
-                const isFuture = day.date > new Date();
-                const isTodayDate = isToday(day.date);
-                
-                let content;
-                let className = "aspect-square flex items-center justify-center text-xs rounded-lg font-bold transition-all";
-                
-                if (isFuture) {
-                    className += " text-muted-foreground/30";
-                    content = format(day.date, 'd');
-                } else if (day.score >= 100) {
-                    className += " bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400";
-                    content = <Check className="size-4" />;
-                } else if (day.score > 0) {
-                    className += " bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400";
-                    content = <span className="text-[10px]">{Math.round(day.score)}%</span>;
-                } else {
-                    className += " bg-muted text-muted-foreground";
-                    content = format(day.date, 'd');
-                }
+          <div className="grid gap-3">
+            {goalsWithProgress?.map(goal => {
+              const exercise = goal.exerciseId ? exerciseMap.get(goal.exerciseId) : null;
+              const Icon = exercise ? getIcon(exercise.icon) : Activity;
+              const progress = Math.min(100, Math.round((goal.currentVal / goal.targetValue) * 100));
+              const isMet = progress >= 100;
 
-                if (isTodayDate) {
-                    className += " ring-2 ring-primary ring-offset-2 ring-offset-background";
-                }
-
-                return (
-                    <div key={i} className={className}>
-                        {content}
+              return (
+                <div key={goal.id} className="group relative bg-card rounded-xl border border-border p-4 shadow-sm">
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className={cn("size-10 rounded-lg flex items-center justify-center", exercise ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground")} style={exercise ? { backgroundColor: `${exercise.color}20`, color: exercise.color } : {}}>
+                        <Icon className="size-5" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-foreground">{goal.title}</h3>
+                        <p className="text-xs text-muted-foreground capitalize">
+                          {goal.type === 'daily' ? t('goals.daily') : t('goals.weekly')} • {goal.metric === 'reps' ? t('home.reps') : t('home.mins')}
+                        </p>
+                        {goal.trigger && (
+                          <p className="text-xs text-primary mt-1 font-medium">
+                            {t('goals.trigger')}: {goal.trigger}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                );
+                    <div className="flex items-center gap-2">
+                        <div className="text-right">
+                            <span className={cn("text-lg font-bold", isMet ? "text-primary" : "text-foreground")}>
+                                {Math.round(goal.currentVal)}
+                            </span>
+                            <span className="text-xs text-muted-foreground"> / {goal.targetValue}</span>
+                        </div>
+                        <button 
+                            onClick={() => handleDeleteGoal(goal.id)}
+                            className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors opacity-0 group-hover:opacity-100"
+                        >
+                            <Trash2 className="size-4" />
+                        </button>
+                    </div>
+                  </div>
+                  
+                  <div className="relative h-2 w-full bg-muted rounded-full overflow-hidden">
+                    <div 
+                      className={cn("absolute top-0 left-0 h-full rounded-full transition-all duration-500", isMet ? "bg-primary" : "bg-primary")}
+                      style={{ width: `${progress}%` }}
+                    ></div>
+                  </div>
+                </div>
+              );
             })}
+
+            {(!goals || goals.length === 0) && (
+              <div className="text-center py-8 bg-muted/30 rounded-xl border border-dashed border-border">
+                <p className="text-muted-foreground text-sm">{t('goals.noGoals')}</p>
+                <button 
+                  onClick={() => setIsAddGoalOpen(true)}
+                  className="mt-2 text-primary font-bold text-sm hover:underline"
+                >
+                  {t('goals.createFirst')}
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* History Calendar */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-bold text-foreground">{t('goals.history')}</h2>
+            <div className="flex items-center gap-2 bg-card border border-border rounded-lg p-1">
+              <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-1 hover:bg-muted rounded-md">
+                <ChevronLeft className="size-4 text-foreground" />
+              </button>
+              <span className="text-xs font-bold w-24 text-center text-foreground">
+                {format(currentMonth, 'MMMM yyyy', { locale })}
+              </span>
+              <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="p-1 hover:bg-muted rounded-md">
+                <ChevronRight className="size-4 text-foreground" />
+              </button>
+            </div>
+          </div>
+
+          <div className="bg-card rounded-xl border border-border p-4 shadow-sm">
+            <div className="grid grid-cols-7 gap-1 mb-2">
+              {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => (
+                <div key={i} className="text-center text-[10px] font-bold text-muted-foreground">
+                  {d}
+                </div>
+              ))}
+            </div>
+            <div className="grid grid-cols-7 gap-1">
+              {historyData?.map((day, i) => (
+                <div 
+                  key={i}
+                  className={cn(
+                    "aspect-square rounded-lg flex items-center justify-center text-xs font-medium border transition-all",
+                    day.met 
+                      ? "bg-primary text-white border-primary" 
+                      : day.score > 0 
+                        ? "bg-primary/10 text-primary border-primary/20" 
+                        : "bg-muted/30 text-muted-foreground border-transparent",
+                    isToday(day.date) && "ring-2 ring-foreground ring-offset-2 ring-offset-background"
+                  )}
+                >
+                  {day.met ? <Check className="size-3" /> : format(day.date, 'd')}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
       <AddGoalModal isOpen={isAddGoalOpen} onClose={() => setIsAddGoalOpen(false)} />
+
+      {/* Delete Confirmation Modal */}
+      {goalToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="w-full max-w-sm rounded-2xl bg-card p-6 shadow-xl border border-border">
+            <h3 className="text-lg font-bold text-foreground mb-2">{t('common.delete')}?</h3>
+            <p className="text-muted-foreground text-sm mb-6">
+              {t('goals.confirmDelete')}
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setGoalToDelete(null)}
+                className="flex-1 rounded-xl bg-muted py-3 text-sm font-bold text-foreground hover:bg-muted/80 transition-colors"
+              >
+                {t('common.cancel')}
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="flex-1 rounded-xl bg-destructive py-3 text-sm font-bold text-destructive-foreground hover:bg-destructive/90 transition-colors"
+              >
+                {t('common.delete')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

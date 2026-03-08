@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
-import { Play, Square, Save, Minus, Plus, Edit2, FileText, CheckCircle, X } from 'lucide-react';
+import { Play, Square, Save, Minus, Plus, Edit2, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { db, type Exercise } from '@/db/db';
 import { useTranslation } from 'react-i18next';
@@ -15,14 +15,12 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
   const { t } = useTranslation();
   const [value, setValue] = useState<number>(0); // Default value 0
   const [isRunning, setIsRunning] = useState(false);
-  const [notes, setNotes] = useState('');
   
   // Reset state when modal opens/closes or exercise changes
   useEffect(() => {
     if (isOpen) {
       setValue(0);
       setIsRunning(false);
-      setNotes('');
     }
   }, [isOpen, exercise]);
 
@@ -37,22 +35,30 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
     return () => clearInterval(interval);
   }, [isRunning]);
 
+  // robust ID generator
+  const generateId = () => {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  };
+
   if (!exercise) return null;
 
   const handleSave = async () => {
     try {
       await db.logs.add({
-        id: crypto.randomUUID(),
+        id: generateId(),
         exerciseId: exercise.id,
         date: new Date(),
         value: value,
-        notes: notes,
         timestamp: Date.now()
       });
       
       onClose();
     } catch (error) {
       console.error("Failed to save log:", error);
+      alert(t('common.error') + ": " + (error instanceof Error ? error.message : String(error)));
     }
   };
 
@@ -60,7 +66,6 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
   const decrement = () => setValue(prev => Math.max(0, prev - 1));
 
   const toggleTimer = () => setIsRunning(!isRunning);
-  const stopTimer = () => setIsRunning(false);
 
   const formatTime = (totalSeconds: number) => {
     const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
@@ -82,7 +87,6 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-              {/* We can use a generic icon or map it if we had the mapping here. For now, first letter. */}
               <span className="text-2xl font-bold">{exercise.name.charAt(0)}</span>
             </div>
             <div>
@@ -90,20 +94,10 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
               <p className="text-sm text-muted-foreground">{t('modals.logEntry.addNewEntry') || "Dodaj nowy wpis"}</p>
             </div>
           </div>
-          {/* Close button is handled by Modal component usually, but we can add one here if we hide the default one or just leave it. 
-              The Modal component has a title prop, but we are building a custom header. 
-              We might want to hide the default Modal header if we use this one. 
-              However, the Modal component implementation (which I can't see fully but assume) likely renders a header.
-              I will assume the Modal title prop renders a header. 
-              To match the design exactly, I should probably pass no title to Modal and render this header.
-              But I'll keep it simple and just render the content below the standard modal header if strictly needed, 
-              OR I'll try to override it. 
-              Let's stick to the content.
-          */}
         </div>
 
         {exercise.unit === 'reps' ? (
-          // Reps Counter View - Updated colors to primary
+          // Reps Counter View
           <div className="flex flex-col items-center mb-10">
             <div className="bg-primary/5 rounded-2xl p-8 mb-8 flex flex-col items-center w-full">
                 <div className="flex items-center gap-8 mb-6">
@@ -132,7 +126,7 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
             </div>
           </div>
         ) : (
-          // Timer View - Matching the requested HTML structure
+          // Timer View
           <div className="flex flex-col items-center mb-8">
              <div className="bg-primary/5 dark:bg-primary/10 rounded-2xl p-8 mb-8 flex flex-col items-center w-full">
               <div className="flex gap-4 items-center mb-6">
@@ -156,14 +150,14 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
                     onClick={toggleTimer}
                     className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-primary h-12 text-white font-bold hover:bg-primary/90 transition-colors"
                 >
-                    <Play className="size-5" />
+                    {isRunning ? <Square className="size-5 fill-current" /> : <Play className="size-5" />}
                     {isRunning ? t('modals.logEntry.stop') : t('modals.logEntry.start')}
                 </button>
                 <button 
                     onClick={() => { setIsRunning(false); setValue(0); }}
                     className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-muted h-12 text-foreground font-bold hover:bg-muted/80 transition-colors"
                 >
-                    <Square className="size-5 fill-current" />
+                    <RotateCcw className="size-5" />
                     {t('modals.logEntry.reset')}
                 </button>
               </div>
@@ -184,20 +178,6 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
             </div>
           </div>
         )}
-
-        {/* Notes Field */}
-        <div className="space-y-2 mb-8 w-full">
-          <label className="text-sm font-semibold text-foreground flex items-center gap-2">
-            <FileText className="size-4" />
-            {t('modals.logEntry.notes')}
-          </label>
-          <textarea 
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            className="w-full rounded-xl border-border bg-card focus:ring-primary focus:border-primary p-4 text-foreground placeholder:text-muted-foreground min-h-[100px] resize-none" 
-            placeholder={t('modals.logEntry.notesPlaceholder')}
-          />
-        </div>
 
         {/* Action Button */}
         <button

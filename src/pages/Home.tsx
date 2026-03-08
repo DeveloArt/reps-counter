@@ -204,12 +204,19 @@ export default function HomePage() {
     }
   };
 
-  const handleDeleteExercise = async (e: React.MouseEvent, id: string) => {
-      e.stopPropagation(); // Prevent opening the modal
-      if (confirm(t('home.confirmDeleteExercise') || 'Are you sure you want to delete this exercise?')) {
-          await db.exercises.delete(id);
-          // Optional: Delete associated logs?
-          // await db.logs.where('exerciseId').equals(id).delete();
+  const [exerciseToDelete, setExerciseToDelete] = useState<string | null>(null);
+
+  // ... (existing code)
+
+  const handleDeleteExercise = (e: React.MouseEvent, id: string) => {
+      e.stopPropagation(); // Prevent opening the log modal
+      setExerciseToDelete(id);
+  };
+
+  const confirmDelete = async () => {
+      if (exerciseToDelete) {
+          await db.exercises.delete(exerciseToDelete);
+          setExerciseToDelete(null);
       }
   };
 
@@ -403,6 +410,32 @@ export default function HomePage() {
         onClose={() => setSelectedExercise(null)} 
         exercise={selectedExercise} 
       />
+
+      {/* Delete Confirmation Modal */}
+      {exerciseToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="w-full max-w-sm rounded-2xl bg-card p-6 shadow-xl border border-border">
+            <h3 className="text-lg font-bold text-foreground mb-2">{t('common.delete')}?</h3>
+            <p className="text-muted-foreground text-sm mb-6">
+              {t('home.confirmDeleteExercise') || 'Are you sure you want to delete this exercise?'}
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setExerciseToDelete(null)}
+                className="flex-1 rounded-xl bg-muted py-3 text-sm font-bold text-foreground hover:bg-muted/80 transition-colors"
+              >
+                {t('common.cancel')}
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="flex-1 rounded-xl bg-destructive py-3 text-sm font-bold text-destructive-foreground hover:bg-destructive/90 transition-colors"
+              >
+                {t('common.delete')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -34,6 +34,14 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
     }
   }, [isOpen]);
 
+  // robust ID generator
+  const generateId = () => {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+      return crypto.randomUUID();
+    }
+    return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -50,7 +58,7 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
       }
 
       await db.goals.add({
-        id: crypto.randomUUID(),
+        id: generateId(),
         title: generatedTitle,
         trigger: trigger || undefined,
         type,
@@ -63,6 +71,7 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
       onClose();
     } catch (error) {
       console.error("Failed to add goal:", error);
+      alert(t('common.error') + ": " + (error instanceof Error ? error.message : String(error)));
     }
   };
 
