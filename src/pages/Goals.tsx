@@ -59,13 +59,18 @@ export default function GoalsPage() {
 
       let currentVal = 0;
       logs.forEach(log => {
-        // Simple metric matching
-        if (goal.metric === 'reps' && (!goal.exerciseId || exerciseMap.get(goal.exerciseId)?.unit === 'reps')) {
-             currentVal += log.value;
-        } else if (goal.metric === 'time' && (!goal.exerciseId || exerciseMap.get(goal.exerciseId)?.unit === 'seconds')) {
-             currentVal += log.value;
-        } else if (!goal.metric) {
-             currentVal += log.value;
+        const logExerciseUnit = exerciseMap.get(log.exerciseId)?.unit;
+        
+        if (goal.exerciseId) {
+            // Specific exercise goal
+            currentVal += log.value;
+        } else {
+            // Global goal
+            if (goal.metric === 'reps' && logExerciseUnit === 'reps') {
+                currentVal += log.value;
+            } else if (goal.metric === 'time' && logExerciseUnit === 'seconds') {
+                currentVal += log.value;
+            }
         }
       });
 

@@ -164,7 +164,7 @@ export default function HomePage() {
 
   // Get user settings for goals (fallback)
   const settings = useLiveQuery(() => db.settings.get(1));
-  const dailyGoals = useLiveQuery(() => db.goals.where({ type: 'daily', isActive: true }).toArray());
+  const dailyGoals = useLiveQuery(() => db.goals.filter(g => g.type === 'daily' && g.isActive).toArray());
 
   const dailyGoalReps = settings?.dailyGoalReps || 100;
   const dailyGoalTime = settings?.dailyGoalTime || 600; // 10 mins
