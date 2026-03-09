@@ -87,6 +87,8 @@
     "dailyNotifications": "Codzienne Powiadomienia",
     "dailyNotificationsDesc": "Przypomnij o zalogowaniu danych",
     "reminderFrequency": "Częstotliwość Przypomnień",
+    "reminderTime": "Czas Przypomnienia",
+    "reminderTimeDesc": "O której wysłać pierwsze przypomnienie",
     "appearance": "Wygląd",
     "light": "Jasny",
     "dark": "Ciemny",

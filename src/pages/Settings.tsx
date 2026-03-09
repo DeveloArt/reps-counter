@@ -5,20 +5,40 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@/context/ThemeContext';
 import { db } from '@/db/db';
+import { useLiveQuery } from 'dexie-react-hooks';
 
 export default function SettingsPage() {
   const { t, i18n } = useTranslation();
   const { theme, setTheme } = useTheme();
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const settings = useLiveQuery(() => db.settings.get(1));
 
   useEffect(() => {
     if ('Notification' in window) {
-        setNotificationsEnabled(Notification.permission === 'granted');
+        if (settings !== undefined) {
+            setNotificationsEnabled(Notification.permission === 'granted' && !!settings.notificationsEnabled);
+        } else {
+            setNotificationsEnabled(Notification.permission === 'granted');
+        }
     }
-  }, []);
+  }, [settings?.notificationsEnabled]);
 
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng);
+  };
+
+  const handleFrequencyChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = parseInt(e.target.value);
+    if (settings) {
+      await db.settings.update(1, { notificationFrequency: val });
+    }
+  };
+
+  const handleTimeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    if (settings) {
+      await db.settings.update(1, { notificationTime: val });
+    }
   };
 
   const handleNotificationToggle = async () => {
@@ -28,14 +48,18 @@ export default function SettingsPage() {
     }
 
     if (Notification.permission === 'granted') {
-        // If already granted, we can't really "revoke" it programmatically in most browsers, 
-        // but we can update our app state to stop sending them.
-        // For this demo, we'll just toggle the UI state.
-        setNotificationsEnabled(!notificationsEnabled);
+        const newValue = !notificationsEnabled;
+        setNotificationsEnabled(newValue);
+        if (settings) {
+            await db.settings.update(1, { notificationsEnabled: newValue });
+        }
     } else if (Notification.permission !== 'denied') {
         const permission = await Notification.requestPermission();
         if (permission === 'granted') {
             setNotificationsEnabled(true);
+            if (settings) {
+                await db.settings.update(1, { notificationsEnabled: true });
+            }
             new Notification('FitCounter', {
                 body: t('settings.dailyNotificationsDesc'),
                 icon: '/pwa-192x192.png'
@@ -93,22 +117,38 @@ export default function SettingsPage() {
               </label>
             </div>
             
-            <div className="relative flex w-full flex-col items-start justify-between gap-3 p-5 rounded-xl border border-primary/10 bg-card shadow-sm opacity-50 pointer-events-none">
+            <div className={cn("relative flex w-full flex-col items-start justify-between gap-3 p-5 rounded-xl border border-primary/10 bg-card shadow-sm transition-opacity", !notificationsEnabled && "opacity-50 pointer-events-none")}>
               <div className="flex w-full items-center justify-between">
                 <p className="text-foreground text-base font-medium leading-normal">{t('settings.reminderFrequency')}</p>
-                <span className="font-bold text-sm bg-primary/10 px-2 py-0.5 rounded text-primary">3/day</span>
+                <span className="font-bold text-sm bg-primary/10 px-2 py-0.5 rounded text-primary">{settings?.notificationFrequency || 1}/day</span>
               </div>
               <div className="flex h-6 w-full items-center gap-4">
-                <div className="flex h-1.5 flex-1 rounded-full bg-muted">
-                  <div className="h-full w-[45%] rounded-full bg-primary relative">
-                    <div className="absolute -right-2 -top-1.5 size-4.5 w-4.5 h-4.5 rounded-full bg-white border-2 border-primary shadow-sm"></div>
-                  </div>
-                </div>
+                <input 
+                  type="range" 
+                  min="1" 
+                  max="10" 
+                  value={settings?.notificationFrequency || 1}
+                  onChange={handleFrequencyChange}
+                  className="w-full h-1.5 rounded-full bg-muted appearance-none cursor-pointer accent-primary"
+                />
               </div>
               <div className="flex w-full justify-between text-[10px] text-muted-foreground font-medium">
                 <span>1 time</span>
                 <span>10 times</span>
               </div>
+            </div>
+
+            <div className={cn("relative flex w-full items-center justify-between gap-3 p-5 rounded-xl border border-primary/10 bg-card shadow-sm transition-opacity", !notificationsEnabled && "opacity-50 pointer-events-none")}>
+              <div className="flex flex-col gap-1">
+                <p className="text-foreground text-base font-medium leading-normal">{t('settings.reminderTime')}</p>
+                <p className="text-muted-foreground text-xs font-normal leading-normal">{t('settings.reminderTimeDesc')}</p>
+              </div>
+              <input 
+                type="time" 
+                value={settings?.notificationTime || "09:00"}
+                onChange={handleTimeChange}
+                className="p-2 rounded-lg bg-muted border-transparent focus:border-primary focus:ring-0 text-foreground font-bold"
+              />
             </div>
           </div>
         </div>

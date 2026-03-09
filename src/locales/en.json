@@ -87,6 +87,8 @@
     "dailyNotifications": "Daily Notifications",
     "dailyNotificationsDesc": "Get reminded to log your fitness data",
     "reminderFrequency": "Reminder Frequency",
+    "reminderTime": "Reminder Time",
+    "reminderTimeDesc": "When to send the first reminder",
     "appearance": "Appearance",
     "light": "Light",
     "dark": "Dark",

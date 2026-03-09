@@ -37,6 +37,9 @@ interface UserSettings {
   dailyGoalReps: number;
   dailyGoalTime: number; // seconds
   onboardingCompleted: boolean;
+  notificationsEnabled?: boolean;
+  notificationFrequency?: number;
+  notificationTime?: string;
 }
 
 const db = new Dexie('FitCounterDB') as Dexie & {
@@ -75,7 +78,10 @@ db.on('populate', async () => {
     theme: 'system',
     dailyGoalReps: 100,
     dailyGoalTime: 600, // 10 mins
-    onboardingCompleted: false
+    onboardingCompleted: false,
+    notificationsEnabled: false,
+    notificationFrequency: 1,
+    notificationTime: '09:00'
   });
 
   await db.goals.bulkAdd([
