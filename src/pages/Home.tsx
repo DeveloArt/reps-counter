@@ -1,18 +1,21 @@
 import { Zap, Dumbbell, Activity, Timer, MoreHorizontal, TrendingUp, Plus, Trash2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useState, useEffect } from 'react';
-import { AddExerciseModal } from '@/components/features/AddExerciseModal';
-import { LogEntryModal } from '@/components/features/LogEntryModal';
 import { useTranslation } from 'react-i18next';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { db } from '@/db/db';
+import { db, type Exercise } from '@/db/db';
 import { startOfDay, endOfDay, subDays, isSameDay, format, eachDayOfInterval } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { useOutletContext } from 'react-router-dom';
+
+interface LayoutContext {
+  openAddExercise: () => void;
+  openLogEntry: (exercise: Exercise) => void;
+}
 
 export default function HomePage() {
   const { t } = useTranslation();
-  const [isAddExerciseOpen, setIsAddExerciseOpen] = useState(false);
-  const [selectedExercise, setSelectedExercise] = useState<any>(null);
+  const { openAddExercise, openLogEntry } = useOutletContext<LayoutContext>();
   const [weeklyMetric, setWeeklyMetric] = useState<'reps' | 'time'>('reps');
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -300,7 +303,7 @@ export default function HomePage() {
                 <motion.button 
                   key={exercise.id}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => setSelectedExercise(exercise)}
+                  onClick={() => openLogEntry(exercise)}
                   className="group relative flex flex-col gap-3 p-4 bg-card rounded-xl border border-border text-left transition-all shadow-sm hover:shadow-md"
                 >
                   <div className="flex justify-between items-start w-full">
@@ -310,7 +313,7 @@ export default function HomePage() {
                       <div className="flex flex-col items-end gap-1">
                           <div 
                             onClick={(e) => handleDeleteExercise(e, exercise.id)}
-                            className="p-1.5 rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors opacity-0 group-hover:opacity-100"
+                            className="p-1.5 rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
                           >
                               <Trash2 className="size-4" />
                           </div>
@@ -323,7 +326,7 @@ export default function HomePage() {
                   </div>
                   <div>
                     <p className="text-foreground text-base font-bold">{exercise.name}</p>
-                    <p className="text-muted-foreground text-xs font-medium uppercase">{exercise.unit}</p>
+                    <p className="text-muted-foreground text-xs font-medium uppercase">{exercise.unit === 'reps' ? t('home.reps') : t('home.mins')}</p>
                   </div>
                   <div className="flex items-center justify-center w-full py-2 bg-muted rounded-lg group-active:bg-primary group-active:text-white transition-colors">
                     <Plus className="size-5" />
@@ -335,7 +338,7 @@ export default function HomePage() {
             {/* New Activity */}
             <motion.button 
               whileTap={{ scale: 0.98 }}
-              onClick={() => setIsAddExerciseOpen(true)}
+              onClick={openAddExercise}
               className="group flex flex-col items-center justify-center gap-2 p-4 bg-muted/50 rounded-xl border-2 border-dashed border-border text-center transition-all hover:bg-muted min-h-[140px]"
             >
               <div className="size-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
@@ -399,17 +402,6 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-
-      <AddExerciseModal 
-        isOpen={isAddExerciseOpen} 
-        onClose={() => setIsAddExerciseOpen(false)} 
-      />
-      
-      <LogEntryModal 
-        isOpen={!!selectedExercise} 
-        onClose={() => setSelectedExercise(null)} 
-        exercise={selectedExercise} 
-      />
 
       {/* Delete Confirmation Modal */}
       {exerciseToDelete && (

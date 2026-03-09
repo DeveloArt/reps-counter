@@ -16,7 +16,8 @@
     "stats": "Statystyki",
     "add": "Dodaj",
     "goals": "Cele",
-    "settings": "Ustawienia"
+    "settings": "Ustawienia",
+    "logWorkout": "Zaloguj Trening"
   },
   "home": {
     "hello": "Cześć!",
@@ -30,7 +31,9 @@
     "addExercise": "Dodaj Ćwiczenie",
     "logWorkout": "Zaloguj Trening",
     "reps": "Powt.",
-    "mins": "Min"
+    "mins": "Min",
+    "seconds": "Sekundy",
+    "confirmDeleteExercise": "Czy na pewno chcesz usunąć to ćwiczenie?"
   },
   "stats": {
     "title": "Statystyki",
@@ -56,21 +59,27 @@
     "title": "Cele",
     "overallProgress": "Całkowity Postęp",
     "activeGoals": "Aktywne Cele",
+    "addGoal": "Dodaj Cel",
     "goalHistory": "Historia Celów",
+    "history": "Historia",
     "completed": "Ukończone",
     "inProgress": "W Trakcie",
     "goal": "Cel",
     "keepGoing": "Tak trzymaj!",
     "noActiveGoals": "Brak aktywnych celów.",
     "createOne": "Stwórz nowy!",
+    "createFirst": "Stwórz swój pierwszy cel!",
     "confirmDelete": "Czy na pewno chcesz usunąć ten cel?",
     "noGoals": "Brak aktywnych celów.",
     "when": "Gdy",
     "dailyGoal": "Cel Codzienny",
     "weeklyGoal": "Cel Tygodniowy",
+    "daily": "Dzienny",
+    "weekly": "Tygodniowy",
     "enterTitle": "Nawyk, który chcesz dodać",
     "triggerLabel": "Sygnał (Gdy...)",
-    "triggerPlaceholder": "np. Włączam mikrofalę"
+    "triggerPlaceholder": "np. Włączam mikrofalę",
+    "trigger": "Sygnał"
   },
   "settings": {
     "title": "Ustawienia",
@@ -98,15 +107,21 @@
   "modals": {
     "addExercise": {
       "title": "Nowe Ćwiczenie",
+      "nameLabel": "Nazwa Ćwiczenia",
       "namePlaceholder": "Nazwa Ćwiczenia",
+      "colorLabel": "Kolor",
       "color": "Kolor",
+      "iconLabel": "Ikona",
       "icon": "Ikona",
+      "unitLabel": "Jednostka",
       "unit": "Jednostka",
       "reps": "Powtórzenia",
       "time": "Czas",
       "create": "Utwórz Ćwiczenie"
     },
     "logEntry": {
+      "title": "Zaloguj wpis",
+      "addNewEntry": "Dodaj nowy wpis",
       "reps": "Powtórzenia",
       "time": "Czas",
       "manualEntry": "Wpis ręczny (sekundy)",

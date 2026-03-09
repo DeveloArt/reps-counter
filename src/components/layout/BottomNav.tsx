@@ -4,14 +4,18 @@ import { cn } from '@/lib/utils';
 import { motion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 
-export function BottomNav() {
+interface BottomNavProps {
+  onAddClick: () => void;
+}
+
+export function BottomNav({ onAddClick }: BottomNavProps) {
   const location = useLocation();
   const { t } = useTranslation();
 
   const navItems = [
     { icon: Home, label: t('nav.home'), path: '/' },
     { icon: BarChart2, label: t('nav.stats'), path: '/stats' },
-    { icon: Plus, label: t('nav.add'), path: '/add', isFab: true },
+    { icon: Plus, label: t('nav.add'), path: '#', isFab: true, onClick: onAddClick },
     { icon: Target, label: t('nav.goals'), path: '/goals' },
     { icon: Settings, label: t('nav.settings'), path: '/settings' },
   ];
@@ -23,15 +27,14 @@ export function BottomNav() {
         
         if (item.isFab) {
           return (
-            <div key={item.path} className="relative -mt-10">
-              <Link to={item.path}>
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
-                  className="bg-primary size-14 rounded-full flex items-center justify-center text-white shadow-lg shadow-primary/30 border-4 border-background active:scale-90 transition-transform"
-                >
-                  <item.icon className="size-8" strokeWidth={2} />
-                </motion.button>
-              </Link>
+            <div key={item.label} className="relative -mt-10">
+              <motion.button
+                whileTap={{ scale: 0.9 }}
+                onClick={item.onClick}
+                className="bg-primary size-14 rounded-full flex items-center justify-center text-white shadow-lg shadow-primary/30 border-4 border-background active:scale-90 transition-transform"
+              >
+                <item.icon className="size-8" strokeWidth={2} />
+              </motion.button>
             </div>
           );
         }

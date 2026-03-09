@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { Play, Square, Save, Minus, Plus, Edit2, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -16,6 +16,9 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
   const [value, setValue] = useState<number>(0); // Default value 0
   const [isRunning, setIsRunning] = useState(false);
   
+  const startTimeRef = useRef<number>(0);
+  const initialValueRef = useRef<number>(0);
+  
   // Reset state when modal opens/closes or exercise changes
   useEffect(() => {
     if (isOpen) {
@@ -24,16 +27,55 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
     }
   }, [isOpen, exercise]);
 
-  // Timer logic
+  // Wake Lock logic to prevent screen from sleeping
+  useEffect(() => {
+    let wakeLock: any = null;
+
+    const requestWakeLock = async () => {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLock = await (navigator as any).wakeLock.request('screen');
+        }
+      } catch (err: any) {
+        console.error(`Wake Lock error: ${err.name}, ${err.message}`);
+      }
+    };
+
+    if (isOpen) {
+      requestWakeLock();
+    }
+
+    const handleVisibilityChange = () => {
+      if (wakeLock !== null && document.visibilityState === 'visible' && isOpen) {
+        requestWakeLock();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (wakeLock !== null) {
+        wakeLock.release().catch(console.error);
+        wakeLock = null;
+      }
+    };
+  }, [isOpen]);
+
+  // Robust Timer logic
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isRunning) {
+      startTimeRef.current = Date.now();
+      initialValueRef.current = value;
+      
       interval = setInterval(() => {
-        setValue((prev) => prev + 1);
+        const elapsedSeconds = Math.floor((Date.now() - startTimeRef.current) / 1000);
+        setValue(initialValueRef.current + elapsedSeconds);
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [isRunning]);
+  }, [isRunning]); // Intentionally omitting value to avoid resetting interval
 
   // robust ID generator
   const generateId = () => {

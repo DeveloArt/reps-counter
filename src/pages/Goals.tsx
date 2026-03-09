@@ -195,13 +195,13 @@ export default function GoalsPage() {
                     <div className="flex items-center gap-2">
                         <div className="text-right">
                             <span className={cn("text-lg font-bold", isMet ? "text-primary" : "text-foreground")}>
-                                {Math.round(goal.currentVal)}
+                                {goal.metric === 'time' ? Math.round(goal.currentVal / 60) : Math.round(goal.currentVal)}
                             </span>
-                            <span className="text-xs text-muted-foreground"> / {goal.targetValue}</span>
+                            <span className="text-xs text-muted-foreground"> / {goal.metric === 'time' ? Math.round(goal.targetValue / 60) : goal.targetValue}</span>
                         </div>
                         <button 
                             onClick={() => handleDeleteGoal(goal.id)}
-                            className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors opacity-0 group-hover:opacity-100"
+                            className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors"
                         >
                             <Trash2 className="size-4" />
                         </button>
