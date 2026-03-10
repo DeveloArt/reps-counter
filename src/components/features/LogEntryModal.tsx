@@ -13,7 +13,7 @@ interface LogEntryModalProps {
 
 export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps) {
   const { t } = useTranslation();
-  const [value, setValue] = useState<number>(0); // Default value 0
+  const [value, setValue] = useState<number | ''>(0); // Default value 0
   const [isRunning, setIsRunning] = useState(false);
   
   const startTimeRef = useRef<number>(0);
@@ -67,7 +67,7 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
     let interval: NodeJS.Timeout;
     if (isRunning) {
       startTimeRef.current = Date.now();
-      initialValueRef.current = value;
+      initialValueRef.current = Number(value) || 0;
       
       interval = setInterval(() => {
         const elapsedSeconds = Math.floor((Date.now() - startTimeRef.current) / 1000);
@@ -93,7 +93,7 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
         id: generateId(),
         exerciseId: exercise.id,
         date: new Date(),
-        value: value,
+        value: Number(value) || 0,
         timestamp: Date.now()
       });
       
@@ -104,8 +104,8 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
     }
   };
 
-  const increment = () => setValue(prev => prev + 1);
-  const decrement = () => setValue(prev => Math.max(0, prev - 1));
+  const increment = () => setValue(prev => (Number(prev) || 0) + 1);
+  const decrement = () => setValue(prev => Math.max(0, (Number(prev) || 0) - 1));
 
   const toggleTimer = () => setIsRunning(!isRunning);
 
@@ -115,7 +115,7 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
     return { minutes, seconds };
   };
 
-  const { minutes, seconds } = formatTime(value);
+  const { minutes, seconds } = formatTime(Number(value) || 0);
 
   return (
     <Modal 
@@ -153,7 +153,7 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
                     <input
                     type="number"
                     value={value}
-                    onChange={(e) => setValue(Number(e.target.value))}
+                    onChange={(e) => setValue(e.target.value === '' ? '' : Number(e.target.value))}
                     className="text-7xl font-bold text-primary tabular-nums bg-transparent text-center w-[180px] focus:outline-none border-none p-0 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                     />
                     <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground mt-2 block">{t('modals.logEntry.reps')}</span>
@@ -213,7 +213,7 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
               <input 
                 type="number"
                 value={value}
-                onChange={(e) => setValue(Number(e.target.value))}
+                onChange={(e) => setValue(e.target.value === '' ? '' : Number(e.target.value))}
                 className="w-full rounded-xl border-border bg-card focus:border-primary focus:ring-primary h-14 text-lg font-medium px-4 placeholder:text-muted-foreground"
                 placeholder="np. 60"
               />

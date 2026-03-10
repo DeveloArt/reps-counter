@@ -18,7 +18,7 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
   const [title, setTitle] = useState('');
   const [trigger, setTrigger] = useState('');
   const [type, setType] = useState<'daily' | 'weekly'>('daily');
-  const [targetValue, setTargetValue] = useState<number>(10);
+  const [targetValue, setTargetValue] = useState<number | ''>(10);
   const [metric, setMetric] = useState<'reps' | 'time'>('reps');
   const [exerciseId, setExerciseId] = useState<string>(''); // Empty for general, or specific ID
 
@@ -57,12 +57,14 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
         }
       }
 
+      const finalTargetValue = Number(targetValue) || 0;
+
       await db.goals.add({
         id: generateId(),
         title: generatedTitle,
         trigger: trigger || undefined,
         type,
-        targetValue: metric === 'time' ? targetValue * 60 : targetValue,
+        targetValue: metric === 'time' ? finalTargetValue * 60 : finalTargetValue,
         metric,
         exerciseId: exerciseId || undefined,
         startDate: new Date(),
@@ -174,7 +176,7 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
               type="number"
               min="1"
               value={targetValue}
-              onChange={(e) => setTargetValue(parseInt(e.target.value) || 0)}
+              onChange={(e) => setTargetValue(e.target.value === '' ? '' : parseInt(e.target.value) || 0)}
               className="w-full p-3 rounded-xl bg-muted border-transparent focus:border-primary focus:ring-0 text-foreground font-bold text-center"
             />
           </div>
