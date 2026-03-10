@@ -1,19 +1,20 @@
 import { useState, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
-import { db, type Exercise } from '@/db/db';
+import { db, type Exercise, type Goal } from '@/db/db';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { Target, Calendar, Dumbbell, Clock, Check } from 'lucide-react';
+import { Target, Calendar, Dumbbell, Clock, Check, Trash2, Save } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 
 interface AddGoalModalProps {
   isOpen: boolean;
   onClose: () => void;
+  goalToEdit?: Goal;
 }
 
-export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
+export function AddGoalModal({ isOpen, onClose, goalToEdit }: AddGoalModalProps) {
   const { t } = useTranslation();
-  const exercises = useLiveQuery(() => db.exercises.toArray());
+  const exercises = useLiveQuery(() => db.exercises.filter(e => !e.isArchived).toArray());
   
   const [title, setTitle] = useState('');
   const [trigger, setTrigger] = useState('');
@@ -21,18 +22,29 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
   const [targetValue, setTargetValue] = useState<number | ''>(10);
   const [metric, setMetric] = useState<'reps' | 'time'>('reps');
   const [exerciseId, setExerciseId] = useState<string>(''); // Empty for general, or specific ID
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Reset form on open
   useEffect(() => {
     if (isOpen) {
-      setTitle('');
-      setTrigger('');
-      setType('daily');
-      setTargetValue(10);
-      setMetric('reps');
-      setExerciseId('');
+      setShowDeleteConfirm(false);
+      if (goalToEdit) {
+        setTitle(goalToEdit.title);
+        setTrigger(goalToEdit.trigger || '');
+        setType(goalToEdit.type as 'daily' | 'weekly');
+        setTargetValue(goalToEdit.metric === 'time' ? goalToEdit.targetValue / 60 : goalToEdit.targetValue);
+        setMetric(goalToEdit.metric);
+        setExerciseId(goalToEdit.exerciseId || '');
+      } else {
+        setTitle('');
+        setTrigger('');
+        setType('daily');
+        setTargetValue(10);
+        setMetric('reps');
+        setExerciseId('');
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, goalToEdit]);
 
   // robust ID generator
   const generateId = () => {
@@ -59,26 +71,76 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
 
       const finalTargetValue = Number(targetValue) || 0;
 
-      await db.goals.add({
-        id: generateId(),
-        title: generatedTitle,
-        trigger: trigger || undefined,
-        type,
-        targetValue: metric === 'time' ? finalTargetValue * 60 : finalTargetValue,
-        metric,
-        exerciseId: exerciseId || undefined,
-        startDate: new Date(),
-        isActive: true
-      });
+      if (goalToEdit) {
+        await db.goals.update(goalToEdit.id, {
+          title: generatedTitle,
+          trigger: trigger || undefined,
+          type,
+          targetValue: metric === 'time' ? finalTargetValue * 60 : finalTargetValue,
+          metric,
+          exerciseId: exerciseId || undefined,
+          isActive: true // Re-activate if it was paused
+        });
+      } else {
+        await db.goals.add({
+          id: generateId(),
+          title: generatedTitle,
+          trigger: trigger || undefined,
+          type,
+          targetValue: metric === 'time' ? finalTargetValue * 60 : finalTargetValue,
+          metric,
+          exerciseId: exerciseId || undefined,
+          startDate: new Date(),
+          isActive: true
+        });
+      }
       onClose();
     } catch (error) {
-      console.error("Failed to add goal:", error);
+      console.error("Failed to save goal:", error);
       alert(t('common.error') + ": " + (error instanceof Error ? error.message : String(error)));
     }
   };
 
+  const handleDelete = async () => {
+    if (!goalToEdit) return;
+    
+    try {
+      await db.goals.delete(goalToEdit.id);
+      onClose();
+    } catch (error) {
+      console.error("Failed to delete goal:", error);
+      alert(t('common.error') + ": " + (error instanceof Error ? error.message : String(error)));
+    }
+  };
+
+  if (showDeleteConfirm) {
+    return (
+      <Modal isOpen={isOpen} onClose={() => setShowDeleteConfirm(false)} title={t('common.delete') + '?'}>
+        <div className="space-y-6">
+          <p className="text-muted-foreground text-sm">
+            {t('goals.confirmDeleteGoal') || 'Czy na pewno chcesz usunąć ten cel?'}
+          </p>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowDeleteConfirm(false)}
+              className="flex-1 rounded-xl bg-muted py-3 text-sm font-bold text-foreground hover:bg-muted/80 transition-colors"
+            >
+              {t('common.cancel')}
+            </button>
+            <button
+              onClick={handleDelete}
+              className="flex-1 rounded-xl bg-destructive py-3 text-sm font-bold text-destructive-foreground hover:bg-destructive/90 transition-colors"
+            >
+              {t('common.delete')}
+            </button>
+          </div>
+        </div>
+      </Modal>
+    );
+  }
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={t('modals.addGoal.title')}>
+    <Modal isOpen={isOpen} onClose={onClose} title={goalToEdit ? (t('modals.addGoal.editTitle') || 'Edytuj cel') : t('modals.addGoal.title')}>
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         
         {/* Goal Type */}
@@ -194,13 +256,25 @@ export function AddGoalModal({ isOpen, onClose }: AddGoalModalProps) {
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-primary text-primary-foreground font-bold py-4 rounded-xl mt-2 flex items-center justify-center gap-2 active:scale-95 transition-transform"
-        >
-          <Check className="size-5" />
-          {t('modals.addGoal.create')}
-        </button>
+        <div className="flex gap-3 mt-2">
+          {goalToEdit && (
+            <button
+              type="button"
+              onClick={() => setShowDeleteConfirm(true)}
+              className="flex-1 bg-destructive/10 text-destructive font-bold py-4 rounded-xl hover:bg-destructive/20 active:scale-95 transition-all flex items-center justify-center gap-2"
+            >
+              <Trash2 className="size-5" />
+              {t('common.delete') || 'Usuń'}
+            </button>
+          )}
+          <button
+            type="submit"
+            className="flex-[2] bg-primary text-primary-foreground font-bold py-4 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-transform"
+          >
+            {goalToEdit ? <Save className="size-5" /> : <Check className="size-5" />}
+            {goalToEdit ? (t('common.save') || 'Zapisz') : t('modals.addGoal.create')}
+          </button>
+        </div>
       </form>
     </Modal>
   );

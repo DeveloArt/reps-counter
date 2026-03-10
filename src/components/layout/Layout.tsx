@@ -8,10 +8,14 @@ import { type Exercise } from '@/db/db';
 
 export function Layout() {
   const [isAddExerciseOpen, setIsAddExerciseOpen] = useState(false);
+  const [exerciseToEdit, setExerciseToEdit] = useState<Exercise | undefined>();
   const [isQuickLogOpen, setIsQuickLogOpen] = useState(false);
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
 
-  const openAddExercise = () => setIsAddExerciseOpen(true);
+  const openAddExercise = (exercise?: Exercise) => {
+    setExerciseToEdit(exercise);
+    setIsAddExerciseOpen(true);
+  };
   const openLogEntry = (exercise: Exercise) => setSelectedExercise(exercise);
 
   return (
@@ -23,7 +27,11 @@ export function Layout() {
       
       <AddExerciseModal 
         isOpen={isAddExerciseOpen} 
-        onClose={() => setIsAddExerciseOpen(false)} 
+        onClose={() => {
+          setIsAddExerciseOpen(false);
+          setExerciseToEdit(undefined);
+        }} 
+        exerciseToEdit={exerciseToEdit}
       />
 
       <QuickLogModal
@@ -34,6 +42,7 @@ export function Layout() {
           setIsQuickLogOpen(false);
         }}
         onAddNew={() => {
+          setExerciseToEdit(undefined);
           setIsAddExerciseOpen(true);
           setIsQuickLogOpen(false);
         }}

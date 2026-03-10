@@ -14,7 +14,7 @@ interface QuickLogModalProps {
 
 export function QuickLogModal({ isOpen, onClose, onSelectExercise, onAddNew }: QuickLogModalProps) {
   const { t } = useTranslation();
-  const exercises = useLiveQuery(() => db.exercises.toArray());
+  const exercises = useLiveQuery(() => db.exercises.filter(e => !e.isArchived).toArray());
 
   const getIcon = (iconName: string) => {
     switch (iconName) {

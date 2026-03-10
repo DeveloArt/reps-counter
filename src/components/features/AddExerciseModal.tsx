@@ -1,13 +1,14 @@
-import { useState, type FormEvent } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import { Modal } from '@/components/ui/Modal';
-import { Dumbbell, Activity, Timer, Plus, Check } from 'lucide-react';
+import { Dumbbell, Activity, Timer, Plus, Check, Trash2, Save } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { db } from '@/db/db';
+import { db, type Exercise } from '@/db/db';
 import { useTranslation } from 'react-i18next';
 
 interface AddExerciseModalProps {
   isOpen: boolean;
   onClose: () => void;
+  exerciseToEdit?: Exercise;
 }
 
 const ICONS = [
@@ -26,12 +27,30 @@ const COLORS = [
   '#EC4899', // Pink
 ];
 
-export function AddExerciseModal({ isOpen, onClose }: AddExerciseModalProps) {
+export function AddExerciseModal({ isOpen, onClose, exerciseToEdit }: AddExerciseModalProps) {
   const { t } = useTranslation();
   const [name, setName] = useState('');
   const [unit, setUnit] = useState<'reps' | 'seconds'>('reps');
   const [selectedColor, setSelectedColor] = useState(COLORS[0]);
   const [selectedIcon, setSelectedIcon] = useState('Dumbbell');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setShowDeleteConfirm(false);
+      if (exerciseToEdit) {
+        setName(exerciseToEdit.name);
+        setUnit(exerciseToEdit.unit);
+        setSelectedColor(exerciseToEdit.color);
+        setSelectedIcon(exerciseToEdit.icon);
+      } else {
+        setName('');
+        setUnit('reps');
+        setSelectedColor(COLORS[0]);
+        setSelectedIcon('Dumbbell');
+      }
+    }
+  }, [isOpen, exerciseToEdit]);
 
   // robust ID generator
   const generateId = () => {
@@ -44,26 +63,76 @@ export function AddExerciseModal({ isOpen, onClose }: AddExerciseModalProps) {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await db.exercises.add({
-        id: generateId(),
-        name,
-        unit,
-        color: selectedColor,
-        icon: selectedIcon
-      });
+      if (exerciseToEdit) {
+        await db.exercises.update(exerciseToEdit.id, {
+          name,
+          unit,
+          color: selectedColor,
+          icon: selectedIcon
+        });
+      } else {
+        await db.exercises.add({
+          id: generateId(),
+          name,
+          unit,
+          color: selectedColor,
+          icon: selectedIcon
+        });
+      }
       onClose();
-      setName('');
-      setUnit('reps');
-      setSelectedColor(COLORS[0]);
-      setSelectedIcon('Dumbbell');
     } catch (error) {
-      console.error("Failed to add exercise:", error);
+      console.error("Failed to save exercise:", error);
       alert(t('common.error') + ": " + (error instanceof Error ? error.message : String(error)));
     }
   };
 
+  const handleDelete = async () => {
+    if (!exerciseToEdit) return;
+    
+    try {
+      await db.exercises.update(exerciseToEdit.id, { isArchived: true });
+      
+      // Pause goals that depend on this exercise
+      const goals = await db.goals.where('exerciseId').equals(exerciseToEdit.id).toArray();
+      for (const goal of goals) {
+        await db.goals.update(goal.id, { isActive: false });
+      }
+      
+      onClose();
+    } catch (error) {
+      console.error("Failed to delete exercise:", error);
+      alert(t('common.error') + ": " + (error instanceof Error ? error.message : String(error)));
+    }
+  };
+
+  if (showDeleteConfirm) {
+    return (
+      <Modal isOpen={isOpen} onClose={() => setShowDeleteConfirm(false)} title={t('common.delete') + '?'}>
+        <div className="space-y-6">
+          <p className="text-muted-foreground text-sm">
+            {t('home.confirmDeleteExercise') || 'Czy na pewno chcesz usunąć to ćwiczenie?'}
+          </p>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setShowDeleteConfirm(false)}
+              className="flex-1 rounded-xl bg-muted py-3 text-sm font-bold text-foreground hover:bg-muted/80 transition-colors"
+            >
+              {t('common.cancel')}
+            </button>
+            <button
+              onClick={handleDelete}
+              className="flex-1 rounded-xl bg-destructive py-3 text-sm font-bold text-destructive-foreground hover:bg-destructive/90 transition-colors"
+            >
+              {t('common.delete')}
+            </button>
+          </div>
+        </div>
+      </Modal>
+    );
+  }
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title={t('modals.addExercise.title')}>
+    <Modal isOpen={isOpen} onClose={onClose} title={exerciseToEdit ? (t('modals.addExercise.editTitle') || 'Edytuj ćwiczenie') : t('modals.addExercise.title')}>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">{t('modals.addExercise.nameLabel')}</label>
@@ -142,13 +211,25 @@ export function AddExerciseModal({ isOpen, onClose }: AddExerciseModalProps) {
           </div>
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 active:scale-95 transition-all flex items-center justify-center gap-2"
-        >
-          <Plus className="size-5" />
-          {t('modals.addExercise.create')}
-        </button>
+        <div className="flex gap-3">
+          {exerciseToEdit && (
+            <button
+              type="button"
+              onClick={() => setShowDeleteConfirm(true)}
+              className="flex-1 bg-destructive/10 text-destructive font-bold py-4 rounded-xl hover:bg-destructive/20 active:scale-95 transition-all flex items-center justify-center gap-2"
+            >
+              <Trash2 className="size-5" />
+              {t('common.delete') || 'Usuń'}
+            </button>
+          )}
+          <button
+            type="submit"
+            className="flex-[2] bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 active:scale-95 transition-all flex items-center justify-center gap-2"
+          >
+            {exerciseToEdit ? <Save className="size-5" /> : <Plus className="size-5" />}
+            {exerciseToEdit ? (t('common.save') || 'Zapisz') : t('modals.addExercise.create')}
+          </button>
+        </div>
       </form>
     </Modal>
   );

@@ -1,8 +1,8 @@
-import { ArrowLeft, Settings, PlusCircle, Dumbbell, Timer, Activity, MoreHorizontal, ChevronLeft, ChevronRight, Check, X, Trash2 } from 'lucide-react';
+import { ArrowLeft, Settings, PlusCircle, Dumbbell, Timer, Activity, MoreHorizontal, ChevronLeft, ChevronRight, Check, X, Edit2, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { db } from '@/db/db';
+import { db, type Goal } from '@/db/db';
 import { startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval, format, isSameDay, isToday, addMonths, subMonths } from 'date-fns';
 import { pl, enUS } from 'date-fns/locale';
 import { useState } from 'react';
@@ -13,12 +13,13 @@ export default function GoalsPage() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [isAddGoalOpen, setIsAddGoalOpen] = useState(false);
+  const [goalToEdit, setGoalToEdit] = useState<Goal | undefined>();
   const [currentMonth, setCurrentMonth] = useState(new Date());
   
   const locale = i18n.language === 'pl' ? pl : enUS;
 
-  // Fetch active goals
-  const goals = useLiveQuery(() => db.goals.filter(g => g.isActive).toArray());
+  // Fetch all goals
+  const goals = useLiveQuery(() => db.goals.toArray());
 
   // Fetch exercises for mapping
   const exercises = useLiveQuery(() => db.exercises.toArray());
@@ -127,22 +128,10 @@ export default function GoalsPage() {
     }
   };
 
-  const [goalToDelete, setGoalToDelete] = useState<string | null>(null);
-  
-  // ... (existing code)
-
-  const handleDeleteGoal = (id: string) => {
-      setGoalToDelete(id);
+  const handleEditGoal = (goal: Goal) => {
+      setGoalToEdit(goal);
+      setIsAddGoalOpen(true);
   };
-
-  const confirmDelete = async () => {
-      if (goalToDelete) {
-          await db.goals.delete(goalToDelete);
-          setGoalToDelete(null);
-      }
-  };
-
-  // ... (existing code)
 
   return (
     <div className="flex flex-col min-h-full pb-20 bg-background">
@@ -179,14 +168,22 @@ export default function GoalsPage() {
               const isMet = progress >= 100;
 
               return (
-                <div key={goal.id} className="group relative bg-card rounded-xl border border-border p-4 shadow-sm">
+                <div key={goal.id} className={cn("group relative bg-card rounded-xl border border-border p-4 shadow-sm", !goal.isActive && "opacity-60")}>
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex items-center gap-3">
                       <div className={cn("size-10 rounded-lg flex items-center justify-center", exercise ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground")} style={exercise ? { backgroundColor: `${exercise.color}20`, color: exercise.color } : {}}>
                         <Icon className="size-5" />
                       </div>
                       <div>
-                        <h3 className="font-bold text-foreground">{goal.title}</h3>
+                        <div className="flex items-center gap-2">
+                          <h3 className="font-bold text-foreground">{goal.title}</h3>
+                          {!goal.isActive && (
+                            <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-destructive/10 text-destructive px-2 py-0.5 rounded-full">
+                              <AlertCircle className="size-3" />
+                              Wstrzymany
+                            </span>
+                          )}
+                        </div>
                         <p className="text-xs text-muted-foreground capitalize">
                           {goal.type === 'daily' ? t('goals.daily') : t('goals.weekly')} • {goal.metric === 'reps' ? t('home.reps') : t('home.mins')}
                         </p>
@@ -205,10 +202,10 @@ export default function GoalsPage() {
                             <span className="text-xs text-muted-foreground"> / {goal.metric === 'time' ? Math.round(goal.targetValue / 60) : goal.targetValue}</span>
                         </div>
                         <button 
-                            onClick={() => handleDeleteGoal(goal.id)}
-                            className="p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors"
+                            onClick={() => handleEditGoal(goal)}
+                            className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-full transition-colors"
                         >
-                            <Trash2 className="size-4" />
+                            <Edit2 className="size-4" />
                         </button>
                     </div>
                   </div>
@@ -284,33 +281,14 @@ export default function GoalsPage() {
         </div>
       </div>
 
-      <AddGoalModal isOpen={isAddGoalOpen} onClose={() => setIsAddGoalOpen(false)} />
-
-      {/* Delete Confirmation Modal */}
-      {goalToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="w-full max-w-sm rounded-2xl bg-card p-6 shadow-xl border border-border">
-            <h3 className="text-lg font-bold text-foreground mb-2">{t('common.delete')}?</h3>
-            <p className="text-muted-foreground text-sm mb-6">
-              {t('goals.confirmDelete')}
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setGoalToDelete(null)}
-                className="flex-1 rounded-xl bg-muted py-3 text-sm font-bold text-foreground hover:bg-muted/80 transition-colors"
-              >
-                {t('common.cancel')}
-              </button>
-              <button
-                onClick={confirmDelete}
-                className="flex-1 rounded-xl bg-destructive py-3 text-sm font-bold text-destructive-foreground hover:bg-destructive/90 transition-colors"
-              >
-                {t('common.delete')}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <AddGoalModal 
+        isOpen={isAddGoalOpen} 
+        onClose={() => {
+          setIsAddGoalOpen(false);
+          setGoalToEdit(undefined);
+        }} 
+        goalToEdit={goalToEdit}
+      />
     </div>
   );
 }

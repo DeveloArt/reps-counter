@@ -1,4 +1,4 @@
-import { Zap, Dumbbell, Activity, Timer, MoreHorizontal, TrendingUp, Plus, Trash2 } from 'lucide-react';
+import { Zap, Dumbbell, Activity, Timer, MoreHorizontal, TrendingUp, Plus, Edit2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 import { useOutletContext } from 'react-router-dom';
 
 interface LayoutContext {
-  openAddExercise: () => void;
+  openAddExercise: (exercise?: Exercise) => void;
   openLogEntry: (exercise: Exercise) => void;
 }
 
@@ -43,7 +43,7 @@ export default function HomePage() {
   }, [currentDate]);
 
   // Fetch exercises from DB
-  const exercises = useLiveQuery(() => db.exercises.toArray());
+  const exercises = useLiveQuery(() => db.exercises.filter(e => !e.isArchived).toArray());
 
   // Fetch today's logs to calculate stats
   const todayStats = useLiveQuery(async () => {
@@ -207,20 +207,11 @@ export default function HomePage() {
     }
   };
 
-  const [exerciseToDelete, setExerciseToDelete] = useState<string | null>(null);
-
   // ... (existing code)
 
-  const handleDeleteExercise = (e: React.MouseEvent, id: string) => {
+  const handleEditExercise = (e: React.MouseEvent, exercise: Exercise) => {
       e.stopPropagation(); // Prevent opening the log modal
-      setExerciseToDelete(id);
-  };
-
-  const confirmDelete = async () => {
-      if (exerciseToDelete) {
-          await db.exercises.delete(exerciseToDelete);
-          setExerciseToDelete(null);
-      }
+      openAddExercise(exercise);
   };
 
   return (
@@ -312,10 +303,10 @@ export default function HomePage() {
                       </div>
                       <div className="flex flex-col items-end gap-1">
                           <div 
-                            onClick={(e) => handleDeleteExercise(e, exercise.id)}
-                            className="p-1.5 rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+                            onClick={(e) => handleEditExercise(e, exercise)}
+                            className="p-1.5 rounded-full text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
                           >
-                              <Trash2 className="size-4" />
+                              <Edit2 className="size-4" />
                           </div>
                           {dailyTotal > 0 && (
                             <span className="text-xs font-bold text-foreground bg-muted px-2 py-0.5 rounded-full">
@@ -338,7 +329,7 @@ export default function HomePage() {
             {/* New Activity */}
             <motion.button 
               whileTap={{ scale: 0.98 }}
-              onClick={openAddExercise}
+              onClick={() => openAddExercise()}
               className="group flex flex-col items-center justify-center gap-2 p-4 bg-muted/50 rounded-xl border-2 border-dashed border-border text-center transition-all hover:bg-muted min-h-[140px]"
             >
               <div className="size-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
@@ -402,32 +393,6 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-
-      {/* Delete Confirmation Modal */}
-      {exerciseToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="w-full max-w-sm rounded-2xl bg-card p-6 shadow-xl border border-border">
-            <h3 className="text-lg font-bold text-foreground mb-2">{t('common.delete')}?</h3>
-            <p className="text-muted-foreground text-sm mb-6">
-              {t('home.confirmDeleteExercise') || 'Are you sure you want to delete this exercise?'}
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setExerciseToDelete(null)}
-                className="flex-1 rounded-xl bg-muted py-3 text-sm font-bold text-foreground hover:bg-muted/80 transition-colors"
-              >
-                {t('common.cancel')}
-              </button>
-              <button
-                onClick={confirmDelete}
-                className="flex-1 rounded-xl bg-destructive py-3 text-sm font-bold text-destructive-foreground hover:bg-destructive/90 transition-colors"
-              >
-                {t('common.delete')}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
