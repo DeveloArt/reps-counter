@@ -1,0 +1,15 @@
+{
+  "name": "@fitcounter/pwa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Główna aplikacja PWA (React + Vite)",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fitcounter/core": "*",
+    "@fitcounter/ui": "*"
+  }
+}

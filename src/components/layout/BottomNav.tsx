@@ -13,11 +13,11 @@ export function BottomNav({ onAddClick }: BottomNavProps) {
   const { t } = useTranslation();
 
   const navItems = [
-    { icon: Home, label: t('nav.home'), path: '/' },
-    { icon: BarChart2, label: t('nav.stats'), path: '/stats' },
+    { icon: Home, label: t('nav.home'), path: '/app' },
+    { icon: BarChart2, label: t('nav.stats'), path: '/app/stats' },
     { icon: Plus, label: t('nav.add'), path: '#', isFab: true, onClick: onAddClick },
-    { icon: Target, label: t('nav.goals'), path: '/goals' },
-    { icon: Settings, label: t('nav.settings'), path: '/settings' },
+    { icon: Target, label: t('nav.goals'), path: '/app/goals' },
+    { icon: Settings, label: t('nav.settings'), path: '/app/settings' },
   ];
 
   return (

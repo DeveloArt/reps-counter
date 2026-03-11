@@ -1,0 +1,14 @@
+{
+  "name": "@fitcounter/landing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Strona Landing Page (np. Next.js lub Astro)",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@fitcounter/ui": "*"
+  }
+}

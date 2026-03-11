@@ -254,8 +254,8 @@ export default function SettingsPage() {
             <h4 className="text-lg font-bold">FitCounter Pro</h4>
             <p className="text-sm opacity-90 mt-1">{t('settings.version')} 2.4.1 (Build 402)</p>
             <div className="mt-4 flex gap-3">
-              <Link to="/terms" className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-xs font-medium backdrop-blur-sm transition-colors">{t('settings.terms')}</Link>
-              <Link to="/privacy" className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-xs font-medium backdrop-blur-sm transition-colors">{t('settings.privacy')}</Link>
+              <Link to="/app/terms" className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-xs font-medium backdrop-blur-sm transition-colors">{t('settings.terms')}</Link>
+              <Link to="/app/privacy" className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-xs font-medium backdrop-blur-sm transition-colors">{t('settings.privacy')}</Link>
             </div>
           </div>
           <div className="absolute -right-4 -bottom-4 opacity-20">

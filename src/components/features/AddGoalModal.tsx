@@ -20,7 +20,7 @@ export function AddGoalModal({ isOpen, onClose, goalToEdit }: AddGoalModalProps)
   const [trigger, setTrigger] = useState('');
   const [type, setType] = useState<'daily' | 'weekly'>('daily');
   const [targetValue, setTargetValue] = useState<number | ''>(10);
-  const [metric, setMetric] = useState<'reps' | 'time'>('reps');
+  const [metric, setMetric] = useState<'reps' | 'time' | 'workouts'>('reps');
   const [exerciseId, setExerciseId] = useState<string>(''); // Empty for general, or specific ID
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 

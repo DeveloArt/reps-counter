@@ -1,0 +1,14 @@
+{
+  "name": "@fitcounter/chrome-extension",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Rozszerzenie do przeglądarki Chrome (Plasmo)",
+  "scripts": {
+    "dev": "plasmo dev",
+    "build": "plasmo build"
+  },
+  "dependencies": {
+    "@fitcounter/core": "*",
+    "@fitcounter/ui": "*"
+  }
+}

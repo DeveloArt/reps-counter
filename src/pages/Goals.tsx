@@ -15,6 +15,7 @@ export default function GoalsPage() {
   const [isAddGoalOpen, setIsAddGoalOpen] = useState(false);
   const [goalToEdit, setGoalToEdit] = useState<Goal | undefined>();
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedGoalFilter, setSelectedGoalFilter] = useState<string>('all');
   
   const locale = i18n.language === 'pl' ? pl : enUS;
 
@@ -64,13 +65,19 @@ export default function GoalsPage() {
         
         if (goal.exerciseId) {
             // Specific exercise goal
-            currentVal += log.value;
+            if (goal.metric === 'workouts') {
+                currentVal += 1;
+            } else {
+                currentVal += log.value;
+            }
         } else {
             // Global goal
             if (goal.metric === 'reps' && logExerciseUnit === 'reps') {
                 currentVal += log.value;
             } else if (goal.metric === 'time' && logExerciseUnit === 'seconds') {
                 currentVal += log.value;
+            } else if (goal.metric === 'workouts') {
+                currentVal += 1;
             }
         }
       });
@@ -86,38 +93,74 @@ export default function GoalsPage() {
     const end = endOfMonth(currentMonth);
     const days = eachDayOfInterval({ start, end });
     
-    // Get settings for daily goals
-    const settings = await db.settings.get(1);
-    const goalReps = settings?.dailyGoalReps || 100;
-    const goalTime = settings?.dailyGoalTime || 600;
+    if (!goals || goals.length === 0) {
+      return days.map(day => ({ date: day, status: 'none', metCount: 0, totalCount: 0 }));
+    }
 
-    const logs = await db.logs.where('date').between(start, end).toArray();
+    const queryStart = startOfWeek(start, { weekStartsOn: 1 });
+    const queryEnd = endOfWeek(end, { weekStartsOn: 1 });
     
-    // Map logs to days
+    const logs = await db.logs.where('date').between(queryStart, queryEnd).toArray();
+    
     const dayStats = days.map(day => {
-      const dayLogs = logs.filter(l => isSameDay(l.date, day));
-      let totalReps = 0;
-      let totalTime = 0;
+      let metCount = 0;
+      let totalCount = 0;
       
-      dayLogs.forEach(l => {
-         const ex = exerciseMap.get(l.exerciseId);
-         if (ex?.unit === 'reps') totalReps += l.value;
-         if (ex?.unit === 'seconds') totalTime += l.value;
+      const goalsToEvaluate = selectedGoalFilter === 'all' 
+        ? goals 
+        : goals.filter(g => g.id === selectedGoalFilter);
+      
+      goalsToEvaluate.forEach(goal => {
+        totalCount++;
+        let pStart, pEnd;
+        if (goal.type === 'daily') {
+          pStart = startOfDay(day).getTime();
+          pEnd = endOfDay(day).getTime();
+        } else {
+          pStart = startOfWeek(day, { weekStartsOn: 1 }).getTime();
+          pEnd = endOfWeek(day, { weekStartsOn: 1 }).getTime();
+        }
+        
+        let currentVal = 0;
+        logs.forEach(log => {
+          const logTime = log.date.getTime();
+          if (logTime >= pStart && logTime <= pEnd) {
+             const logExerciseUnit = exerciseMap.get(log.exerciseId)?.unit;
+             if (goal.exerciseId) {
+                 if (goal.metric === 'workouts') {
+                     currentVal += 1;
+                 } else if (log.exerciseId === goal.exerciseId) {
+                     currentVal += log.value;
+                 }
+             } else {
+                 if (goal.metric === 'reps' && logExerciseUnit === 'reps') currentVal += log.value;
+                 else if (goal.metric === 'time' && logExerciseUnit === 'seconds') currentVal += log.value;
+                 else if (goal.metric === 'workouts') currentVal += 1;
+             }
+          }
+        });
+        
+        if (currentVal >= goal.targetValue) {
+          metCount++;
+        }
       });
 
-      const progressReps = Math.min(100, (totalReps / goalReps) * 100);
-      const progressTime = Math.min(100, (totalTime / goalTime) * 100);
-      const score = (progressReps + progressTime) / 2;
+      let status = 'none';
+      if (totalCount > 0) {
+        if (metCount === totalCount) status = 'all';
+        else if (metCount > 0) status = 'some';
+      }
 
       return {
         date: day,
-        score,
-        met: score >= 100
+        status,
+        metCount,
+        totalCount
       };
     });
 
     return dayStats;
-  }, [currentMonth, exercises]); // Re-run when month changes
+  }, [currentMonth, exercises, goals, selectedGoalFilter]); // Re-run when month, goals or filter changes
 
   const getIcon = (iconName: string | undefined) => {
     switch (iconName) {
@@ -252,6 +295,21 @@ export default function GoalsPage() {
           </div>
 
           <div className="bg-card rounded-xl border border-border p-4 shadow-sm">
+            {goals && goals.length > 0 && (
+              <div className="mb-4">
+                <select 
+                  value={selectedGoalFilter} 
+                  onChange={(e) => setSelectedGoalFilter(e.target.value)}
+                  className="w-full bg-muted text-foreground rounded-lg px-3 py-2 text-sm border-none outline-none focus:ring-2 focus:ring-primary/20"
+                >
+                  <option value="all">{t('goals.allGoals', 'Wszystkie cele')}</option>
+                  {goals.map(g => (
+                    <option key={g.id} value={g.id}>{g.title}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
             <div className="grid grid-cols-7 gap-1 mb-2">
               {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => (
                 <div key={i} className="text-center text-[10px] font-bold text-muted-foreground">
@@ -265,18 +323,36 @@ export default function GoalsPage() {
                   key={i}
                   className={cn(
                     "aspect-square rounded-lg flex items-center justify-center text-xs font-medium border transition-all",
-                    day.met 
+                    day.status === 'all'
                       ? "bg-primary text-white border-primary" 
-                      : day.score > 0 
-                        ? "bg-primary/10 text-primary border-primary/20" 
+                      : day.status === 'some'
+                        ? "bg-primary/40 text-primary border-primary/50" 
                         : "bg-muted/30 text-muted-foreground border-transparent",
                     isToday(day.date) && "ring-2 ring-foreground ring-offset-2 ring-offset-background"
                   )}
+                  title={selectedGoalFilter === 'all' ? `${day.metCount}/${day.totalCount} celów` : (day.status === 'all' ? t('goals.status.met', 'Zrealizowany') : t('goals.status.notMet', 'Niezrealizowany'))}
                 >
-                  {day.met ? <Check className="size-3" /> : format(day.date, 'd')}
+                  {day.status === 'all' ? <Check className="size-3" /> : format(day.date, 'd')}
                 </div>
               ))}
             </div>
+
+            {selectedGoalFilter === 'all' && goals && goals.length > 0 && (
+              <div className="flex items-center justify-center gap-4 mt-4 text-xs text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <div className="size-3 rounded-sm bg-muted/30 border border-transparent"></div>
+                  <span>{t('goals.legend.none', 'Brak')}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="size-3 rounded-sm bg-primary/40 border border-primary/50"></div>
+                  <span>{t('goals.legend.some', 'Część')}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="size-3 rounded-sm bg-primary border border-primary"></div>
+                  <span>{t('goals.legend.all', 'Wszystkie')}</span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
