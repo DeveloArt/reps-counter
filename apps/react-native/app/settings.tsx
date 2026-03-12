@@ -1,15 +1,19 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
-import { ArrowLeft, ChevronRight, Moon, Sun, Trash2 } from 'lucide-react-native';
+import { ArrowLeft, ChevronRight, Info, Monitor, Moon, Sun, Trash2 } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Alert, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
+import Slider from '@react-native-community/slider';
 import { getSettings, initDatabase, updateSettings } from '../src/db';
 import { useTheme } from '../src/hooks/useTheme';
 import type { UserSettings } from '../src/types';
+import '../src/i18n';
 
 type ThemeMode = 'light' | 'dark' | 'system';
 
 export default function SettingsModalScreen() {
+  const { t, i18n } = useTranslation();
   const { colors, theme: currentTheme, setTheme } = useTheme();
   const router = useRouter();
   const [settings, setSettings] = useState<UserSettings | null>(null);
@@ -39,9 +43,14 @@ export default function SettingsModalScreen() {
     }
   };
 
-  const handleFrequencyChange = async (freq: number) => {
+  const handleFrequencyChange = async (value: number) => {
+    const freq = Math.round(value);
     setNotificationFrequency(freq);
     await updateSettings({ notificationFrequency: freq });
+  };
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
   };
 
   const _handleTimeChange = async (time: string) => {
@@ -56,7 +65,7 @@ export default function SettingsModalScreen() {
   };
 
   const handleResetData = () => {
-    Alert.alert('Reset Data', 'Are you sure? This action is permanent.', [
+    Alert.alert(t('settings.resetData'), t('settings.resetDataDesc'), [
       { text: 'Cancel', style: 'cancel' },
       {
         text: 'Reset',
@@ -64,38 +73,32 @@ export default function SettingsModalScreen() {
         onPress: async () => {
           try {
             await AsyncStorage.clear();
-            Alert.alert('Success', 'Data has been reset. Please restart the app.');
+            Alert.alert(t('common.success'), 'Data has been reset. Please restart the app.');
           } catch (_error) {
-            Alert.alert('Error', 'Failed to reset data');
+            Alert.alert(t('common.error'), 'Failed to reset data');
           }
         },
       },
     ]);
   };
 
-  const frequencyOptions = [1, 2, 3, 5, 7, 10];
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <ArrowLeft size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.title, { color: colors.text }]}>Settings</Text>
-        <View style={styles.placeholder} />
-      </View>
-
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* Reminders Section */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Reminders</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
+            {t('settings.reminders')}
+          </Text>
           <View style={[styles.card, { backgroundColor: colors.card }]}>
             <View style={styles.row}>
               <View style={styles.rowContent}>
-                <Text style={[styles.rowLabel, { color: colors.text }]}>Daily Notifications</Text>
+                <Text style={[styles.rowLabel, { color: colors.text }]}>
+                  {t('settings.dailyNotifications')}
+                </Text>
                 <Text style={[styles.rowDescription, { color: colors.textSecondary }]}>
-                  Get reminded to workout daily
+                  {t('settings.dailyNotificationsDesc')}
                 </Text>
               </View>
               <Switch
@@ -109,12 +112,14 @@ export default function SettingsModalScreen() {
             {/* Frequency Slider */}
             <View
               style={[
-                styles.subRow,
+                styles.sliderContainer,
                 { borderTopColor: colors.border, opacity: notifications ? 1 : 0.5 },
               ]}
             >
-              <View style={styles.rowContent}>
-                <Text style={[styles.rowLabel, { color: colors.text }]}>Reminder Frequency</Text>
+              <View style={styles.sliderHeader}>
+                <Text style={[styles.rowLabel, { color: colors.text }]}>
+                  {t('settings.reminderFrequency')}
+                </Text>
                 <Text
                   style={[
                     styles.frequencyBadge,
@@ -124,33 +129,26 @@ export default function SettingsModalScreen() {
                   {notificationFrequency}/day
                 </Text>
               </View>
+              {notifications && (
+                <>
+                  <Slider
+                    style={styles.slider}
+                    minimumValue={1}
+                    maximumValue={10}
+                    step={1}
+                    value={notificationFrequency}
+                    onValueChange={handleFrequencyChange}
+                    minimumTrackTintColor={colors.primary}
+                    maximumTrackTintColor={colors.border}
+                    thumbTintColor={colors.primary}
+                  />
+                  <View style={styles.sliderLabels}>
+                    <Text style={[styles.sliderLabel, { color: colors.textSecondary }]}>1 time</Text>
+                    <Text style={[styles.sliderLabel, { color: colors.textSecondary }]}>10 times</Text>
+                  </View>
+                </>
+              )}
             </View>
-            {notifications && (
-              <View style={styles.frequencyOptions}>
-                {frequencyOptions.map((freq) => (
-                  <TouchableOpacity
-                    key={freq}
-                    style={[
-                      styles.frequencyButton,
-                      {
-                        backgroundColor:
-                          notificationFrequency === freq ? colors.primary : colors.border,
-                      },
-                    ]}
-                    onPress={() => handleFrequencyChange(freq)}
-                  >
-                    <Text
-                      style={[
-                        styles.frequencyButtonText,
-                        { color: notificationFrequency === freq ? 'white' : colors.text },
-                      ]}
-                    >
-                      {freq}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-            )}
 
             {/* Time Picker */}
             <View
@@ -160,9 +158,11 @@ export default function SettingsModalScreen() {
               ]}
             >
               <View style={styles.rowContent}>
-                <Text style={[styles.rowLabel, { color: colors.text }]}>Reminder Time</Text>
+                <Text style={[styles.rowLabel, { color: colors.text }]}>
+                  {t('settings.reminderTime')}
+                </Text>
                 <Text style={[styles.rowDescription, { color: colors.textSecondary }]}>
-                  When to receive reminders
+                  {t('settings.reminderTimeDesc')}
                 </Text>
               </View>
               <TouchableOpacity
@@ -179,7 +179,9 @@ export default function SettingsModalScreen() {
 
         {/* Appearance Section */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Appearance</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
+            {t('settings.appearance')}
+          </Text>
           <View style={styles.themeGrid}>
             {/* Light Theme */}
             <TouchableOpacity
@@ -207,7 +209,7 @@ export default function SettingsModalScreen() {
                   { color: selectedTheme === 'light' ? colors.text : colors.textSecondary },
                 ]}
               >
-                Light
+                {t('settings.light')}
               </Text>
             </TouchableOpacity>
 
@@ -237,7 +239,7 @@ export default function SettingsModalScreen() {
                   { color: selectedTheme === 'dark' ? colors.text : colors.textSecondary },
                 ]}
               >
-                Dark
+                {t('settings.dark')}
               </Text>
             </TouchableOpacity>
 
@@ -262,10 +264,7 @@ export default function SettingsModalScreen() {
                   },
                 ]}
               >
-                <View style={{ flexDirection: 'row', gap: 4 }}>
-                  <Sun size={16} color="#666" />
-                  <Moon size={16} color="#fff" />
-                </View>
+                <Monitor size={24} color={colors.textSecondary} />
               </View>
               <Text
                 style={[
@@ -273,7 +272,65 @@ export default function SettingsModalScreen() {
                   { color: selectedTheme === 'system' ? colors.text : colors.textSecondary },
                 ]}
               >
-                System
+                {t('settings.system')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Language Section */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
+            {t('settings.language')}
+          </Text>
+          <View style={styles.languageGrid}>
+            <TouchableOpacity
+              style={[
+                styles.languageCard,
+                {
+                  backgroundColor: colors.card,
+                  borderColor: i18n.language === 'en' ? colors.primary : 'transparent',
+                  borderWidth: 2,
+                },
+              ]}
+              onPress={() => changeLanguage('en')}
+            >
+              <View style={[styles.languageIcon, { backgroundColor: '#DBEAFE' }]}>
+                <Text style={[styles.languageIconText, { color: '#2563EB' }]}>EN</Text>
+              </View>
+              <Text
+                style={[
+                  styles.languageLabel,
+                  { color: i18n.language === 'en' ? colors.text : colors.textSecondary },
+                  i18n.language === 'en' && styles.languageLabelBold,
+                ]}
+              >
+                English
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.languageCard,
+                {
+                  backgroundColor: colors.card,
+                  borderColor: i18n.language === 'pl' ? colors.primary : 'transparent',
+                  borderWidth: 2,
+                },
+              ]}
+              onPress={() => changeLanguage('pl')}
+            >
+              <View style={[styles.languageIcon, { backgroundColor: '#FEE2E2' }]}>
+                <Text style={[styles.languageIconText, { color: '#DC2626' }]}>PL</Text>
+              </View>
+              <Text
+                style={[
+                  styles.languageLabel,
+                  { color: i18n.language === 'pl' ? colors.text : colors.textSecondary },
+                  i18n.language === 'pl' && styles.languageLabelBold,
+                ]}
+              >
+                Polski
               </Text>
             </TouchableOpacity>
           </View>
@@ -282,7 +339,7 @@ export default function SettingsModalScreen() {
         {/* Data Management Section */}
         <View style={styles.section}>
           <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
-            Data Management
+            {t('settings.dataManagement')}
           </Text>
           <TouchableOpacity
             style={[
@@ -295,9 +352,11 @@ export default function SettingsModalScreen() {
               <Trash2 size={20} color={colors.error} />
             </View>
             <View style={styles.dataContent}>
-              <Text style={[styles.dataLabel, { color: colors.text }]}>Reset Data</Text>
+              <Text style={[styles.dataLabel, { color: colors.text }]}>
+                {t('settings.resetData')}
+              </Text>
               <Text style={[styles.dataDescription, { color: colors.textSecondary }]}>
-                Delete all exercises, logs, and goals
+                {t('settings.resetDataDesc')}
               </Text>
             </View>
             <ChevronRight size={20} color={colors.textSecondary} />
@@ -306,17 +365,26 @@ export default function SettingsModalScreen() {
 
         {/* About Section */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>About</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
+            {t('settings.about')}
+          </Text>
           <View style={[styles.aboutCard, { backgroundColor: colors.primary }]}>
-            <Text style={styles.aboutTitle}>FitCounter Pro</Text>
-            <Text style={styles.aboutVersion}>Version 2.4.1 (Build 402)</Text>
-            <View style={styles.aboutLinks}>
-              <TouchableOpacity style={styles.aboutLink}>
-                <Text style={styles.aboutLinkText}>Terms</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.aboutLink}>
-                <Text style={styles.aboutLinkText}>Privacy</Text>
-              </TouchableOpacity>
+            <View style={styles.aboutContent}>
+              <Text style={styles.aboutTitle}>FitCounter Pro</Text>
+              <Text style={styles.aboutVersion}>
+                {t('settings.version')} 2.4.1 (Build 402)
+              </Text>
+              <View style={styles.aboutLinks}>
+                <TouchableOpacity style={styles.aboutLink}>
+                  <Text style={styles.aboutLinkText}>{t('settings.terms')}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.aboutLink}>
+                  <Text style={styles.aboutLinkText}>{t('settings.privacy')}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.aboutIcon}>
+              <Info size={128} color="rgba(255,255,255,0.2)" />
             </View>
           </View>
         </View>
@@ -330,28 +398,6 @@ export default function SettingsModalScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 8,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: '700',
-  },
-  placeholder: {
-    width: 40,
   },
   content: {
     flex: 1,
@@ -401,25 +447,30 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 8,
-    marginTop: 4,
     alignSelf: 'flex-start',
   },
-  frequencyOptions: {
+  sliderContainer: {
+    padding: 16,
+    borderTopWidth: 1,
+  },
+  sliderHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-    gap: 8,
-  },
-  frequencyButton: {
-    flex: 1,
-    paddingVertical: 8,
-    borderRadius: 8,
     alignItems: 'center',
+    marginBottom: 12,
   },
-  frequencyButtonText: {
-    fontSize: 14,
-    fontWeight: '700',
+  slider: {
+    width: '100%',
+    height: 40,
+  },
+  sliderLabels: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: -8,
+  },
+  sliderLabel: {
+    fontSize: 10,
+    fontWeight: '600',
   },
   timeButton: {
     paddingHorizontal: 12,
@@ -452,6 +503,36 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
   },
+  languageGrid: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  languageCard: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 16,
+    gap: 12,
+  },
+  languageIcon: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  languageIconText: {
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  languageLabel: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  languageLabelBold: {
+    fontWeight: '700',
+  },
   dataButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -480,7 +561,19 @@ const styles = StyleSheet.create({
   },
   aboutCard: {
     borderRadius: 16,
-    padding: 20,
+    padding: 24,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  aboutContent: {
+    position: 'relative',
+    zIndex: 10,
+  },
+  aboutIcon: {
+    position: 'absolute',
+    right: -16,
+    bottom: -16,
+    opacity: 0.2,
   },
   aboutTitle: {
     fontSize: 18,

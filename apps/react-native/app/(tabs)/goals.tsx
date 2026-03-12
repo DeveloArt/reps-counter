@@ -257,15 +257,6 @@ export default function GoalsScreen() {
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <ArrowLeft size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.title, { color: colors.text }]}>Goals</Text>
-        <View style={{ width: 40 }} />
-      </View>
-
       <View style={styles.content}>
         {/* Active Goals Section */}
         <View style={styles.section}>
@@ -723,7 +714,7 @@ const styles = StyleSheet.create({
   },
   calendarSection: {
     borderRadius: 16,
-    padding: 16,
+    padding: 12,
     borderWidth: 1,
   },
   filterContainer: {

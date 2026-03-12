@@ -1,4 +1,5 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Check, Save, Trash2 } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import {
   Alert,
@@ -9,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { Modal } from '../../src/components/Modal';
 import { deleteExercise, getExercise, updateExercise } from '../../src/db';
 import { useTheme } from '../../src/hooks/useTheme';
 import type { Exercise } from '../../src/types';
@@ -22,7 +24,7 @@ export default function ExerciseDetailScreen() {
   const [name, setName] = useState('');
   const [unit, setUnit] = useState<'reps' | 'seconds'>('reps');
   const [color, setColor] = useState('#0D5D5D');
-  const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const colors_list = [
     '#0D5D5D',
@@ -62,28 +64,15 @@ export default function ExerciseDetailScreen() {
         unit,
         color,
       });
-      setIsEditing(false);
+      router.back();
     }
   };
 
-  const handleDelete = () => {
-    Alert.alert(
-      'Delete Exercise',
-      'Are you sure you want to delete this exercise? This action cannot be undone.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            if (id) {
-              await deleteExercise(id);
-              router.back();
-            }
-          },
-        },
-      ]
-    );
+  const handleDelete = async () => {
+    if (id) {
+      await deleteExercise(id);
+      router.back();
+    }
   };
 
   if (!exercise) {
@@ -94,70 +83,94 @@ export default function ExerciseDetailScreen() {
     );
   }
 
-  return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <Text style={[styles.closeButton, { color: colors.primary }]}>Cancel</Text>
-        </TouchableOpacity>
-        <Text style={[styles.title, { color: colors.text }]}>
-          {isEditing ? 'Edit Exercise' : exercise.name}
-        </Text>
-        <TouchableOpacity onPress={() => (isEditing ? handleSave() : setIsEditing(true))}>
-          <Text style={[styles.saveButton, { color: colors.primary }]}>
-            {isEditing ? 'Save' : 'Edit'}
+  if (showDeleteConfirm) {
+    return (
+      <Modal isOpen={true} onClose={() => setShowDeleteConfirm(false)} title="Delete?">
+        <View style={styles.modalContent}>
+          <Text style={[styles.confirmText, { color: colors.textSecondary }]}>
+            Are you sure you want to delete this exercise?
           </Text>
-        </TouchableOpacity>
-      </View>
+          <View style={styles.buttonRow}>
+            <TouchableOpacity
+              onPress={() => setShowDeleteConfirm(false)}
+              style={[styles.cancelButton, { backgroundColor: colors.muted }]}
+            >
+              <Text style={[styles.cancelButtonText, { color: colors.text }]}>Cancel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleDelete}
+              style={[styles.confirmButton, { backgroundColor: colors.error }]}
+            >
+              <Text style={styles.confirmButtonText}>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    );
+  }
 
-      {isEditing ? (
-        <>
+  return (
+    <Modal isOpen={true} onClose={() => router.back()} title="Edit Exercise">
+      <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
+        <View style={styles.formSection}>
           <Text style={[styles.label, { color: colors.text }]}>Name</Text>
           <TextInput
             style={[
               styles.input,
-              { color: colors.text, backgroundColor: colors.card, borderColor: colors.border },
+              { color: colors.text, backgroundColor: colors.muted, borderColor: 'transparent' },
             ]}
             placeholder="Exercise name"
             placeholderTextColor={colors.textSecondary}
             value={name}
             onChangeText={setName}
           />
+        </View>
 
+        <View style={styles.formSection}>
           <Text style={[styles.label, { color: colors.text }]}>Unit</Text>
-          <View style={styles.unitContainer}>
+          <View style={[styles.segmentedControl, { backgroundColor: colors.muted }]}>
             <TouchableOpacity
               style={[
-                styles.unitButton,
-                {
-                  backgroundColor: unit === 'reps' ? colors.primary : colors.card,
-                  borderColor: colors.border,
-                },
+                styles.segmentButton,
+                unit === 'reps' && [
+                  styles.segmentButtonActive,
+                  { backgroundColor: colors.card },
+                ],
               ]}
               onPress={() => setUnit('reps')}
             >
-              <Text style={[styles.unitText, { color: unit === 'reps' ? 'white' : colors.text }]}>
+              <Text
+                style={[
+                  styles.segmentText,
+                  { color: unit === 'reps' ? colors.primary : colors.textSecondary },
+                ]}
+              >
                 Reps
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
-                styles.unitButton,
-                {
-                  backgroundColor: unit === 'seconds' ? colors.primary : colors.card,
-                  borderColor: colors.border,
-                },
+                styles.segmentButton,
+                unit === 'seconds' && [
+                  styles.segmentButtonActive,
+                  { backgroundColor: colors.card },
+                ],
               ]}
               onPress={() => setUnit('seconds')}
             >
               <Text
-                style={[styles.unitText, { color: unit === 'seconds' ? 'white' : colors.text }]}
+                style={[
+                  styles.segmentText,
+                  { color: unit === 'seconds' ? colors.primary : colors.textSecondary },
+                ]}
               >
-                Seconds
+                Time
               </Text>
             </TouchableOpacity>
           </View>
+        </View>
 
+        <View style={styles.formSection}>
           <Text style={[styles.label, { color: colors.text }]}>Color</Text>
           <View style={styles.colorContainer}>
             {colors_list.map((c) => (
@@ -167,37 +180,39 @@ export default function ExerciseDetailScreen() {
                   styles.colorButton,
                   {
                     backgroundColor: c,
-                    borderColor: color === c ? colors.text : 'transparent',
-                    borderWidth: 3,
+                    borderColor: color === c ? colors.primary : 'transparent',
+                    borderWidth: color === c ? 2 : 0,
                   },
                 ]}
                 onPress={() => setColor(c)}
-              />
+              >
+                {color === c && <Check size={16} color="white" strokeWidth={3} />}
+              </TouchableOpacity>
             ))}
           </View>
-
-          <TouchableOpacity
-            style={[styles.deleteButton, { backgroundColor: colors.error }]}
-            onPress={handleDelete}
-          >
-            <Text style={styles.deleteButtonText}>Delete Exercise</Text>
-          </TouchableOpacity>
-        </>
-      ) : (
-        <View style={styles.detailCard}>
-          <View style={styles.detailRow}>
-            <Text style={[styles.detailLabel, { color: colors.textSecondary }]}>Unit</Text>
-            <Text style={[styles.detailValue, { color: colors.text }]}>
-              {exercise.unit === 'reps' ? 'Repetitions' : 'Seconds'}
-            </Text>
-          </View>
-          <View style={[styles.detailRow, { borderTopColor: colors.border, borderTopWidth: 1 }]}>
-            <Text style={[styles.detailLabel, { color: colors.textSecondary }]}>Color</Text>
-            <View style={[styles.colorPreview, { backgroundColor: exercise.color }]} />
-          </View>
         </View>
-      )}
-    </ScrollView>
+
+        <View style={styles.actionButtons}>
+          <TouchableOpacity
+            style={[
+              styles.deleteButtonNew,
+              { backgroundColor: `${colors.error}10`, borderColor: `${colors.error}30` },
+            ]}
+            onPress={() => setShowDeleteConfirm(true)}
+          >
+            <Trash2 size={20} color={colors.error} />
+            <Text style={[styles.deleteButtonTextNew, { color: colors.error }]}>Delete</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.saveButtonNew, { backgroundColor: colors.primary }]}
+            onPress={handleSave}
+          >
+            <Save size={20} color="white" />
+            <Text style={styles.saveButtonTextNew}>Save</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </Modal>
   );
 }
 
@@ -206,51 +221,77 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  errorText: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 100,
+  },
+  modalContent: {
+    gap: 24,
+  },
+  confirmText: {
+    fontSize: 14,
     marginBottom: 24,
-    marginTop: 40,
   },
-  closeButton: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  saveButton: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 8,
-    marginTop: 16,
-  },
-  input: {
-    borderWidth: 1,
-    borderRadius: 12,
-    padding: 16,
-    fontSize: 16,
-  },
-  unitContainer: {
+  buttonRow: {
     flexDirection: 'row',
     gap: 12,
   },
-  unitButton: {
+  cancelButton: {
     flex: 1,
-    padding: 16,
     borderRadius: 12,
+    paddingVertical: 12,
     alignItems: 'center',
-    borderWidth: 1,
   },
-  unitText: {
-    fontSize: 16,
+  cancelButtonText: {
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  confirmButton: {
+    flex: 1,
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  confirmButtonText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: 'white',
+  },
+  formSection: {
+    gap: 8,
+  },
+  label: {
+    fontSize: 14,
     fontWeight: '600',
+  },
+  input: {
+    borderRadius: 12,
+    padding: 12,
+    fontSize: 16,
+  },
+  segmentedControl: {
+    flexDirection: 'row',
+    borderRadius: 12,
+    padding: 4,
+    gap: 4,
+  },
+  segmentButton: {
+    flex: 1,
+    paddingVertical: 8,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  segmentButtonActive: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  segmentText: {
+    fontSize: 14,
+    fontWeight: '700',
   },
   colorContainer: {
     flexDirection: 'row',
@@ -258,48 +299,48 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   colorButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-  },
-  deleteButton: {
-    padding: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginTop: 32,
-    marginBottom: 32,
-  },
-  deleteButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  errorText: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginTop: 100,
-  },
-  detailCard: {
-    borderRadius: 16,
-    overflow: 'hidden',
-    marginTop: 16,
-  },
-  detailRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
-  },
-  detailLabel: {
-    fontSize: 16,
-  },
-  detailValue: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  colorPreview: {
     width: 32,
     height: 32,
     borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 8,
+  },
+  deleteButtonNew: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    borderRadius: 12,
+    paddingVertical: 16,
+    borderWidth: 1,
+  },
+  deleteButtonTextNew: {
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  saveButtonNew: {
+    flex: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    borderRadius: 12,
+    paddingVertical: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  saveButtonTextNew: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: 'white',
   },
 });

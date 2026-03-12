@@ -1,4 +1,5 @@
 import { useRouter } from 'expo-router';
+import { Calendar, Check } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import {
   Alert,
@@ -9,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { Modal } from '../../src/components/Modal';
 import { addGoal, getExercises, initDatabase } from '../../src/db';
 import { useTheme } from '../../src/hooks/useTheme';
 
@@ -52,203 +54,291 @@ export default function NewGoalScreen() {
   };
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.title, { color: colors.text }]}>New Goal</Text>
+    <Modal isOpen={true} onClose={() => router.back()} title="New Goal">
+      <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
 
-      <Text style={[styles.label, { color: colors.text }]}>Title</Text>
-      <TextInput
-        style={[
-          styles.input,
-          { color: colors.text, backgroundColor: colors.card, borderColor: colors.border },
-        ]}
-        placeholder="Goal title"
-        placeholderTextColor={colors.textSecondary}
-        value={title}
-        onChangeText={setTitle}
-      />
-
-      <Text style={[styles.label, { color: colors.text }]}>Type</Text>
-      <View style={styles.typeContainer}>
-        {(['daily', 'weekly', 'monthly'] as const).map((t) => (
+        <View style={styles.typeGrid}>
           <TouchableOpacity
-            key={t}
             style={[
-              styles.typeButton,
+              styles.typeCard,
               {
-                backgroundColor: type === t ? colors.primary : colors.card,
-                borderColor: colors.border,
+                backgroundColor: type === 'daily' ? `${colors.primary}05` : colors.card,
+                borderColor: type === 'daily' ? colors.primary : colors.border,
+                borderWidth: 2,
               },
             ]}
-            onPress={() => setType(t)}
+            onPress={() => setType('daily')}
           >
-            <Text style={[styles.typeText, { color: type === t ? 'white' : colors.text }]}>
-              {t}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      <Text style={[styles.label, { color: colors.text }]}>Target Value</Text>
-      <TextInput
-        style={[
-          styles.input,
-          { color: colors.text, backgroundColor: colors.card, borderColor: colors.border },
-        ]}
-        placeholder="Target"
-        placeholderTextColor={colors.textSecondary}
-        keyboardType="numeric"
-        value={targetValue}
-        onChangeText={setTargetValue}
-      />
-
-      <Text style={[styles.label, { color: colors.text }]}>Metric</Text>
-      <View style={styles.metricContainer}>
-        {(['reps', 'time', 'workouts'] as const).map((m) => (
-          <TouchableOpacity
-            key={m}
-            style={[
-              styles.metricButton,
-              {
-                backgroundColor: metric === m ? colors.primary : colors.card,
-                borderColor: colors.border,
-              },
-            ]}
-            onPress={() => setMetric(m)}
-          >
-            <Text style={[styles.metricText, { color: metric === m ? 'white' : colors.text }]}>
-              {m}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      <Text style={[styles.label, { color: colors.text }]}>Exercise (optional)</Text>
-      <View style={styles.exerciseContainer}>
-        <TouchableOpacity
-          style={[
-            styles.exerciseButton,
-            {
-              backgroundColor: !exerciseId ? colors.primary : colors.card,
-              borderColor: colors.border,
-            },
-          ]}
-          onPress={() => setExerciseId('')}
-        >
-          <Text style={[styles.exerciseText, { color: !exerciseId ? 'white' : colors.text }]}>
-            All
-          </Text>
-        </TouchableOpacity>
-        {exercises.map((ex) => (
-          <TouchableOpacity
-            key={ex.id}
-            style={[
-              styles.exerciseButton,
-              {
-                backgroundColor: exerciseId === ex.id ? colors.primary : colors.card,
-                borderColor: colors.border,
-              },
-            ]}
-            onPress={() => setExerciseId(ex.id)}
-          >
+            <Calendar size={24} color={type === 'daily' ? colors.primary : colors.textSecondary} />
             <Text
-              style={[styles.exerciseText, { color: exerciseId === ex.id ? 'white' : colors.text }]}
+              style={[
+                styles.typeLabel,
+                { color: type === 'daily' ? colors.primary : colors.textSecondary },
+              ]}
             >
-              {ex.name}
+              DAILY
             </Text>
           </TouchableOpacity>
-        ))}
-      </View>
+          <TouchableOpacity
+            style={[
+              styles.typeCard,
+              {
+                backgroundColor: type === 'weekly' ? `${colors.primary}05` : colors.card,
+                borderColor: type === 'weekly' ? colors.primary : colors.border,
+                borderWidth: 2,
+              },
+            ]}
+            onPress={() => setType('weekly')}
+          >
+            <Calendar size={24} color={type === 'weekly' ? colors.primary : colors.textSecondary} />
+            <Text
+              style={[
+                styles.typeLabel,
+                { color: type === 'weekly' ? colors.primary : colors.textSecondary },
+              ]}
+            >
+              WEEKLY
+            </Text>
+          </TouchableOpacity>
+        </View>
 
-      <TouchableOpacity
-        style={[styles.saveButton, { backgroundColor: colors.primary }]}
-        onPress={handleSave}
-      >
-        <Text style={styles.saveButtonText}>Save Goal</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <View style={styles.formSection}>
+          <Text style={[styles.label, { color: colors.text }]}>Exercise</Text>
+          <View style={styles.exerciseGrid}>
+            <TouchableOpacity
+              style={[
+                styles.exerciseChip,
+                {
+                  backgroundColor: !exerciseId ? colors.primary : colors.muted,
+                  borderColor: !exerciseId ? colors.primary : 'transparent',
+                },
+              ]}
+              onPress={() => setExerciseId('')}
+            >
+              <Text style={[styles.exerciseChipText, { color: !exerciseId ? 'white' : colors.text }]}>
+                All
+              </Text>
+            </TouchableOpacity>
+            {exercises.map((ex) => (
+              <TouchableOpacity
+                key={ex.id}
+                style={[
+                  styles.exerciseChip,
+                  {
+                    backgroundColor: exerciseId === ex.id ? colors.primary : colors.muted,
+                    borderColor: exerciseId === ex.id ? colors.primary : 'transparent',
+                  },
+                ]}
+                onPress={() => setExerciseId(ex.id)}
+              >
+                <Text
+                  style={[
+                    styles.exerciseChipText,
+                    { color: exerciseId === ex.id ? 'white' : colors.text },
+                  ]}
+                >
+                  {ex.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        <View style={styles.metricRow}>
+          <View style={styles.metricSection}>
+            <Text style={[styles.label, { color: colors.text }]}>Metric</Text>
+            <View style={[styles.segmentedControl, { backgroundColor: colors.muted }]}>
+              <TouchableOpacity
+                style={[
+                  styles.segmentButton,
+                  metric === 'reps' && [
+                    styles.segmentButtonActive,
+                    { backgroundColor: colors.card },
+                  ],
+                ]}
+                onPress={() => setMetric('reps')}
+              >
+                <Text
+                  style={[
+                    styles.segmentText,
+                    { color: metric === 'reps' ? colors.text : colors.textSecondary },
+                  ]}
+                >
+                  Reps
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.segmentButton,
+                  metric === 'time' && [
+                    styles.segmentButtonActive,
+                    { backgroundColor: colors.card },
+                  ],
+                ]}
+                onPress={() => setMetric('time')}
+              >
+                <Text
+                  style={[
+                    styles.segmentText,
+                    { color: metric === 'time' ? colors.text : colors.textSecondary },
+                  ]}
+                >
+                  Mins
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={styles.targetSection}>
+            <Text style={[styles.label, { color: colors.text }]}>Target</Text>
+            <TextInput
+              style={[
+                styles.targetInput,
+                { color: colors.text, backgroundColor: colors.muted, borderColor: 'transparent' },
+              ]}
+              placeholder="10"
+              placeholderTextColor={colors.textSecondary}
+              keyboardType="numeric"
+              value={targetValue}
+              onChangeText={setTargetValue}
+            />
+          </View>
+        </View>
+
+        <View style={styles.formSection}>
+          <Text style={[styles.label, { color: colors.text }]}>Goal Title (Optional)</Text>
+          <TextInput
+            style={[
+              styles.input,
+              { color: colors.text, backgroundColor: colors.muted, borderColor: 'transparent' },
+            ]}
+            placeholder="Enter title"
+            placeholderTextColor={colors.textSecondary}
+            value={title}
+            onChangeText={setTitle}
+          />
+        </View>
+
+        <TouchableOpacity
+          style={[styles.saveButton, { backgroundColor: colors.primary }]}
+          onPress={handleSave}
+        >
+          <Check size={20} color="white" />
+          <Text style={styles.saveButtonText}>Create Goal</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
+  modalContent: {
+    gap: 24,
+    paddingBottom: 16,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 24,
-    marginTop: 40,
+  typeGrid: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  typeCard: {
+    flex: 1,
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: 8,
+    padding: 12,
+    borderRadius: 12,
+  },
+  typeLabel: {
+    fontSize: 12,
+    fontWeight: '700',
+    letterSpacing: 0.5,
+  },
+  formSection: {
+    gap: 8,
   },
   label: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
-    marginBottom: 8,
-    marginTop: 16,
   },
   input: {
-    borderWidth: 1,
     borderRadius: 12,
-    padding: 16,
+    padding: 12,
     fontSize: 16,
   },
-  typeContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  typeButton: {
-    flex: 1,
-    padding: 12,
-    borderRadius: 12,
-    alignItems: 'center',
-    borderWidth: 1,
-  },
-  typeText: {
-    fontSize: 14,
-    fontWeight: '600',
-    textTransform: 'capitalize',
-  },
-  metricContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  metricButton: {
-    flex: 1,
-    padding: 12,
-    borderRadius: 12,
-    alignItems: 'center',
-    borderWidth: 1,
-  },
-  metricText: {
-    fontSize: 14,
-    fontWeight: '600',
-    textTransform: 'capitalize',
-  },
-  exerciseContainer: {
+  exerciseGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
   },
-  exerciseButton: {
+  exerciseChip: {
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 12,
     borderWidth: 1,
   },
-  exerciseText: {
+  exerciseChipText: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: '600',
+  },
+  metricRow: {
+    flexDirection: 'row',
+    gap: 16,
+  },
+  metricSection: {
+    flex: 1,
+    gap: 8,
+  },
+  segmentedControl: {
+    flexDirection: 'row',
+    borderRadius: 12,
+    padding: 4,
+    gap: 4,
+  },
+  segmentButton: {
+    flex: 1,
+    paddingVertical: 8,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  segmentButtonActive: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  segmentText: {
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  targetSection: {
+    flex: 1,
+    gap: 8,
+  },
+  targetInput: {
+    borderRadius: 12,
+    padding: 12,
+    fontSize: 18,
+    fontWeight: '700',
+    textAlign: 'center',
   },
   saveButton: {
-    padding: 16,
-    borderRadius: 12,
+    flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 32,
-    marginBottom: 32,
+    justifyContent: 'center',
+    gap: 8,
+    borderRadius: 12,
+    paddingVertical: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
+    marginTop: 8,
   },
   saveButtonText: {
+    fontSize: 16,
+    fontWeight: '700',
     color: 'white',
-    fontSize: 18,
-    fontWeight: '600',
   },
 });

@@ -9,35 +9,42 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen
+          name="exercise/new"
+          options={{
+            presentation: 'transparentModal',
+            headerShown: false,
+            animation: 'fade',
+          }}
+        />
+        <Stack.Screen
           name="exercise/[id]"
           options={{
-            presentation: 'modal',
-            headerShown: true,
-            title: 'Exercise',
+            presentation: 'transparentModal',
+            headerShown: false,
+            animation: 'fade',
           }}
         />
         <Stack.Screen
           name="log/[exerciseId]"
           options={{
-            presentation: 'modal',
-            headerShown: true,
-            title: 'Log Entry',
+            presentation: 'transparentModal',
+            headerShown: false,
+            animation: 'fade',
           }}
         />
         <Stack.Screen
           name="goal/new"
           options={{
-            presentation: 'modal',
-            headerShown: true,
-            title: 'New Goal',
+            presentation: 'transparentModal',
+            headerShown: false,
+            animation: 'fade',
           }}
         />
         <Stack.Screen
           name="settings"
           options={{
             presentation: 'modal',
-            headerShown: true,
-            title: 'Settings',
+            headerShown: false,
           }}
         />
       </Stack>

@@ -1,4 +1,5 @@
 import { useRouter } from 'expo-router';
+import { Check, Plus } from 'lucide-react-native';
 import { useState } from 'react';
 import {
   Alert,
@@ -9,6 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { Modal } from '../../src/components/Modal';
 import { addExercise, initDatabase } from '../../src/db';
 import { useTheme } from '../../src/hooks/useTheme';
 
@@ -49,118 +51,139 @@ export default function NewExerciseScreen() {
   };
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
-      <Text style={[styles.title, { color: colors.text }]}>New Exercise</Text>
-
-      <Text style={[styles.label, { color: colors.text }]}>Name</Text>
-      <TextInput
-        style={[
-          styles.input,
-          { color: colors.text, backgroundColor: colors.card, borderColor: colors.border },
-        ]}
-        placeholder="Exercise name"
-        placeholderTextColor={colors.textSecondary}
-        value={name}
-        onChangeText={setName}
-      />
-
-      <Text style={[styles.label, { color: colors.text }]}>Unit</Text>
-      <View style={styles.unitContainer}>
-        <TouchableOpacity
-          style={[
-            styles.unitButton,
-            {
-              backgroundColor: unit === 'reps' ? colors.primary : colors.card,
-              borderColor: colors.border,
-            },
-          ]}
-          onPress={() => setUnit('reps')}
-        >
-          <Text style={[styles.unitText, { color: unit === 'reps' ? 'white' : colors.text }]}>
-            Reps
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[
-            styles.unitButton,
-            {
-              backgroundColor: unit === 'seconds' ? colors.primary : colors.card,
-              borderColor: colors.border,
-            },
-          ]}
-          onPress={() => setUnit('seconds')}
-        >
-          <Text style={[styles.unitText, { color: unit === 'seconds' ? 'white' : colors.text }]}>
-            Seconds
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <Text style={[styles.label, { color: colors.text }]}>Color</Text>
-      <View style={styles.colorContainer}>
-        {colors_list.map((c) => (
-          <TouchableOpacity
-            key={c}
+    <Modal isOpen={true} onClose={() => router.back()} title="New Exercise">
+      <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
+        <View style={styles.formSection}>
+          <Text style={[styles.label, { color: colors.text }]}>Name</Text>
+          <TextInput
             style={[
-              styles.colorButton,
-              {
-                backgroundColor: c,
-                borderColor: color === c ? colors.text : 'transparent',
-                borderWidth: 3,
-              },
+              styles.input,
+              { color: colors.text, backgroundColor: colors.muted, borderColor: 'transparent' },
             ]}
-            onPress={() => setColor(c)}
+            placeholder="Exercise name"
+            placeholderTextColor={colors.textSecondary}
+            value={name}
+            onChangeText={setName}
           />
-        ))}
-      </View>
+        </View>
 
-      <TouchableOpacity
-        style={[styles.saveButton, { backgroundColor: colors.primary }]}
-        onPress={handleSave}
-      >
-        <Text style={styles.saveButtonText}>Save Exercise</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        <View style={styles.formSection}>
+          <Text style={[styles.label, { color: colors.text }]}>Unit</Text>
+          <View style={[styles.segmentedControl, { backgroundColor: colors.muted }]}>
+            <TouchableOpacity
+              style={[
+                styles.segmentButton,
+                unit === 'reps' && [
+                  styles.segmentButtonActive,
+                  { backgroundColor: colors.card },
+                ],
+              ]}
+              onPress={() => setUnit('reps')}
+            >
+              <Text
+                style={[
+                  styles.segmentText,
+                  { color: unit === 'reps' ? colors.primary : colors.textSecondary },
+                ]}
+              >
+                Reps
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.segmentButton,
+                unit === 'seconds' && [
+                  styles.segmentButtonActive,
+                  { backgroundColor: colors.card },
+                ],
+              ]}
+              onPress={() => setUnit('seconds')}
+            >
+              <Text
+                style={[
+                  styles.segmentText,
+                  { color: unit === 'seconds' ? colors.primary : colors.textSecondary },
+                ]}
+              >
+                Time
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.formSection}>
+          <Text style={[styles.label, { color: colors.text }]}>Color</Text>
+          <View style={styles.colorContainer}>
+            {colors_list.map((c) => (
+              <TouchableOpacity
+                key={c}
+                style={[
+                  styles.colorButton,
+                  {
+                    backgroundColor: c,
+                    borderColor: color === c ? colors.primary : 'transparent',
+                    borderWidth: color === c ? 2 : 0,
+                  },
+                ]}
+                onPress={() => setColor(c)}
+              >
+                {color === c && <Check size={16} color="white" strokeWidth={3} />}
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={[styles.saveButton, { backgroundColor: colors.primary }]}
+          onPress={handleSave}
+        >
+          <Plus size={20} color="white" />
+          <Text style={styles.saveButtonText}>Create Exercise</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
+  modalContent: {
+    gap: 24,
+    paddingBottom: 16,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 24,
-    marginTop: 40,
+  formSection: {
+    gap: 8,
   },
   label: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
-    marginBottom: 8,
-    marginTop: 16,
   },
   input: {
-    borderWidth: 1,
     borderRadius: 12,
-    padding: 16,
+    padding: 12,
     fontSize: 16,
   },
-  unitContainer: {
+  segmentedControl: {
     flexDirection: 'row',
-    gap: 12,
-  },
-  unitButton: {
-    flex: 1,
-    padding: 16,
     borderRadius: 12,
-    alignItems: 'center',
-    borderWidth: 1,
+    padding: 4,
+    gap: 4,
   },
-  unitText: {
-    fontSize: 16,
-    fontWeight: '600',
+  segmentButton: {
+    flex: 1,
+    paddingVertical: 8,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  segmentButtonActive: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  segmentText: {
+    fontSize: 14,
+    fontWeight: '700',
   },
   colorContainer: {
     flexDirection: 'row',
@@ -168,20 +191,29 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   colorButton: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   saveButton: {
-    padding: 16,
-    borderRadius: 12,
+    flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 32,
-    marginBottom: 32,
+    justifyContent: 'center',
+    gap: 8,
+    borderRadius: 12,
+    paddingVertical: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
+    marginTop: 8,
   },
   saveButtonText: {
+    fontSize: 16,
+    fontWeight: '700',
     color: 'white',
-    fontSize: 18,
-    fontWeight: '600',
   },
 });

@@ -1,16 +1,16 @@
-import { Tabs, useRouter } from 'expo-router';
+import { Tabs } from 'expo-router';
 import { ChartBar, House, Plus, Settings, Target } from 'lucide-react-native';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { QuickLogModal } from '../../src/components/QuickLogModal';
 import { useTheme } from '../../src/hooks/useTheme';
 
-function FabButton({ color }: { color: string }) {
-  const router = useRouter();
-
+function FabButton({ color, onPress }: { color: string; onPress: () => void }) {
   return (
     <View style={styles.fabContainer}>
       <View
         style={[styles.fab, { backgroundColor: color }]}
-        onTouchEnd={() => router.push('/log/new')}
+        onTouchEnd={onPress}
       >
         <Plus size={32} color="white" strokeWidth={2.5} />
       </View>
@@ -20,9 +20,11 @@ function FabButton({ color }: { color: string }) {
 
 export default function TabLayout() {
   const { colors } = useTheme();
+  const [isQuickLogOpen, setIsQuickLogOpen] = useState(false);
 
   return (
-    <Tabs
+    <>
+      <Tabs
       screenOptions={{
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textSecondary,
@@ -59,7 +61,7 @@ export default function TabLayout() {
         options={{
           title: '',
           headerShown: false,
-          tabBarIcon: () => <FabButton color={colors.primary} />,
+          tabBarIcon: () => <FabButton color={colors.primary} onPress={() => setIsQuickLogOpen(true)} />,
         }}
       />
       <Tabs.Screen
@@ -77,6 +79,12 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+
+      <QuickLogModal
+        isOpen={isQuickLogOpen}
+        onClose={() => setIsQuickLogOpen(false)}
+      />
+    </>
   );
 }
 

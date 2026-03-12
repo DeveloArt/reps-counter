@@ -333,15 +333,6 @@ export default function StatsScreen() {
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <ArrowLeft size={24} color={colors.text} />
-        </TouchableOpacity>
-        <Text style={[styles.title, { color: colors.text }]}>Statistics</Text>
-        <View style={{ width: 40 }} />
-      </View>
-
       {/* Tab Navigation */}
       <View style={[styles.tabContainer, { borderBottomColor: colors.border }]}>
         {(['week', 'month', 'year'] as TabType[]).map((tab) => (

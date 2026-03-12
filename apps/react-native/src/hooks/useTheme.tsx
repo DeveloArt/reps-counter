@@ -8,6 +8,7 @@ interface ThemeColors {
   text: string;
   textSecondary: string;
   border: string;
+  muted: string;
   success: string;
   warning: string;
   error: string;
@@ -20,6 +21,7 @@ const lightColors: ThemeColors = {
   text: '#0F172A',
   textSecondary: '#64748B',
   border: '#E2E8F0',
+  muted: '#F1F5F9',
   success: '#10B981',
   warning: '#F59E0B',
   error: '#EF4444',
@@ -32,6 +34,7 @@ const darkColors: ThemeColors = {
   text: '#F8FAFC',
   textSecondary: '#94A3B8',
   border: '#334155',
+  muted: '#334155',
   success: '#10B981',
   warning: '#F59E0B',
   error: '#EF4444',

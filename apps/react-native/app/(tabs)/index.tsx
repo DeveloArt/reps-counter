@@ -7,6 +7,7 @@ import {
   MoreHorizontal,
   Plus,
   Timer,
+  User,
   Zap,
 } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
@@ -33,6 +34,7 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
   const [weeklyMetric, setWeeklyMetric] = useState<'reps' | 'time'>('reps');
   const [_currentDate] = useState(new Date());
+  const [streak, setStreak] = useState(0);
 
   useEffect(() => {
     async function loadData() {
@@ -57,10 +59,52 @@ export default function HomeScreen() {
       setWeeklyLogs(weeklyData);
       setSettings(settingsData);
       setGoals(goalsData.filter((g) => g.type === 'daily' && g.isActive));
+      
+      // Calculate streak
+      const calculatedStreak = calculateStreak(weeklyData);
+      setStreak(calculatedStreak);
+      
       setLoading(false);
     }
     loadData();
   }, []);
+
+  // Calculate streak based on consecutive days with activity
+  const calculateStreak = (allLogs: LogEntry[]): number => {
+    if (allLogs.length === 0) return 0;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Group logs by date
+    const dateMap = new Map<string, boolean>();
+    allLogs.forEach(log => {
+      const dateStr = typeof log.date === 'string' ? log.date : log.date.toISOString().split('T')[0];
+      dateMap.set(dateStr, true);
+    });
+
+    let currentStreak = 0;
+    let checkDate = new Date(today);
+    
+    // Check if today has activity, if not start from yesterday
+    const todayStr = today.toISOString().split('T')[0];
+    if (!dateMap.has(todayStr)) {
+      checkDate.setDate(checkDate.getDate() - 1);
+    }
+
+    // Count consecutive days backwards
+    while (true) {
+      const dateStr = checkDate.toISOString().split('T')[0];
+      if (dateMap.has(dateStr)) {
+        currentStreak++;
+        checkDate.setDate(checkDate.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+
+    return currentStreak;
+  };
 
   // Calculate today's stats
   const todayStats = logs.reduce(
@@ -188,7 +232,18 @@ export default function HomeScreen() {
           <Text style={[styles.greeting, { color: colors.text }]}>Hello!</Text>
           <View style={styles.streakContainer}>
             <Flame size={14} color={colors.primary} />
-            <Text style={[styles.streakText, { color: colors.primary }]}>0 days streak</Text>
+            <Text style={[styles.streakText, { color: colors.primary }]}>{streak} days streak</Text>
+          </View>
+        </View>
+        <View style={styles.headerRight}>
+          <View style={[styles.avatarContainer, { backgroundColor: colors.primary }]}>
+            <User size={24} color="white" />
+            {streak > 0 && (
+              <View style={[styles.streakBadge, { backgroundColor: colors.card }]}>
+                <Flame size={10} color={colors.primary} fill={colors.primary} />
+                <Text style={[styles.streakBadgeText, { color: colors.primary }]}>{streak}</Text>
+              </View>
+            )}
           </View>
         </View>
       </View>
@@ -399,6 +454,34 @@ const styles = StyleSheet.create({
   },
   headerLeft: {
     gap: 4,
+  },
+  headerRight: {
+    justifyContent: 'center',
+  },
+  avatarContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  streakBadge: {
+    position: 'absolute',
+    bottom: -2,
+    right: -2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  streakBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
   },
   greeting: {
     fontSize: 28,
