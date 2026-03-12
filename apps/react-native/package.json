@@ -10,7 +10,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "build:android": "expo run:android",
-    "build:ios": "expo run:ios"
+    "build:ios": "expo run:ios",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",
@@ -27,6 +28,7 @@
     "expo-secure-store": "~15.0.8",
     "expo-sqlite": "~16.0.10",
     "expo-status-bar": "~3.0.9",
+    "expo-updates": "~0.26.16",
     "i18next": "^25.8.14",
     "lucide-react-native": "^0.577.0",
     "react": "19.1.0",
@@ -37,7 +39,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
-    "@types/react": "~19.1.10",
+    "@types/react": "~18.2.79",
     "typescript": "~5.9.2"
   }
 }

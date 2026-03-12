@@ -504,15 +504,15 @@ export default function StatsScreen() {
               <Text
                 style={[
                   styles.changeValue,
-                  { color: stats.percentChange >= 0 ? colors.primary : colors.error },
+                  { color: (stats.percentChange ?? 0) >= 0 ? colors.primary : colors.error },
                 ]}
               >
-                {stats.percentChange > 0 ? '+' : ''}
-                {stats.percentChange}%
+                {(stats.percentChange ?? 0) > 0 ? '+' : ''}
+                {stats.percentChange ?? 0}%
               </Text>
               <TrendingUp
                 size={16}
-                color={stats.percentChange >= 0 ? colors.primary : colors.error}
+                color={(stats.percentChange ?? 0) >= 0 ? colors.primary : colors.error}
               />
             </View>
             <Text style={[styles.chartTotalLabel, { color: colors.textSecondary }]}>

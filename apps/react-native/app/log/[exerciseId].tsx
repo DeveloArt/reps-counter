@@ -33,7 +33,7 @@ export default function LogEntryScreen() {
   }, [exerciseId]);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (isRunning) {
       startTimeRef.current = Date.now();
       initialValueRef.current = Number(value) || 0;

@@ -237,7 +237,7 @@ export default function GoalsScreen() {
   ];
 
   const handleEditGoal = (goal: Goal) => {
-    router.push(`/goal/${goal.id}`);
+    router.push(`/goal/${goal.id}` as any);
   };
 
   if (loading) {
