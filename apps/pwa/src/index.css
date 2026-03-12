@@ -1,0 +1,70 @@
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap");
+@import "tailwindcss";
+
+@variant dark
+(
+&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Lexend", ui-sans-serif, system-ui, sans-serif;
+
+  --color-primary: #0d5d5d;
+  --color-primary-foreground: #ffffff;
+
+  --color-accent-teal: #147a7a;
+
+  --color-background: #f9f9f7;
+  --color-foreground: #0f1717;
+
+  --color-card: #ffffff;
+  --color-card-foreground: #0f1717;
+
+  --color-muted: #f1f5f9;
+  --color-muted-foreground: #64748b;
+
+  --color-border: #e2e8f0;
+}
+
+.dark {
+  --color-background: #0f1717;
+  --color-foreground: #f9f9f7;
+
+  --color-card: #1a2323;
+  --color-card-foreground: #f9f9f7;
+
+  --color-muted: #1e293b;
+  --color-muted-foreground: #94a3b8;
+
+  --color-border: #2d3748;
+}
+
+/* Custom utilities if needed */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Button interactive styles */
+button,
+[role="button"],
+.btn {
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease, background-color 0.2s ease;
+}
+
+button:hover,
+[role="button"]:hover,
+.btn:hover {
+  transform: scale(1.02);
+  opacity: 0.9;
+}
+
+button:active,
+[role="button"]:active,
+.btn:active {
+  transform: scale(0.97);
+}

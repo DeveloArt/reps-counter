@@ -1,0 +1,12 @@
+{
+  "name": "FitCounter",
+  "version": "1.0.0",
+  "description": "Track your micro-workouts throughout the day",
+  "default_popup": "popup.html",
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": ["storage", "alarms", "notifications"],
+  "host_permissions": ["<all_urls>"]
+}

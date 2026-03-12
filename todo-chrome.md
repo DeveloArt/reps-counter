@@ -45,5 +45,5 @@ Głównym celem jest umożliwienie użytkownikom szybkiego logowania ćwiczeń (
 ### Etap 5: Testowanie i Publikacja
 *   [ ] **Testowanie lokalne:** Załadowanie rozpakowanego rozszerzenia (Load unpacked) w `chrome://extensions/`.
 *   [ ] **Testy wydajnościowe:** Sprawdzenie, czy animacje (Framer Motion) działają płynnie w popupie.
-*   [ ] **Przygotowanie paczki:** Zbudowanie wersji produkcyjnej (`npm run build`) i spakowanie do pliku `.zip`.
+*   [ ] **Przygotowanie paczki:** Zbudowanie wersji produkcyjnej (`pnpm run build`) i spakowanie do pliku `.zip`.
 *   [ ] **Chrome Web Store:** Przygotowanie grafik, opisów i polityki prywatności do publikacji w sklepie.
