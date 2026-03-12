@@ -78,7 +78,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   content: {
-    padding: 16,
-    maxHeight: '75%',
+    paddingTop: 16,
+    paddingHorizontal: 16,
+    paddingBottom: 20,
   },
 });

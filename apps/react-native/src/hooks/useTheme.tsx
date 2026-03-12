@@ -62,23 +62,18 @@ export function useTheme() {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const systemColorScheme = useColorScheme();
-  const [manualDarkMode, setManualDarkMode] = useState<boolean | null>(null);
   const [theme, setThemeState] = useState<'light' | 'dark' | 'system'>('system');
 
-  const isDark = manualDarkMode !== null ? manualDarkMode : systemColorScheme === 'dark';
+  const isDark = theme === 'system' ? systemColorScheme === 'dark' : theme === 'dark';
   const colors = isDark ? darkColors : lightColors;
 
   const toggleTheme = () => {
-    setManualDarkMode((prev) => (prev === null ? true : !prev));
+    const newTheme = isDark ? 'light' : 'dark';
+    setThemeState(newTheme);
   };
 
   const setTheme = (newTheme: 'light' | 'dark' | 'system') => {
     setThemeState(newTheme);
-    if (newTheme === 'system') {
-      setManualDarkMode(null);
-    } else {
-      setManualDarkMode(newTheme === 'dark');
-    }
   };
 
   return (

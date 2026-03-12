@@ -1,6 +1,7 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider } from '../src/hooks/useTheme';
+import '../src/i18n';
 
 export default function RootLayout() {
   return (

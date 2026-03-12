@@ -1,4 +1,4 @@
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import {
   Activity,
   AlertCircle,
@@ -11,13 +11,15 @@ import {
   PlusCircle,
   Timer,
 } from 'lucide-react-native';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { getExercises, getGoals, getLogs, initDatabase } from '../../src/db';
 import { useTheme } from '../../src/hooks/useTheme';
 import type { Exercise, Goal, LogEntry } from '../../src/types';
 
 export default function GoalsScreen() {
+  const { t } = useTranslation();
   const { colors } = useTheme();
   const router = useRouter();
   const [goals, setGoals] = useState<Goal[]>([]);
@@ -27,21 +29,28 @@ export default function GoalsScreen() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedGoalFilter, setSelectedGoalFilter] = useState<string>('all');
 
-  useEffect(() => {
-    async function loadData() {
-      await initDatabase();
-      const [goalsData, exercisesData, logsData] = await Promise.all([
-        getGoals(),
-        getExercises(),
-        getLogs(),
-      ]);
-      setGoals(goalsData);
-      setExercises(exercisesData);
-      setLogs(logsData);
-      setLoading(false);
-    }
-    loadData();
+  const loadData = useCallback(async () => {
+    await initDatabase();
+    const [goalsData, exercisesData, logsData] = await Promise.all([
+      getGoals(),
+      getExercises(),
+      getLogs(),
+    ]);
+    setGoals(goalsData);
+    setExercises(exercisesData);
+    setLogs(logsData);
+    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [loadData])
+  );
 
   const exerciseMap = useMemo(() => new Map(exercises.map((e) => [e.id, e])), [exercises]);
 
@@ -248,7 +257,7 @@ export default function GoalsScreen() {
           { backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center' },
         ]}
       >
-        <Text style={{ color: colors.text }}>Loading...</Text>
+        <Text style={{ color: colors.text }}>{t('common.loading')}</Text>
       </View>
     );
   }
@@ -261,10 +270,10 @@ export default function GoalsScreen() {
         {/* Active Goals Section */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>Active Goals</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('goals.activeGoals')}</Text>
             <TouchableOpacity onPress={() => router.push('/goal/new')} style={styles.addButton}>
               <PlusCircle size={16} color={colors.primary} />
-              <Text style={[styles.addButtonText, { color: colors.primary }]}>Add Goal</Text>
+              <Text style={[styles.addButtonText, { color: colors.primary }]}>{t('goals.addGoal')}</Text>
             </TouchableOpacity>
           </View>
 
@@ -310,22 +319,22 @@ export default function GoalsScreen() {
                             >
                               <AlertCircle size={10} color={colors.error} />
                               <Text style={[styles.pausedBadgeText, { color: colors.error }]}>
-                                Paused
+                                {t('goals.pausedStatus')}
                               </Text>
                             </View>
                           )}
                         </View>
                         <Text style={[styles.goalSubtitle, { color: colors.textSecondary }]}>
                           {goal.type === 'daily'
-                            ? 'Daily'
+                            ? t('goals.daily')
                             : goal.type === 'weekly'
-                              ? 'Weekly'
-                              : 'Monthly'}{' '}
+                              ? t('goals.weekly')
+                              : t('goals.monthly')}{' '}
                           •{' '}
                           {goal.metric === 'reps'
-                            ? 'Reps'
+                            ? t('home.reps')
                             : goal.metric === 'time'
-                              ? 'Mins'
+                              ? t('home.mins')
                               : 'Workouts'}
                         </Text>
                       </View>
@@ -378,11 +387,11 @@ export default function GoalsScreen() {
             {activeGoals.length === 0 && (
               <View style={[styles.emptyState, { borderColor: colors.border }]}>
                 <Text style={[styles.emptyStateText, { color: colors.textSecondary }]}>
-                  No goals yet
+                  {t('goals.noGoals')}
                 </Text>
                 <TouchableOpacity onPress={() => router.push('/goal/new')}>
                   <Text style={[styles.emptyStateLink, { color: colors.primary }]}>
-                    Create your first goal
+                    {t('goals.createFirst')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -393,7 +402,7 @@ export default function GoalsScreen() {
         {/* History Calendar */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>History</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('goals.history')}</Text>
             <View
               style={[
                 styles.monthNav,
@@ -446,7 +455,7 @@ export default function GoalsScreen() {
                       { color: selectedGoalFilter === 'all' ? 'white' : colors.text },
                     ]}
                   >
-                    All Goals
+                    {t('goals.allGoals')}
                   </Text>
                 </TouchableOpacity>
                 {goals.slice(0, 2).map((g) => (
@@ -521,7 +530,7 @@ export default function GoalsScreen() {
               <View style={styles.legendContainer}>
                 <View style={styles.legendItem}>
                   <View style={[styles.legendDot, { backgroundColor: colors.border }]} />
-                  <Text style={[styles.legendText, { color: colors.textSecondary }]}>None</Text>
+                  <Text style={[styles.legendText, { color: colors.textSecondary }]}>{t('common.none')}</Text>
                 </View>
                 <View style={styles.legendItem}>
                   <View
@@ -530,11 +539,11 @@ export default function GoalsScreen() {
                       { backgroundColor: `${colors.primary}66`, borderColor: colors.primary },
                     ]}
                   />
-                  <Text style={[styles.legendText, { color: colors.textSecondary }]}>Some</Text>
+                  <Text style={[styles.legendText, { color: colors.textSecondary }]}>{t('common.some')}</Text>
                 </View>
                 <View style={styles.legendItem}>
                   <View style={[styles.legendDot, { backgroundColor: colors.primary }]} />
-                  <Text style={[styles.legendText, { color: colors.textSecondary }]}>All</Text>
+                  <Text style={[styles.legendText, { color: colors.textSecondary }]}>{t('common.all')}</Text>
                 </View>
               </View>
             )}

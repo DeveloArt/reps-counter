@@ -1,5 +1,5 @@
-import { useRouter } from 'expo-router';
-import { Calendar, Check } from 'lucide-react-native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { Calendar, Check, Trash2 } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -12,29 +12,47 @@ import {
   View,
 } from 'react-native';
 import { Modal } from '../../src/components/Modal';
-import { addGoal, getExercises, initDatabase } from '../../src/db';
+import { deleteGoal, getExercises, getGoals, initDatabase, updateGoal } from '../../src/db';
 import { useTheme } from '../../src/hooks/useTheme';
+import type { Goal } from '../../src/types';
 
-export default function NewGoalScreen() {
+export default function EditGoalScreen() {
   const { t } = useTranslation();
   const { colors } = useTheme();
   const router = useRouter();
+  const { id } = useLocalSearchParams<{ id: string }>();
   const [exercises, setExercises] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [title, setTitle] = useState('');
   const [type, setType] = useState<'daily' | 'weekly' | 'monthly'>('daily');
   const [targetValue, setTargetValue] = useState('');
   const [exerciseId, setExerciseId] = useState<string>('');
   const [metric, setMetric] = useState<'reps' | 'time' | 'workouts'>('reps');
+  const [isActive, setIsActive] = useState(true);
 
   useEffect(() => {
     async function loadData() {
       await initDatabase();
-      const data = await getExercises();
-      setExercises(data);
+      const [exercisesData, goalsData] = await Promise.all([
+        getExercises(),
+        getGoals(),
+      ]);
+      setExercises(exercisesData);
+
+      const goal = goalsData.find((g: Goal) => g.id === id);
+      if (goal) {
+        setTitle(goal.title);
+        setType(goal.type);
+        setTargetValue(String(goal.targetValue));
+        setExerciseId(goal.exerciseId || '');
+        setMetric(goal.metric);
+        setIsActive(goal.isActive);
+      }
+      setLoading(false);
     }
     loadData();
-  }, []);
+  }, [id]);
 
   const handleSave = async () => {
     if (!title.trim() || !targetValue) {
@@ -42,21 +60,54 @@ export default function NewGoalScreen() {
       return;
     }
 
-    await addGoal({
+    await updateGoal(id, {
       title: title.trim(),
       type,
       targetValue: Number.parseInt(targetValue, 10),
       exerciseId: exerciseId || undefined,
       metric,
-      startDate: new Date(),
-      isActive: true,
+      isActive,
     });
 
     router.back();
   };
 
+  const handleDelete = () => {
+    Alert.alert(
+      t('goals.deleteGoal'),
+      t('goals.deleteGoalConfirm'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('common.delete'),
+          style: 'destructive',
+          onPress: async () => {
+            await deleteGoal(id);
+            router.back();
+          },
+        },
+      ]
+    );
+  };
+
+  const handleToggleActive = async () => {
+    const newActiveState = !isActive;
+    setIsActive(newActiveState);
+    await updateGoal(id, { isActive: newActiveState });
+  };
+
+  if (loading) {
+    return (
+      <Modal isOpen={true} onClose={() => router.back()} title={t('goals.editGoal')}>
+        <View style={styles.loadingContainer}>
+          <Text style={{ color: colors.text }}>{t('common.loading')}</Text>
+        </View>
+      </Modal>
+    );
+  }
+
   return (
-    <Modal isOpen={true} onClose={() => router.back()} title={t('goals.newGoal')}>
+    <Modal isOpen={true} onClose={() => router.back()} title={t('goals.editGoal')}>
       <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
 
         <View style={styles.typeGrid}>
@@ -221,13 +272,45 @@ export default function NewGoalScreen() {
           />
         </View>
 
-        <TouchableOpacity
-          style={[styles.saveButton, { backgroundColor: colors.primary }]}
-          onPress={handleSave}
-        >
-          <Check size={20} color="white" />
-          <Text style={styles.saveButtonText}>{t('goals.createGoal')}</Text>
-        </TouchableOpacity>
+        <View style={styles.formSection}>
+          <View style={styles.activeToggleRow}>
+            <View>
+              <Text style={[styles.label, { color: colors.text }]}>{t('common.active')}</Text>
+              <Text style={[styles.activeDescription, { color: colors.textSecondary }]}>
+                {isActive ? t('goals.activeDescription') : t('goals.pausedDescription')}
+              </Text>
+            </View>
+            <TouchableOpacity
+              style={[
+                styles.activeToggle,
+                { backgroundColor: isActive ? colors.primary : colors.muted },
+              ]}
+              onPress={handleToggleActive}
+            >
+              <Text style={[styles.activeToggleText, { color: isActive ? 'white' : colors.text }]}>
+                {isActive ? t('goals.activeStatus') : t('goals.pausedStatus')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.buttonRow}>
+          <TouchableOpacity
+            style={[styles.deleteButton, { backgroundColor: colors.error }]}
+            onPress={handleDelete}
+          >
+            <Trash2 size={20} color="white" />
+            <Text style={styles.deleteButtonText}>{t('common.delete')}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.saveButton, { backgroundColor: colors.primary }]}
+            onPress={handleSave}
+          >
+            <Check size={20} color="white" />
+            <Text style={styles.saveButtonText}>{t('common.save')}</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </Modal>
   );
@@ -237,6 +320,11 @@ const styles = StyleSheet.create({
   modalContent: {
     gap: 24,
     paddingBottom: 16,
+  },
+  loadingContainer: {
+    padding: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   typeGrid: {
     flexDirection: 'row',
@@ -324,7 +412,31 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
   },
-  saveButton: {
+  activeToggleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  activeDescription: {
+    fontSize: 12,
+    marginTop: 2,
+  },
+  activeToggle: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 12,
+  },
+  activeToggleText: {
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginTop: 8,
+  },
+  deleteButton: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -336,7 +448,25 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 4,
-    marginTop: 8,
+  },
+  deleteButtonText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: 'white',
+  },
+  saveButton: {
+    flex: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    borderRadius: 12,
+    paddingVertical: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 4,
   },
   saveButtonText: {
     fontSize: 16,

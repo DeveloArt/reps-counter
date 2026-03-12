@@ -15,20 +15,20 @@
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",
-    "@react-native-async-storage/async-storage": "^3.0.1",
-    "@react-native-community/slider": "^5.1.2",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/slider": "5.0.1",
     "date-fns": "^4.1.0",
     "expo": "~54.0.0",
     "expo-constants": "~18.0.13",
     "expo-crypto": "~15.0.8",
     "expo-linking": "~8.0.11",
-    "expo-localization": "^55.0.8",
+    "expo-localization": "~17.0.8",
     "expo-notifications": "~0.32.16",
     "expo-router": "~6.0.23",
     "expo-secure-store": "~15.0.8",
     "expo-sqlite": "~16.0.10",
     "expo-status-bar": "~3.0.9",
-    "expo-updates": "~0.26.16",
+    "expo-updates": "~29.0.16",
     "i18next": "^25.8.14",
     "lucide-react-native": "^0.577.0",
     "react": "19.1.0",
@@ -39,7 +39,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
-    "@types/react": "~18.2.79",
     "typescript": "~5.9.2"
   }
 }
