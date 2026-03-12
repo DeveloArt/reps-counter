@@ -1,0 +1,13 @@
+pre-commit:
+  skip: true
+
+pre-push:
+  parallel: true
+  commands:
+    typecheck:
+      run: npx tsc --noEmit
+    test:
+      run: pnpm -r run test
+
+commit-msg:
+  skip: true
