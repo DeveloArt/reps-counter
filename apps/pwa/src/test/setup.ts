@@ -3,6 +3,8 @@ import { cleanup } from '@testing-library/react';
 import { afterEach, beforeAll, vi } from 'vitest';
 
 beforeAll(() => {
+  document.title = 'FitCounter';
+  
   vi.stubGlobal(
     'matchMedia',
     vi.fn().mockImplementation((query) => ({
