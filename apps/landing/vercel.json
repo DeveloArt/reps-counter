@@ -1,6 +1,6 @@
 {
   "buildCommand": "pnpm run build",
   "outputDirectory": ".next",
-  "installCommand": "pnpm install --filter=@fitcounter/landing --filter=@fitcounter/ui",
+  "installCommand": "pnpm install --filter=@fitcounter/landing...",
   "framework": "nextjs"
 }

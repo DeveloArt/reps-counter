@@ -1,6 +1,6 @@
 {
   "buildCommand": "pnpm run build",
   "outputDirectory": "dist",
-  "installCommand": "pnpm install --filter=@fitcounter/pwa --filter=@fitcounter/core --filter=@fitcounter/ui",
+  "installCommand": "pnpm install --filter=@fitcounter/pwa...",
   "framework": "vite"
 }

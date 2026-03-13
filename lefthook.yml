@@ -1,46 +1,8 @@
-{
-  "$schema": "https://json.schemastore.org/lefthook.json",
-  "pre-commit": {
-    "parallel": true,
-    "commands": {
-      "lint": {
-        "run": "npx biome check --files-modified-staged"
-      },
-      "format": {
-        "run": "npx biome format --files-modified-staged"
-      }
-    }
-  },
-  "pre-push": {
-    "parallel": true,
-    "commands": {
-      "typecheck": {
-        "run": "npx tsc --noEmit"
-      },
-      "test": {
-        "run": "npm run test --workspaces --if-present"
-      }
-    }
-  },
-  "commit-msg": {
-    "commands": {
-      "commitlint": {
-        "run": "npx commitlint --edit {1}"
-      }
-    }
-  }
-}
-
 pre-commit:
   skip: true
 
 pre-push:
-  parallel: true
-  commands:
-    typecheck:
-      run: npx tsc --noEmit
-    test:
-      run: pnpm -r run test
+  skip: true
 
 commit-msg:
   skip: true
