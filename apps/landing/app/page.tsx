@@ -1,5 +1,4 @@
-import { Link } from 'react-router-dom';
-import { motion } from 'motion/react';
+import Link from 'next/link';
 import { Dumbbell, Activity, Target, Smartphone, Zap, ShieldCheck, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export default function LandingPage() {
@@ -16,7 +15,7 @@ export default function LandingPage() {
           </div>
           <div className="flex items-center gap-4">
             <Link 
-              to="/app" 
+              href="https://develoart.com/PWA/reps-counter" 
               className="bg-primary text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all hover:-translate-y-0.5"
             >
               Uruchom PWA
@@ -27,58 +26,33 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto flex flex-col items-center text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6"
-        >
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
           <Zap className="size-4" />
           <span>Zbuduj nawyk w 2 kliknięcia</span>
-        </motion.div>
+        </div>
         
-        <motion.h1 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 max-w-4xl"
-        >
+        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 max-w-4xl">
           Śledź swoje treningi. <br className="hidden sm:block" />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-600">
             Bez wymówek.
           </span>
-        </motion.h1>
+        </h1>
         
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-2xl"
-        >
+        <p className="text-lg sm:text-xl text-muted-foreground mb-10 max-w-2xl">
           Aplikacja stworzona z myślą o osobach, które chcą wprowadzić nawyki treningowe zgodnie z zasadami opisanymi w książkach takich jak <strong>"Atomic Habits"</strong> czy <strong>"Tiny Habits"</strong>. Prosta, szybka i w 100% prywatna.
-        </motion.p>
+        </p>
         
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
-        >
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
           <Link 
-            to="/app" 
+            href="https://develoart.com/PWA/reps-counter" 
             className="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white px-8 py-4 rounded-full text-lg font-bold shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-all hover:-translate-y-1"
           >
             Przejdź do aplikacji
             <ArrowRight className="size-5" />
           </Link>
-        </motion.div>
+        </div>
 
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.6 }}
-          className="mt-12 flex flex-col sm:flex-row items-center gap-6 text-sm text-muted-foreground"
-        >
+        <div className="mt-12 flex flex-col sm:flex-row items-center gap-6 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <ShieldCheck className="size-5 text-emerald-500" />
             <span>100% Prywatności (Local-first)</span>
@@ -91,7 +65,7 @@ export default function LandingPage() {
             <Smartphone className="size-5 text-blue-500" />
             <span>Działa offline</span>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       {/* Features Section */}
@@ -185,7 +159,7 @@ export default function LandingPage() {
             develoart.com/PWA/reps-counter
           </div>
           <Link 
-            to="/app" 
+            href="https://develoart.com/PWA/reps-counter" 
             className="inline-flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-full font-bold shadow-md hover:shadow-lg transition-all"
           >
             Uruchom teraz w przeglądarce
