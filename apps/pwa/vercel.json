@@ -1,8 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "cd ../.. && npm run build -w @fitcounter/pwa",
+  "buildCommand": "npm run build",
   "devCommand": "npm run dev",
-  "installCommand": "cd ../.. && npm install",
+  "installCommand": "npm install --prefix ../.. && npm install",
   "outputDirectory": "dist",
   "rewrites": [
     {
