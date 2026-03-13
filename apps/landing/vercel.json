@@ -1,7 +1,10 @@
 {
   "buildCommand": "pnpm run build",
   "outputDirectory": ".next",
-  "installCommand": "pnpm install",
+  "installCommand": "pnpm install --no-frozen-lockfile",
   "framework": "nextjs",
-  "ignoreCommand": "git diff --quiet HEAD^ HEAD ."
+  "ignoreCommand": "git diff --quiet HEAD^ HEAD .",
+  "env": {
+    "PNPM_FLAGS": "--shamefully-hoist"
+  }
 }

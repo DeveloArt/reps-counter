@@ -1,0 +1,7 @@
+apps/react-native
+apps/chrome-extension
+node_modules
+.git
+*.log
+.env.local
+.env.*.local
