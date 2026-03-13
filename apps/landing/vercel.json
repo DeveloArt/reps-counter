@@ -1,6 +1,6 @@
 {
   "buildCommand": "pnpm run build",
   "outputDirectory": ".next",
-  "installCommand": "pnpm install --no-frozen-lockfile",
+  "installCommand": "pnpm install --filter=@fitcounter/landing --filter=@fitcounter/ui",
   "framework": "nextjs"
 }

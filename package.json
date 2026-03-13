@@ -21,9 +21,6 @@
     "lefthook": "^1.10.0",
     "typescript": "~5.8.2"
   },
-  "dependencies": {
-    "react-native-svg": "^15.15.3"
-  },
   "pnpm": {
     "overrides": {
       "@fitcounter/mobile>@types/react": "~18.2.0"
