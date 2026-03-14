@@ -59,11 +59,11 @@ export default function HomeScreen() {
       setWeeklyLogs(weeklyData);
       setSettings(settingsData);
       setGoals(goalsData.filter((g) => g.type === 'daily' && g.isActive));
-      
+
       // Calculate streak
       const calculatedStreak = calculateStreak(weeklyData);
       setStreak(calculatedStreak);
-      
+
       setLoading(false);
     }
     loadData();
@@ -75,17 +75,18 @@ export default function HomeScreen() {
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     // Group logs by date
     const dateMap = new Map<string, boolean>();
-    allLogs.forEach(log => {
-      const dateStr = typeof log.date === 'string' ? log.date : log.date.toISOString().split('T')[0];
+    allLogs.forEach((log) => {
+      const dateStr =
+        typeof log.date === 'string' ? log.date : log.date.toISOString().split('T')[0];
       dateMap.set(dateStr, true);
     });
 
     let currentStreak = 0;
-    let checkDate = new Date(today);
-    
+    const checkDate = new Date(today);
+
     // Check if today has activity, if not start from yesterday
     const todayStr = today.toISOString().split('T')[0];
     if (!dateMap.has(todayStr)) {

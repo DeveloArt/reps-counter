@@ -1,11 +1,11 @@
+import { useTheme } from '@/context/ThemeContext';
+import { cn } from '@/lib/utils';
 import { db } from '@fitcounter/core';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { ArrowLeft, ChevronRight, Info, Monitor, Moon, Sun, Trash2 } from 'lucide-react';
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { useTheme } from '@/context/ThemeContext';
-import { cn } from '@/lib/utils';
 
 export default function SettingsPage() {
   const { t, i18n } = useTranslation();

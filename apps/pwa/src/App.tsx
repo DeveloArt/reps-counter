@@ -3,7 +3,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Layout } from '@/components/layout/Layout';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { useNotificationScheduler } from '@/hooks/useNotificationScheduler';
@@ -13,6 +12,7 @@ import PrivacyPage from '@/pages/Privacy';
 import SettingsPage from '@/pages/Settings';
 import StatsPage from '@/pages/Stats';
 import TermsPage from '@/pages/Terms';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import './i18n';
 
 function AppContent() {

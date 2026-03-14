@@ -1,4 +1,5 @@
-import { db, type Exercise } from '@fitcounter/core';
+import { cn } from '@/lib/utils';
+import { type Exercise, db } from '@fitcounter/core';
 import { eachDayOfInterval, endOfDay, format, isSameDay, startOfDay, subDays } from 'date-fns';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Activity, Dumbbell, Edit2, MoreHorizontal, Plus, Timer, Zap } from 'lucide-react';
@@ -6,7 +7,6 @@ import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
-import { cn } from '@/lib/utils';
 
 interface LayoutContext {
   openAddExercise: (exercise?: Exercise) => void;

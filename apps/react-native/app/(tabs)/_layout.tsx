@@ -8,10 +8,7 @@ import { useTheme } from '../../src/hooks/useTheme';
 function FabButton({ color, onPress }: { color: string; onPress: () => void }) {
   return (
     <View style={styles.fabContainer}>
-      <View
-        style={[styles.fab, { backgroundColor: color }]}
-        onTouchEnd={onPress}
-      >
+      <View style={[styles.fab, { backgroundColor: color }]} onTouchEnd={onPress}>
         <Plus size={32} color="white" strokeWidth={2.5} />
       </View>
     </View>
@@ -25,65 +22,64 @@ export default function TabLayout() {
   return (
     <>
       <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textSecondary,
-        tabBarStyle: {
-          backgroundColor: colors.card,
-          borderTopColor: colors.border,
-          height: 85,
-          paddingBottom: 25,
-          paddingTop: 10,
-        },
-        headerStyle: {
-          backgroundColor: colors.card,
-        },
-        headerTintColor: colors.text,
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          headerTitle: 'FitCounter',
-          tabBarIcon: ({ color, size }) => <House size={size} color={color} strokeWidth={2} />,
+        screenOptions={{
+          tabBarActiveTintColor: colors.primary,
+          tabBarInactiveTintColor: colors.textSecondary,
+          tabBarStyle: {
+            backgroundColor: colors.card,
+            borderTopColor: colors.border,
+            height: 85,
+            paddingBottom: 25,
+            paddingTop: 10,
+          },
+          headerStyle: {
+            backgroundColor: colors.card,
+          },
+          headerTintColor: colors.text,
         }}
-      />
-      <Tabs.Screen
-        name="stats"
-        options={{
-          title: 'Stats',
-          tabBarIcon: ({ color, size }) => <ChartBar size={size} color={color} strokeWidth={2} />,
-        }}
-      />
-      <Tabs.Screen
-        name="add"
-        options={{
-          title: '',
-          headerShown: false,
-          tabBarIcon: () => <FabButton color={colors.primary} onPress={() => setIsQuickLogOpen(true)} />,
-        }}
-      />
-      <Tabs.Screen
-        name="goals"
-        options={{
-          title: 'Goals',
-          tabBarIcon: ({ color, size }) => <Target size={size} color={color} strokeWidth={2} />,
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: 'Settings',
-          tabBarIcon: ({ color, size }) => <Settings size={size} color={color} strokeWidth={2} />,
-        }}
-      />
-    </Tabs>
+      >
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: 'Home',
+            headerTitle: 'FitCounter',
+            tabBarIcon: ({ color, size }) => <House size={size} color={color} strokeWidth={2} />,
+          }}
+        />
+        <Tabs.Screen
+          name="stats"
+          options={{
+            title: 'Stats',
+            tabBarIcon: ({ color, size }) => <ChartBar size={size} color={color} strokeWidth={2} />,
+          }}
+        />
+        <Tabs.Screen
+          name="add"
+          options={{
+            title: '',
+            headerShown: false,
+            tabBarIcon: () => (
+              <FabButton color={colors.primary} onPress={() => setIsQuickLogOpen(true)} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="goals"
+          options={{
+            title: 'Goals',
+            tabBarIcon: ({ color, size }) => <Target size={size} color={color} strokeWidth={2} />,
+          }}
+        />
+        <Tabs.Screen
+          name="settings"
+          options={{
+            title: 'Settings',
+            tabBarIcon: ({ color, size }) => <Settings size={size} color={color} strokeWidth={2} />,
+          }}
+        />
+      </Tabs>
 
-      <QuickLogModal
-        isOpen={isQuickLogOpen}
-        onClose={() => setIsQuickLogOpen(false)}
-      />
+      <QuickLogModal isOpen={isQuickLogOpen} onClose={() => setIsQuickLogOpen(false)} />
     </>
   );
 }

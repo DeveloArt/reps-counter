@@ -1,8 +1,8 @@
-import { db, type Exercise } from '@fitcounter/core';
+import { Modal } from '@/components/ui/Modal';
+import { type Exercise, db } from '@fitcounter/core';
 import { Edit2, Minus, Play, Plus, RotateCcw, Save, Square } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Modal } from '@/components/ui/Modal';
 
 interface LogEntryModalProps {
   isOpen: boolean;

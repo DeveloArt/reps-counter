@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Slider from '@react-native-community/slider';
 import { useRouter } from 'expo-router';
 import { ArrowLeft, ChevronRight, Info, Monitor, Moon, Sun, Trash2 } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Alert, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from 'react-native';
-import Slider from '@react-native-community/slider';
 import { getSettings, initDatabase, updateSettings } from '../src/db';
 import { useTheme } from '../src/hooks/useTheme';
 import type { UserSettings } from '../src/types';
@@ -82,7 +82,6 @@ export default function SettingsModalScreen() {
     ]);
   };
 
-
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
@@ -143,8 +142,12 @@ export default function SettingsModalScreen() {
                     thumbTintColor={colors.primary}
                   />
                   <View style={styles.sliderLabels}>
-                    <Text style={[styles.sliderLabel, { color: colors.textSecondary }]}>1 time</Text>
-                    <Text style={[styles.sliderLabel, { color: colors.textSecondary }]}>10 times</Text>
+                    <Text style={[styles.sliderLabel, { color: colors.textSecondary }]}>
+                      1 time
+                    </Text>
+                    <Text style={[styles.sliderLabel, { color: colors.textSecondary }]}>
+                      10 times
+                    </Text>
                   </View>
                 </>
               )}
@@ -371,9 +374,7 @@ export default function SettingsModalScreen() {
           <View style={[styles.aboutCard, { backgroundColor: colors.primary }]}>
             <View style={styles.aboutContent}>
               <Text style={styles.aboutTitle}>FitCounter Pro</Text>
-              <Text style={styles.aboutVersion}>
-                {t('settings.version')} 2.4.1 (Build 402)
-              </Text>
+              <Text style={styles.aboutVersion}>{t('settings.version')} 2.4.1 (Build 402)</Text>
               <View style={styles.aboutLinks}>
                 <TouchableOpacity style={styles.aboutLink}>
                   <Text style={styles.aboutLinkText}>{t('settings.terms')}</Text>

@@ -34,10 +34,7 @@ export default function EditGoalScreen() {
   useEffect(() => {
     async function loadData() {
       await initDatabase();
-      const [exercisesData, goalsData] = await Promise.all([
-        getExercises(),
-        getGoals(),
-      ]);
+      const [exercisesData, goalsData] = await Promise.all([getExercises(), getGoals()]);
       setExercises(exercisesData);
 
       const goal = goalsData.find((g: Goal) => g.id === id);
@@ -73,21 +70,17 @@ export default function EditGoalScreen() {
   };
 
   const handleDelete = () => {
-    Alert.alert(
-      t('goals.deleteGoal'),
-      t('goals.deleteGoalConfirm'),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('common.delete'),
-          style: 'destructive',
-          onPress: async () => {
-            await deleteGoal(id);
-            router.back();
-          },
+    Alert.alert(t('goals.deleteGoal'), t('goals.deleteGoalConfirm'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('common.delete'),
+        style: 'destructive',
+        onPress: async () => {
+          await deleteGoal(id);
+          router.back();
         },
-      ]
-    );
+      },
+    ]);
   };
 
   const handleToggleActive = async () => {
@@ -109,7 +102,6 @@ export default function EditGoalScreen() {
   return (
     <Modal isOpen={true} onClose={() => router.back()} title={t('goals.editGoal')}>
       <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
-
         <View style={styles.typeGrid}>
           <TouchableOpacity
             style={[
@@ -168,7 +160,9 @@ export default function EditGoalScreen() {
               ]}
               onPress={() => setExerciseId('')}
             >
-              <Text style={[styles.exerciseChipText, { color: !exerciseId ? 'white' : colors.text }]}>
+              <Text
+                style={[styles.exerciseChipText, { color: !exerciseId ? 'white' : colors.text }]}
+              >
                 {t('common.all')}
               </Text>
             </TouchableOpacity>

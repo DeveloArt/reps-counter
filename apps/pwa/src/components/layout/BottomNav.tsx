@@ -1,8 +1,8 @@
+import { cn } from '@/lib/utils';
 import { BarChart2, Home, Plus, Settings, Target } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation } from 'react-router-dom';
-import { cn } from '@/lib/utils';
 
 interface BottomNavProps {
   onAddClick: () => void;

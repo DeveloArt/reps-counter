@@ -1,10 +1,10 @@
-import { db, type Goal } from '@fitcounter/core';
+import { Modal } from '@/components/ui/Modal';
+import { cn } from '@/lib/utils';
+import { type Goal, db } from '@fitcounter/core';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Calendar, Check, Save, Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Modal } from '@/components/ui/Modal';
-import { cn } from '@/lib/utils';
 
 interface AddGoalModalProps {
   isOpen: boolean;

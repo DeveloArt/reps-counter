@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { db } from '@fitcounter/core';
 import {
   eachDayOfInterval,
@@ -24,7 +25,6 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Area, AreaChart, Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
-import { cn } from '@/lib/utils';
 
 export default function StatsPage() {
   const { t, i18n } = useTranslation();

@@ -1,9 +1,9 @@
-import { db, type Exercise } from '@fitcounter/core';
+import { Modal } from '@/components/ui/Modal';
+import { cn } from '@/lib/utils';
+import { type Exercise, db } from '@fitcounter/core';
 import { Activity, Check, Dumbbell, Plus, Save, Timer, Trash2 } from 'lucide-react';
 import { type FormEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Modal } from '@/components/ui/Modal';
-import { cn } from '@/lib/utils';
 
 interface AddExerciseModalProps {
   isOpen: boolean;

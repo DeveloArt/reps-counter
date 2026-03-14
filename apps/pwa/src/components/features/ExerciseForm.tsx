@@ -1,6 +1,6 @@
+import type { ExerciseFormProps } from '@/types/components';
 import { Plus, Save, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import type { ExerciseFormProps } from '@/types/components';
 import { ColorPicker } from './ColorPicker';
 import { IconPicker } from './IconPicker';
 

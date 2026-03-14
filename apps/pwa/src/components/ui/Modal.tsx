@@ -1,8 +1,8 @@
+import { cn } from '@/lib/utils';
 import { X } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { type ReactNode, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { cn } from '@/lib/utils';
 
 interface ModalProps {
   isOpen: boolean;

@@ -58,7 +58,6 @@ export default function NewGoalScreen() {
   return (
     <Modal isOpen={true} onClose={() => router.back()} title={t('goals.newGoal')}>
       <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
-
         <View style={styles.typeGrid}>
           <TouchableOpacity
             style={[
@@ -117,7 +116,9 @@ export default function NewGoalScreen() {
               ]}
               onPress={() => setExerciseId('')}
             >
-              <Text style={[styles.exerciseChipText, { color: !exerciseId ? 'white' : colors.text }]}>
+              <Text
+                style={[styles.exerciseChipText, { color: !exerciseId ? 'white' : colors.text }]}
+              >
                 {t('common.all')}
               </Text>
             </TouchableOpacity>

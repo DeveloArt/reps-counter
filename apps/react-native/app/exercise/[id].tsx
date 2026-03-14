@@ -132,10 +132,7 @@ export default function ExerciseDetailScreen() {
             <TouchableOpacity
               style={[
                 styles.segmentButton,
-                unit === 'reps' && [
-                  styles.segmentButtonActive,
-                  { backgroundColor: colors.card },
-                ],
+                unit === 'reps' && [styles.segmentButtonActive, { backgroundColor: colors.card }],
               ]}
               onPress={() => setUnit('reps')}
             >

@@ -1,8 +1,8 @@
-import { db, type Exercise } from '@fitcounter/core';
+import { Modal } from '@/components/ui/Modal';
+import { type Exercise, db } from '@fitcounter/core';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Activity, Dumbbell, Plus, Timer } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Modal } from '@/components/ui/Modal';
 
 interface QuickLogModalProps {
   isOpen: boolean;

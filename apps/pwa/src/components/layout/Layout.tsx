@@ -1,9 +1,9 @@
-import type { Exercise } from '@fitcounter/core';
-import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
 import { AddExerciseModal } from '@/components/features/AddExerciseModal';
 import { LogEntryModal } from '@/components/features/LogEntryModal';
 import { QuickLogModal } from '@/components/features/QuickLogModal';
+import type { Exercise } from '@fitcounter/core';
+import { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import { BottomNav } from './BottomNav';
 
 export function Layout() {

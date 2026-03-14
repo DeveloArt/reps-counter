@@ -1,5 +1,5 @@
-import { Activity, Dumbbell, Timer } from 'lucide-react';
 import type { IconPickerProps } from '@/types/components';
+import { Activity, Dumbbell, Timer } from 'lucide-react';
 
 const ICONS = [
   { name: 'Dumbbell', icon: Dumbbell },

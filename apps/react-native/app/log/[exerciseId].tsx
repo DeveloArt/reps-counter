@@ -86,19 +86,16 @@ export default function LogEntryScreen() {
       <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <View style={styles.iconContainer}>
-            <View
-              style={[
-                styles.exerciseIcon,
-                { backgroundColor: `${colors.primary}10` },
-              ]}
-            >
+            <View style={[styles.exerciseIcon, { backgroundColor: `${colors.primary}10` }]}>
               <Text style={[styles.exerciseInitial, { color: colors.primary }]}>
                 {exercise.name.charAt(0)}
               </Text>
             </View>
             <View>
               <Text style={[styles.exerciseName, { color: colors.text }]}>{exercise.name}</Text>
-              <Text style={[styles.exerciseSubtitle, { color: colors.textSecondary }]}>Dodaj nowy wpis</Text>
+              <Text style={[styles.exerciseSubtitle, { color: colors.textSecondary }]}>
+                Dodaj nowy wpis
+              </Text>
             </View>
           </View>
         </View>
@@ -136,14 +133,24 @@ export default function LogEntryScreen() {
             <View style={[styles.timerBox, { backgroundColor: `${colors.primary}05` }]}>
               <View style={styles.timerDisplay}>
                 <View style={styles.timeUnit}>
-                  <View style={[styles.timeCard, { backgroundColor: colors.card, borderColor: `${colors.primary}10` }]}>
+                  <View
+                    style={[
+                      styles.timeCard,
+                      { backgroundColor: colors.card, borderColor: `${colors.primary}10` },
+                    ]}
+                  >
                     <Text style={[styles.timeValue, { color: colors.primary }]}>{minutes}</Text>
                   </View>
                   <Text style={[styles.timeLabel, { color: colors.textSecondary }]}>MINUTES</Text>
                 </View>
                 <Text style={[styles.timeSeparator, { color: colors.primary }]}>:</Text>
                 <View style={styles.timeUnit}>
-                  <View style={[styles.timeCard, { backgroundColor: colors.card, borderColor: `${colors.primary}10` }]}>
+                  <View
+                    style={[
+                      styles.timeCard,
+                      { backgroundColor: colors.card, borderColor: `${colors.primary}10` },
+                    ]}
+                  >
                     <Text style={[styles.timeValue, { color: colors.primary }]}>{seconds}</Text>
                   </View>
                   <Text style={[styles.timeLabel, { color: colors.textSecondary }]}>SECONDS</Text>
@@ -155,7 +162,11 @@ export default function LogEntryScreen() {
                   onPress={toggleTimer}
                   style={[styles.timerButton, { backgroundColor: colors.primary }]}
                 >
-                  {isRunning ? <Square size={20} color="white" /> : <Play size={20} color="white" />}
+                  {isRunning ? (
+                    <Square size={20} color="white" />
+                  ) : (
+                    <Play size={20} color="white" />
+                  )}
                   <Text style={styles.timerButtonText}>{isRunning ? 'Stop' : 'Start'}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity

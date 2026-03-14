@@ -61,15 +61,13 @@ export function QuickLogModal({ isOpen, onClose }: QuickLogModalProps) {
               <TouchableOpacity
                 key={exercise.id}
                 onPress={() => handleSelectExercise(exercise)}
-                style={[styles.exerciseButton, { backgroundColor: colors.card, borderColor: colors.border }]}
+                style={[
+                  styles.exerciseButton,
+                  { backgroundColor: colors.card, borderColor: colors.border },
+                ]}
                 activeOpacity={0.7}
               >
-                <View
-                  style={[
-                    styles.iconContainer,
-                    { backgroundColor: `${exercise.color}20` },
-                  ]}
-                >
+                <View style={[styles.iconContainer, { backgroundColor: `${exercise.color}20` }]}>
                   <Icon size={24} color={exercise.color} />
                 </View>
                 <View style={styles.textContainer}>
@@ -84,13 +82,18 @@ export function QuickLogModal({ isOpen, onClose }: QuickLogModalProps) {
 
           <TouchableOpacity
             onPress={handleAddNew}
-            style={[styles.addNewButton, { backgroundColor: colors.muted, borderColor: colors.border }]}
+            style={[
+              styles.addNewButton,
+              { backgroundColor: colors.muted, borderColor: colors.border },
+            ]}
             activeOpacity={0.7}
           >
             <View style={[styles.addIconContainer, { backgroundColor: colors.border }]}>
               <Plus size={20} color={colors.textSecondary} />
             </View>
-            <Text style={[styles.addNewText, { color: colors.textSecondary }]}>Dodaj ćwiczenie</Text>
+            <Text style={[styles.addNewText, { color: colors.textSecondary }]}>
+              Dodaj ćwiczenie
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

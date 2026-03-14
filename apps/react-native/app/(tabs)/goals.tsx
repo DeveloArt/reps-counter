@@ -270,10 +270,14 @@ export default function GoalsScreen() {
         {/* Active Goals Section */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('goals.activeGoals')}</Text>
+            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+              {t('goals.activeGoals')}
+            </Text>
             <TouchableOpacity onPress={() => router.push('/goal/new')} style={styles.addButton}>
               <PlusCircle size={16} color={colors.primary} />
-              <Text style={[styles.addButtonText, { color: colors.primary }]}>{t('goals.addGoal')}</Text>
+              <Text style={[styles.addButtonText, { color: colors.primary }]}>
+                {t('goals.addGoal')}
+              </Text>
             </TouchableOpacity>
           </View>
 
@@ -530,7 +534,9 @@ export default function GoalsScreen() {
               <View style={styles.legendContainer}>
                 <View style={styles.legendItem}>
                   <View style={[styles.legendDot, { backgroundColor: colors.border }]} />
-                  <Text style={[styles.legendText, { color: colors.textSecondary }]}>{t('common.none')}</Text>
+                  <Text style={[styles.legendText, { color: colors.textSecondary }]}>
+                    {t('common.none')}
+                  </Text>
                 </View>
                 <View style={styles.legendItem}>
                   <View
@@ -539,11 +545,15 @@ export default function GoalsScreen() {
                       { backgroundColor: `${colors.primary}66`, borderColor: colors.primary },
                     ]}
                   />
-                  <Text style={[styles.legendText, { color: colors.textSecondary }]}>{t('common.some')}</Text>
+                  <Text style={[styles.legendText, { color: colors.textSecondary }]}>
+                    {t('common.some')}
+                  </Text>
                 </View>
                 <View style={styles.legendItem}>
                   <View style={[styles.legendDot, { backgroundColor: colors.primary }]} />
-                  <Text style={[styles.legendText, { color: colors.textSecondary }]}>{t('common.all')}</Text>
+                  <Text style={[styles.legendText, { color: colors.textSecondary }]}>
+                    {t('common.all')}
+                  </Text>
                 </View>
               </View>
             )}

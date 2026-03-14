@@ -1,4 +1,6 @@
-import { db, type Goal } from '@fitcounter/core';
+import { AddGoalModal } from '@/components/features/AddGoalModal';
+import { cn } from '@/lib/utils';
+import { type Goal, db } from '@fitcounter/core';
 import {
   addMonths,
   eachDayOfInterval,
@@ -29,8 +31,6 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { AddGoalModal } from '@/components/features/AddGoalModal';
-import { cn } from '@/lib/utils';
 
 export default function GoalsPage() {
   const { t, i18n } = useTranslation();
