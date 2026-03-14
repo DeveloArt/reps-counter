@@ -58,7 +58,7 @@ export function QuickAddSection({
                 </p>
               </div>
               <div className="flex items-center justify-center w-full py-2 bg-muted rounded-lg group-active:bg-primary group-active:text-white transition-colors">
-                <Plus className="size-5" />
+                <Plus className="size-5 text-foreground" />
               </div>
             </button>
           );

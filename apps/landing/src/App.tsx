@@ -15,7 +15,7 @@ export default function App() {
           </div>
           <div className="flex items-center gap-4">
             <a 
-              href="https://app.fitcounter.com" 
+              href="https://reps-counter-pwa.vercel.app/app" 
               className="bg-primary text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all hover:-translate-y-0.5"
             >
               Uruchom PWA
@@ -64,7 +64,7 @@ export default function App() {
           className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
         >
           <a 
-            href="https://app.fitcounter.com" 
+            href="https://reps-counter-pwa.vercel.app/app" 
             className="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white px-8 py-4 rounded-full text-lg font-bold shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-all hover:-translate-y-1"
           >
             Przejdź do aplikacji
@@ -181,10 +181,10 @@ export default function App() {
             Nie chcesz instalować aplikacji ze sklepu? Użyj wersji PWA, która działa w każdej nowoczesnej przeglądarce i pozwala na dodanie skrótu do ekranu głównego.
           </p>
           <div className="flex items-center justify-center gap-2 bg-muted p-4 rounded-xl font-mono text-sm mb-6 select-all">
-            app.fitcounter.com
+            reps-counter-pwa.vercel.app/app
           </div>
           <a 
-            href="https://app.fitcounter.com" 
+            href="https://reps-counter-pwa.vercel.app/app" 
             className="inline-flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-full font-bold shadow-md hover:shadow-lg transition-all"
           >
             Uruchom teraz w przeglądarce
