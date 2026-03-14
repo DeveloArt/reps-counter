@@ -1,34 +1,26 @@
 {
-  "name": "@fitcounter/landing",
-  "version": "1.0.0",
+  "name": "fitcounter-landing",
   "private": true,
-  "description": "Strona Landing Page (Next.js)",
+  "version": "1.0.0",
+  "type": "module",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "@fitcounter/ui": "file:../../packages/ui",
-    "next": "^14.2.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "lucide-react": "^0.475.0",
+    "motion": "^12.23.24",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.50.1",
-    "@types/node": "^22.14.0",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "autoprefixer": "^10.4.21",
-    "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.0",
-    "typescript": "^5.3.0",
-    "vitest": "^3.0.0",
-    "happy-dom": "^16.6.0"
+    "@tailwindcss/vite": "^4.0.0",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0"
   }
 }
