@@ -2,10 +2,14 @@
   "name": "fitcounter-monorepo",
   "private": true,
   "version": "1.0.0",
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev": "npm run dev --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
+    "build:check": "npm run build:landing && npm run build:pwa",
     "dev:pwa": "npm run dev -w @fitcounter/pwa",
     "dev:landing": "npm run dev -w fitcounter-landing",
     "dev:mobile": "npm run start -w @fitcounter/mobile",
@@ -27,5 +31,8 @@
     "overrides": {
       "@fitcounter/mobile>@types/react": "~18.2.0"
     }
+  },
+  "dependencies": {
+    "sharp": "^0.34.5"
   }
 }
