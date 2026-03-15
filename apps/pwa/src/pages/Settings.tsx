@@ -339,7 +339,7 @@ export default function SettingsPage() {
         <div className="mx-4 mb-8 p-6 rounded-xl bg-gradient-to-br from-primary to-primary/80 text-white relative overflow-hidden shadow-lg">
           <div className="relative z-10">
             <h4 className="text-lg font-bold">FitCounter Pro</h4>
-            <p className="text-sm opacity-90 mt-1">{t('settings.version')} 2.4.1 (Build 402)</p>
+            <p className="text-sm opacity-90 mt-1">{t('settings.version')} 1.0.0</p>
             <div className="mt-4 flex gap-3">
               <Link
                 to="/app/terms"

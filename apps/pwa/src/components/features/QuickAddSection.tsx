@@ -57,8 +57,8 @@ export function QuickAddSection({
                   {exercise.unit === 'reps' ? 'reps' : 'mins'}
                 </p>
               </div>
-              <div className="flex items-center justify-center w-full py-2 bg-muted rounded-lg group-active:bg-primary group-active:text-white transition-colors">
-                <Plus className="size-5 text-foreground" />
+              <div className="flex items-center justify-center w-full py-2 bg-primary rounded-lg hover:bg-primary/90 active:scale-95 transition-all">
+                <Plus className="size-5 text-white" />
               </div>
             </button>
           );
