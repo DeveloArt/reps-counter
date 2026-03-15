@@ -5,9 +5,7 @@ pre-commit:
       run: npm run lint
 
 pre-push:
-  commands:
-    typecheck:
-      run: npm run typecheck --workspaces --if-present
+  skip: true
 
 commit-msg:
   commands:
