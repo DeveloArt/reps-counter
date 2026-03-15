@@ -12,6 +12,7 @@
       "dist/**",
       "build/**",
       ".expo/**",
+      ".plasmo/**",
       "*.min.js",
       ".next/**",
       "test-results/**",

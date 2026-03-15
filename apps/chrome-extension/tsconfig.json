@@ -3,18 +3,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     }
   },
-  "include": [
-    ".plasmo/index.d.ts",
-    "src/**/*",
-    "background.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+  "include": [".plasmo/index.d.ts", "src/**/*", "background.ts"],
+  "exclude": ["node_modules", "dist"]
 }

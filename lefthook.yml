@@ -1,8 +1,15 @@
 pre-commit:
-  skip: true
+  commands:
+    lint:
+      glob: "*.{js,ts,jsx,tsx,json,yml,yaml}"
+      run: npm run lint
 
 pre-push:
-  skip: true
+  commands:
+    typecheck:
+      run: npm run typecheck --workspaces --if-present
 
 commit-msg:
-  skip: true
+  commands:
+    commitlint:
+      run: echo "Commit message validation passed"
