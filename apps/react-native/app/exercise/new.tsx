@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
   },
   formSection: {
     gap: 8,
+    marginTop: 8,
   },
   label: {
     fontSize: 14,
@@ -186,6 +187,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 12,
+    marginBottom: 8,
   },
   colorButton: {
     width: 32,

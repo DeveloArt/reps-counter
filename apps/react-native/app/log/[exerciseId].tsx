@@ -224,13 +224,13 @@ const styles = StyleSheet.create({
   error: {
     fontSize: 18,
     textAlign: 'center',
-    marginTop: 100,
+    marginTop: 24,
   },
   modalContent: {
     gap: 16,
   },
   header: {
-    marginBottom: 32,
+    marginBottom: 20,
   },
   iconContainer: {
     flexDirection: 'row',
@@ -259,19 +259,19 @@ const styles = StyleSheet.create({
   },
   counterSection: {
     alignItems: 'center',
-    marginBottom: 40,
+    marginBottom: 24,
   },
   counterBox: {
     borderRadius: 16,
-    padding: 32,
+    padding: 20,
     width: '100%',
   },
   counterRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 32,
-    marginBottom: 24,
+    gap: 20,
+    marginBottom: 16,
   },
   counterButton: {
     width: 56,
@@ -310,13 +310,13 @@ const styles = StyleSheet.create({
   },
   timerSection: {
     alignItems: 'center',
-    marginBottom: 32,
+    marginBottom: 20,
   },
   timerBox: {
     borderRadius: 16,
-    padding: 32,
+    padding: 20,
     width: '100%',
-    marginBottom: 32,
+    marginBottom: 20,
   },
   timerDisplay: {
     flexDirection: 'row',
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
   timeSeparator: {
     fontSize: 40,
     fontWeight: '700',
-    marginBottom: 24,
+    marginBottom: 16,
   },
   timerControls: {
     flexDirection: 'row',

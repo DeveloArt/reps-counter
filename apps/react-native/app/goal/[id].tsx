@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   loadingContainer: {
-    padding: 40,
+    padding: 24,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -338,6 +338,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   formSection: {
+    marginTop: 16,
     gap: 8,
   },
   label: {
@@ -365,6 +366,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   metricRow: {
+    marginTop: 16,
     flexDirection: 'row',
     gap: 16,
   },
@@ -427,7 +429,7 @@ const styles = StyleSheet.create({
   buttonRow: {
     flexDirection: 'row',
     gap: 12,
-    marginTop: 8,
+    marginTop: 16,
   },
   deleteButton: {
     flex: 1,

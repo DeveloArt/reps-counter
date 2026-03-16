@@ -502,7 +502,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 8,
     borderRadius: 24,
-    padding: 24,
+    padding: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
@@ -561,8 +561,8 @@ const styles = StyleSheet.create({
   dailyGoalStats: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 24,
-    paddingTop: 16,
+    marginTop: 16,
+    paddingTop: 12,
     borderTopWidth: 1,
     borderTopColor: 'rgba(255,255,255,0.1)',
   },
@@ -589,7 +589,7 @@ const styles = StyleSheet.create({
 
   section: {
     paddingHorizontal: 16,
-    marginTop: 24,
+    marginTop: 16,
   },
   sectionTitle: {
     fontSize: 18,
@@ -693,9 +693,10 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   weeklyPerformanceHeader: {
-    marginBottom: 16,
+    marginBottom: 24,
   },
   weeklyPerformanceTitle: {
+    marginBottom: 8,
     fontSize: 16,
     fontWeight: '700',
   },

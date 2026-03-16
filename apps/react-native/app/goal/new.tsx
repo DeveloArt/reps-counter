@@ -257,6 +257,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   formSection: {
+    marginTop: 16,
     gap: 8,
   },
   label: {
@@ -284,6 +285,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   metricRow: {
+    marginTop: 16,
     flexDirection: 'row',
     gap: 16,
   },
@@ -337,7 +339,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 4,
-    marginTop: 8,
+    marginTop: 16,
   },
   saveButtonText: {
     fontSize: 16,

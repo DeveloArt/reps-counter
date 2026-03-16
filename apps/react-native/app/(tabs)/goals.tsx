@@ -593,7 +593,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   section: {
-    marginBottom: 24,
+    marginBottom: 16,
   },
   sectionHeader: {
     flexDirection: 'row',
@@ -701,7 +701,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   emptyState: {
-    padding: 24,
+    padding: 16,
     borderRadius: 16,
     borderWidth: 1,
     borderStyle: 'dashed',
@@ -767,7 +767,7 @@ const styles = StyleSheet.create({
   },
   calendarDay: {
     width: `${100 / 7}%`,
-    aspectRatio: 1,
+    height: 36,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
@@ -797,6 +797,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   bottomSpacer: {
-    height: 32,
+    height: 8,
   },
 });
