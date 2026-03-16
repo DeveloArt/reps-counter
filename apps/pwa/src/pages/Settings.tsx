@@ -316,7 +316,7 @@ export default function SettingsPage() {
             className="flex items-center justify-between p-4 rounded-xl border border-destructive/20 bg-destructive/5 hover:bg-destructive/10 transition-all group"
           >
             <div className="flex items-center gap-3">
-              <div className="size-10 rounded-full bg-destructive/10 flex items-center justify-center text-destructive group-hover:bg-destructive group-hover:text-white transition-colors">
+              <div className="size-10 rounded-full bg-destructive/10 flex items-center justify-center text-foreground group-hover:bg-destructive group-hover:text-white transition-colors">
                 <Trash2 className="size-5" />
               </div>
               <div className="flex flex-col items-start">
