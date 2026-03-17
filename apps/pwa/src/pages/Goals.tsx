@@ -308,7 +308,7 @@ export default function GoalsPage() {
                       </div>
                       <button
                         onClick={() => handleEditGoal(goal)}
-                        className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-full transition-colors"
+                        className="p-2 text-foreground hover:bg-primary/10 rounded-full transition-colors"
                       >
                         <Edit2 className="size-4" />
                       </button>

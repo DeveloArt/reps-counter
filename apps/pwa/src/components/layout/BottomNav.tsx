@@ -45,7 +45,7 @@ export function BottomNav({ onAddClick }: BottomNavProps) {
             to={item.path}
             className={cn(
               'flex flex-col items-center gap-1 transition-colors',
-              isActive ? 'text-primary' : 'text-muted-foreground hover:text-primary'
+              isActive ? 'text-primary' : 'text-foreground'
             )}
           >
             <item.icon className={cn('size-6', isActive && 'fill-current')} strokeWidth={2} />

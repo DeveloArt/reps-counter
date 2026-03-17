@@ -340,7 +340,7 @@ export default function HomePage() {
                     <div className="flex flex-col items-end gap-1">
                       <div
                         onClick={(e) => handleEditExercise(e, exercise)}
-                        className="p-1.5 rounded-full text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+                        className="p-1.5 rounded-full text-foreground hover:bg-primary/10 transition-colors"
                       >
                         <Edit2 className="size-4" />
                       </div>
@@ -357,7 +357,7 @@ export default function HomePage() {
                       {exercise.unit === 'reps' ? t('home.reps') : t('home.mins')}
                     </p>
                   </div>
-                  <div className="flex items-center justify-center w-full py-2 bg-muted rounded-lg group-active:bg-primary group-active:text-white transition-colors">
+                  <div className="flex items-center justify-center w-full py-2 bg-muted rounded-lg text-foreground group-active:bg-primary group-active:text-white transition-colors">
                     <Plus className="size-5" />
                   </div>
                 </motion.button>
