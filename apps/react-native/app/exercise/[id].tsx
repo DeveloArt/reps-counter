@@ -221,14 +221,15 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 16,
     textAlign: 'center',
-    marginTop: 100,
+    marginTop: 24,
   },
   modalContent: {
     gap: 24,
+    paddingBottom: 16,
   },
   confirmText: {
     fontSize: 14,
-    marginBottom: 24,
+    marginBottom: 16,
   },
   buttonRow: {
     flexDirection: 'row',
@@ -257,6 +258,7 @@ const styles = StyleSheet.create({
   },
   formSection: {
     gap: 8,
+    marginTop: 8,
   },
   label: {
     fontSize: 14,
@@ -294,6 +296,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 12,
+    marginBottom: 8,
   },
   colorButton: {
     width: 32,

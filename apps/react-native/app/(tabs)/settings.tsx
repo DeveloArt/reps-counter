@@ -409,7 +409,7 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingBottom: 80,
+    paddingBottom: 40,
   },
   loadingContainer: {
     justifyContent: 'center',
@@ -417,8 +417,8 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 16,
-    paddingTop: 60,
-    paddingBottom: 24,
+    paddingTop: 24,
+    paddingBottom: 16,
   },
   title: {
     fontSize: 28,
@@ -432,7 +432,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     opacity: 0.6,
     paddingHorizontal: 16,
-    paddingTop: 24,
+    paddingTop: 16,
     paddingBottom: 8,
   },
   section: {
@@ -449,13 +449,13 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   cardContent: {
-    padding: 20,
+    padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
   },
   sliderCard: {
-    padding: 20,
+    padding: 16,
   },
   cardTitle: {
     fontSize: 16,
@@ -628,9 +628,9 @@ const styles = StyleSheet.create({
   },
   aboutCard: {
     marginHorizontal: 16,
-    marginBottom: 32,
+    marginBottom: 24,
     borderRadius: 12,
-    padding: 24,
+    padding: 16,
     position: 'relative',
     overflow: 'hidden',
   },

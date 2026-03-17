@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   section: {
-    marginBottom: 24,
+    marginBottom: 16,
   },
   sectionTitle: {
     fontSize: 12,
@@ -562,7 +562,7 @@ const styles = StyleSheet.create({
   },
   aboutCard: {
     borderRadius: 16,
-    padding: 24,
+    padding: 16,
     position: 'relative',
     overflow: 'hidden',
   },

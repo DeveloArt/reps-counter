@@ -668,7 +668,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'flex-end',
     height: 160,
-    paddingTop: 20,
+    paddingTop: 16,
   },
   barWrapper: {
     alignItems: 'center',
@@ -692,6 +692,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   bottomSpacer: {
-    height: 32,
+    height: 8,
   },
 });
