@@ -139,7 +139,7 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
                 {exercise.name}
               </h2>
               <p className="text-sm text-muted-foreground">
-                {t('modals.logEntry.addNewEntry') || 'Dodaj nowy wpis'}
+                {t('modals.logEntry.addNewEntry')}
               </p>
             </div>
           </div>
@@ -186,7 +186,7 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
                     <span className="text-4xl font-bold text-primary">{minutes}</span>
                   </div>
                   <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground mt-2">
-                    {t('home.mins') || 'Minuty'}
+                    {t('home.mins')}
                   </span>
                 </div>
                 <span className="text-4xl font-bold text-primary mb-6">:</span>
@@ -195,7 +195,7 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
                     <span className="text-4xl font-bold text-primary">{seconds}</span>
                   </div>
                   <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground mt-2">
-                    {t('home.seconds') || 'Sekundy'}
+                    {t('home.seconds')}
                   </span>
                 </div>
               </div>
@@ -228,14 +228,14 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
             <div className="w-full space-y-2">
               <label className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <Edit2 className="size-4" />
-                {t('modals.logEntry.manualEntry') || 'Wpisz ręcznie (Sekundy)'}
+                {t('modals.logEntry.manualEntry')}
               </label>
               <input
                 type="number"
                 value={value}
                 onChange={(e) => setValue(e.target.value === '' ? '' : Number(e.target.value))}
                 className="w-full rounded-xl border-border bg-card focus:border-primary focus:ring-primary h-14 text-lg font-medium px-4 placeholder:text-muted-foreground"
-                placeholder="np. 60"
+                placeholder={t('components.manualEntry.placeholder')}
               />
             </div>
           </div>

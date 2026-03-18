@@ -1,6 +1,7 @@
 import { Tabs } from 'expo-router';
 import { ChartBar, House, Plus, Settings, Target } from 'lucide-react-native';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { StyleSheet, View } from 'react-native';
 import { QuickLogModal } from '../../src/components/QuickLogModal';
 import { useTheme } from '../../src/hooks/useTheme';
@@ -18,6 +19,7 @@ function FabButton({ color, onPress }: { color: string; onPress: () => void }) {
 export default function TabLayout() {
   const { colors } = useTheme();
   const [isQuickLogOpen, setIsQuickLogOpen] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <>
@@ -41,7 +43,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="index"
           options={{
-            title: 'Home',
+            title: t('nav.home'),
             headerTitle: 'FitCounter',
             tabBarIcon: ({ color, size }) => <House size={size} color={color} strokeWidth={2} />,
           }}
@@ -49,7 +51,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="stats"
           options={{
-            title: 'Stats',
+            title: t('nav.stats'),
             tabBarIcon: ({ color, size }) => <ChartBar size={size} color={color} strokeWidth={2} />,
           }}
         />
@@ -66,14 +68,14 @@ export default function TabLayout() {
         <Tabs.Screen
           name="goals"
           options={{
-            title: 'Goals',
+            title: t('nav.goals'),
             tabBarIcon: ({ color, size }) => <Target size={size} color={color} strokeWidth={2} />,
           }}
         />
         <Tabs.Screen
           name="settings"
           options={{
-            title: 'Settings',
+            title: t('nav.settings'),
             tabBarIcon: ({ color, size }) => <Settings size={size} color={color} strokeWidth={2} />,
           }}
         />

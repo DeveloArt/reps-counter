@@ -1,4 +1,5 @@
 import { Minus, Plus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface RepsCounterProps {
   value: number | '';
@@ -8,6 +9,8 @@ interface RepsCounterProps {
 }
 
 export function RepsCounter({ value, onChange, onIncrement, onDecrement }: RepsCounterProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-primary/5 rounded-2xl p-8 mb-8 flex flex-col items-center w-full">
       <div className="flex items-center gap-8 mb-6">
@@ -25,7 +28,7 @@ export function RepsCounter({ value, onChange, onIncrement, onDecrement }: RepsC
             className="text-7xl font-bold text-primary tabular-nums bg-transparent text-center w-[180px] focus:outline-none border-none p-0 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
           />
           <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground mt-2 block">
-            Reps
+            {t('home.reps')}
           </span>
         </div>
         <button

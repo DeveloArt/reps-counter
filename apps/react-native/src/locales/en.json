@@ -106,7 +106,8 @@
     "pausedStatus": "Paused",
     "activeDescription": "Goal is currently active",
     "pausedDescription": "Goal is paused",
-    "allGoals": "All Goals"
+    "allGoals": "All Goals",
+    "workouts": "Workouts"
   },
   "settings": {
     "title": "Settings",
@@ -132,10 +133,26 @@
     "version": "Version",
     "terms": "Terms of Use",
     "privacy": "Privacy Policy"
+    ,
+    "productName": "FitCounter Pro",
+    "frequency": {
+      "min": "1 time",
+      "max": "10 times"
+    },
+    "languages": {
+      "english": "English",
+      "polish": "Polish"
+    },
+    "alerts": {
+      "resetSuccess": "Data has been reset",
+      "resetSuccessRestart": "Data has been reset. Please restart the app.",
+      "resetFailed": "Failed to reset data"
+    }
   },
   "modals": {
     "addExercise": {
       "title": "New Exercise",
+      "editTitle": "Edit Exercise",
       "nameLabel": "Exercise Name",
       "namePlaceholder": "Exercise Name",
       "colorLabel": "Color",
@@ -224,6 +241,17 @@
     "section5": {
       "title": "5. Contact",
       "content": "If you have any questions about this Privacy Policy, please contact us."
+    }
+  },
+  "components": {
+    "manualEntry": {
+      "placeholder": "e.g. 60"
+    }
+  },
+  "exercises": {
+    "notFound": "Exercise not found",
+    "alerts": {
+      "enterName": "Please enter exercise name"
     }
   }
 }

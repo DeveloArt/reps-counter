@@ -14,14 +14,19 @@ import {
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { format } from 'date-fns';
+import { enUS, pl as plLocale } from 'date-fns/locale';
 import { getExercises, getGoals, getLogs, initDatabase } from '../../src/db';
 import { useTheme } from '../../src/hooks/useTheme';
 import type { Exercise, Goal, LogEntry } from '../../src/types';
 
 export default function GoalsScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { colors } = useTheme();
   const router = useRouter();
+  const locale = (i18n.resolvedLanguage ?? i18n.language).toLowerCase().startsWith('pl')
+    ? plLocale
+    : enUS;
   const [goals, setGoals] = useState<Goal[]>([]);
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [logs, setLogs] = useState<LogEntry[]>([]);
@@ -230,20 +235,7 @@ export default function GoalsScreen() {
     );
   };
 
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
+  // Month names come from date-fns locale (e.g. March -> marzec)
 
   const handleEditGoal = (goal: Goal) => {
     router.push(`/goal/${goal.id}` as any);
@@ -339,7 +331,7 @@ export default function GoalsScreen() {
                             ? t('home.reps')
                             : goal.metric === 'time'
                               ? t('home.mins')
-                              : 'Workouts'}
+                              : t('goals.workouts')}
                         </Text>
                       </View>
                     </View>
@@ -422,7 +414,7 @@ export default function GoalsScreen() {
                 <ChevronLeft size={16} color={colors.text} />
               </TouchableOpacity>
               <Text style={[styles.monthTitle, { color: colors.text }]}>
-                {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
+                {format(currentMonth, 'LLLL yyyy', { locale })}
               </Text>
               <TouchableOpacity
                 onPress={() =>

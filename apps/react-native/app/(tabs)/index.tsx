@@ -20,12 +20,14 @@ import {
   getSettings,
   initDatabase,
 } from '../../src/db';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../src/hooks/useTheme';
 import type { Exercise, Goal, LogEntry, UserSettings } from '../../src/types';
 
 export default function HomeScreen() {
   const { colors, isDark } = useTheme();
   const router = useRouter();
+  const { t } = useTranslation();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [weeklyLogs, setWeeklyLogs] = useState<LogEntry[]>([]);
@@ -217,7 +219,7 @@ export default function HomeScreen() {
           { backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center' },
         ]}
       >
-        <Text style={{ color: colors.text }}>Loading...</Text>
+        <Text style={{ color: colors.text }}>{t('common.loading')}</Text>
       </View>
     );
   }
@@ -230,10 +232,12 @@ export default function HomeScreen() {
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <Text style={[styles.greeting, { color: colors.text }]}>Hello!</Text>
+          <Text style={[styles.greeting, { color: colors.text }]}>{t('home.hello')}</Text>
           <View style={styles.streakContainer}>
             <Flame size={14} color={colors.primary} />
-            <Text style={[styles.streakText, { color: colors.primary }]}>{streak} days streak</Text>
+            <Text style={[styles.streakText, { color: colors.primary }]}>
+              {streak} {t('home.streak')}
+            </Text>
           </View>
         </View>
         <View style={styles.headerRight}>
@@ -253,9 +257,11 @@ export default function HomeScreen() {
       <View style={[styles.dailyGoalCard, { backgroundColor: colors.primary }]}>
         <View style={styles.dailyGoalContent}>
           <View style={styles.dailyGoalLeft}>
-            <Text style={styles.dailyGoalLabel}>Daily Goal</Text>
-            <Text style={styles.dailyGoalValue}>{totalProgress}% Complete</Text>
-            <Text style={styles.dailyGoalHint}>Keep going! You're doing great today.</Text>
+            <Text style={styles.dailyGoalLabel}>{t('home.dailyGoal')}</Text>
+            <Text style={styles.dailyGoalValue}>
+              {totalProgress}% {t('home.complete')}
+            </Text>
+            <Text style={styles.dailyGoalHint}>{t('home.keepGoing')}</Text>
           </View>
           <View style={styles.circularProgress}>
             <View
@@ -283,19 +289,19 @@ export default function HomeScreen() {
         <View style={styles.dailyGoalStats}>
           <View style={styles.dailyGoalStat}>
             <Text style={styles.dailyGoalStatValue}>{todayStats.totalReps}</Text>
-            <Text style={styles.dailyGoalStatLabel}>Reps</Text>
+            <Text style={styles.dailyGoalStatLabel}>{t('home.reps')}</Text>
           </View>
           <View style={[styles.dailyGoalDivider, { backgroundColor: 'rgba(255,255,255,0.1)' }]} />
           <View style={styles.dailyGoalStat}>
             <Text style={styles.dailyGoalStatValue}>{Math.round(todayStats.totalTime / 60)}</Text>
-            <Text style={styles.dailyGoalStatLabel}>Mins</Text>
+            <Text style={styles.dailyGoalStatLabel}>{t('home.mins')}</Text>
           </View>
         </View>
       </View>
 
       {/* Quick Add Section */}
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>Quick Add</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('home.quickAdd')}</Text>
         <View style={styles.exercisesGrid}>
           {exercises.map((exercise) => {
             const Icon = getIcon(exercise.icon);
@@ -329,7 +335,7 @@ export default function HomeScreen() {
                 <View style={styles.exerciseCardContent}>
                   <Text style={[styles.exerciseName, { color: colors.text }]}>{exercise.name}</Text>
                   <Text style={[styles.exerciseUnit, { color: colors.textSecondary }]}>
-                    {exercise.unit === 'reps' ? 'Reps' : 'Mins'}
+                    {exercise.unit === 'reps' ? t('home.reps') : t('home.mins')}
                   </Text>
                 </View>
                 {dailyTotal > 0 && (
@@ -359,7 +365,7 @@ export default function HomeScreen() {
               <MoreHorizontal size={24} color={colors.textSecondary} />
             </View>
             <Text style={[styles.addExerciseText, { color: colors.textSecondary }]}>
-              Add Exercise
+              {t('home.addExercise')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -369,7 +375,7 @@ export default function HomeScreen() {
       <View style={[styles.weeklyPerformanceCard, { backgroundColor: colors.card }]}>
         <View style={styles.weeklyPerformanceHeader}>
           <Text style={[styles.weeklyPerformanceTitle, { color: colors.text }]}>
-            Weekly Performance
+            {t('home.weeklyPerformance')}
           </Text>
           <View style={[styles.metricToggle, { backgroundColor: colors.border }]}>
             <TouchableOpacity
@@ -385,7 +391,7 @@ export default function HomeScreen() {
                   { color: weeklyMetric === 'reps' ? colors.text : colors.textSecondary },
                 ]}
               >
-                Reps
+                {t('home.reps')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -401,7 +407,7 @@ export default function HomeScreen() {
                   { color: weeklyMetric === 'time' ? colors.text : colors.textSecondary },
                 ]}
               >
-                Mins
+                {t('home.mins')}
               </Text>
             </TouchableOpacity>
           </View>

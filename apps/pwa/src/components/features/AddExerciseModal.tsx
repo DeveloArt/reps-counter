@@ -116,7 +116,7 @@ export function AddExerciseModal({ isOpen, onClose, exerciseToEdit }: AddExercis
       >
         <div className="space-y-6">
           <p className="text-muted-foreground text-sm">
-            {t('home.confirmDeleteExercise') || 'Czy na pewno chcesz usunąć to ćwiczenie?'}
+            {t('home.confirmDeleteExercise')}
           </p>
           <div className="flex gap-3">
             <button
@@ -143,7 +143,7 @@ export function AddExerciseModal({ isOpen, onClose, exerciseToEdit }: AddExercis
       onClose={onClose}
       title={
         exerciseToEdit
-          ? t('modals.addExercise.editTitle') || 'Edytuj ćwiczenie'
+          ? t('modals.addExercise.editTitle')
           : t('modals.addExercise.title')
       }
     >
@@ -246,7 +246,7 @@ export function AddExerciseModal({ isOpen, onClose, exerciseToEdit }: AddExercis
               className="flex-1 bg-destructive/10 text-destructive font-bold py-4 rounded-xl hover:bg-destructive/20 active:scale-95 transition-all flex items-center justify-center gap-2"
             >
               <Trash2 className="size-5" />
-              {t('common.delete') || 'Usuń'}
+              {t('common.delete')}
             </button>
           )}
           <button
@@ -254,7 +254,7 @@ export function AddExerciseModal({ isOpen, onClose, exerciseToEdit }: AddExercis
             className="flex-[2] bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 active:scale-95 transition-all flex items-center justify-center gap-2"
           >
             {exerciseToEdit ? <Save className="size-5" /> : <Plus className="size-5" />}
-            {exerciseToEdit ? t('common.save') || 'Zapisz' : t('modals.addExercise.create')}
+            {exerciseToEdit ? t('common.save') : t('modals.addExercise.create')}
           </button>
         </div>
       </form>

@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Edit2, Minus, Play, Plus, RotateCcw, Save, Square } from 'lucide-react-native';
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Modal } from '../../src/components/Modal';
 import { addLog, getExercise, initDatabase } from '../../src/db';
@@ -10,6 +11,7 @@ export default function LogEntryScreen() {
   const { exerciseId } = useLocalSearchParams<{ exerciseId: string }>();
   const { colors } = useTheme();
   const router = useRouter();
+  const { t } = useTranslation();
   const [exercise, setExercise] = useState<any>(null);
   const [value, setValue] = useState<number | ''>(0);
   const [isRunning, setIsRunning] = useState(false);
@@ -74,7 +76,7 @@ export default function LogEntryScreen() {
   if (!exercise) {
     return (
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <Text style={[styles.error, { color: colors.text }]}>Exercise not found</Text>
+        <Text style={[styles.error, { color: colors.text }]}>{t('exercises.notFound')}</Text>
       </View>
     );
   }
@@ -117,7 +119,9 @@ export default function LogEntryScreen() {
                     onChangeText={(text) => setValue(text === '' ? '' : Number(text))}
                     keyboardType="numeric"
                   />
-                  <Text style={[styles.counterLabel, { color: colors.textSecondary }]}>REPS</Text>
+                  <Text style={[styles.counterLabel, { color: colors.textSecondary }]}>
+                    {t('home.reps').toUpperCase()}
+                  </Text>
                 </View>
                 <TouchableOpacity
                   onPress={increment}
@@ -141,7 +145,9 @@ export default function LogEntryScreen() {
                   >
                     <Text style={[styles.timeValue, { color: colors.primary }]}>{minutes}</Text>
                   </View>
-                  <Text style={[styles.timeLabel, { color: colors.textSecondary }]}>MINUTES</Text>
+                  <Text style={[styles.timeLabel, { color: colors.textSecondary }]}>
+                    {t('home.mins').toUpperCase()}
+                  </Text>
                 </View>
                 <Text style={[styles.timeSeparator, { color: colors.primary }]}>:</Text>
                 <View style={styles.timeUnit}>
@@ -153,7 +159,9 @@ export default function LogEntryScreen() {
                   >
                     <Text style={[styles.timeValue, { color: colors.primary }]}>{seconds}</Text>
                   </View>
-                  <Text style={[styles.timeLabel, { color: colors.textSecondary }]}>SECONDS</Text>
+                  <Text style={[styles.timeLabel, { color: colors.textSecondary }]}>
+                    {t('home.seconds').toUpperCase()}
+                  </Text>
                 </View>
               </View>
 
@@ -167,7 +175,9 @@ export default function LogEntryScreen() {
                   ) : (
                     <Play size={20} color="white" />
                   )}
-                  <Text style={styles.timerButtonText}>{isRunning ? 'Stop' : 'Start'}</Text>
+                  <Text style={styles.timerButtonText}>
+                    {isRunning ? t('modals.logEntry.stop') : t('modals.logEntry.start')}
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
@@ -177,7 +187,9 @@ export default function LogEntryScreen() {
                   style={[styles.timerButton, { backgroundColor: colors.muted }]}
                 >
                   <RotateCcw size={20} color={colors.text} />
-                  <Text style={[styles.timerButtonText, { color: colors.text }]}>Reset</Text>
+                  <Text style={[styles.timerButtonText, { color: colors.text }]}>
+                    {t('modals.logEntry.reset')}
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -186,7 +198,7 @@ export default function LogEntryScreen() {
               <View style={styles.manualLabelContainer}>
                 <Edit2 size={16} color={colors.text} />
                 <Text style={[styles.manualLabel, { color: colors.text }]}>
-                  Wpisz ręcznie (Sekundy)
+                  {t('modals.logEntry.manualEntry')}
                 </Text>
               </View>
               <TextInput
@@ -194,7 +206,7 @@ export default function LogEntryScreen() {
                   styles.manualInput,
                   { color: colors.text, backgroundColor: colors.card, borderColor: colors.border },
                 ]}
-                placeholder="np. 60"
+                placeholder={t('components.manualEntry.placeholder')}
                 placeholderTextColor={colors.textSecondary}
                 keyboardType="numeric"
                 value={String(value)}
@@ -209,7 +221,7 @@ export default function LogEntryScreen() {
           style={[styles.saveButton, { backgroundColor: colors.primary }]}
         >
           <Save size={24} color="white" />
-          <Text style={styles.saveButtonText}>Save Workout</Text>
+          <Text style={styles.saveButtonText}>{t('modals.logEntry.saveWorkout')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </Modal>

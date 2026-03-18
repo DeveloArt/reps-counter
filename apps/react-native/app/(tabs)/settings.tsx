@@ -23,6 +23,10 @@ export default function SettingsScreen() {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  const activeLanguage = (i18n.resolvedLanguage ?? i18n.language).toLowerCase().startsWith('pl')
+    ? 'pl'
+    : 'en';
+
   useEffect(() => {
     async function loadData() {
       try {
@@ -88,10 +92,10 @@ export default function SettingsScreen() {
             const data = await getSettings();
             setSettings(data);
             setNotificationsEnabled(false);
-            Alert.alert(t('common.success'), 'Data has been reset');
+            Alert.alert(t('common.success'), t('settings.alerts.resetSuccess'));
           } catch (error) {
             console.error('Failed to reset data:', error);
-            Alert.alert(t('common.error'), 'Failed to reset data');
+            Alert.alert(t('common.error'), t('settings.alerts.resetFailed'));
           }
         },
       },
@@ -103,7 +107,7 @@ export default function SettingsScreen() {
       <View
         style={[styles.container, styles.loadingContainer, { backgroundColor: colors.background }]}
       >
-        <Text style={{ color: colors.text }}>Loading...</Text>
+        <Text style={{ color: colors.text }}>{t('common.loading')}</Text>
       </View>
     );
   }
@@ -181,8 +185,12 @@ export default function SettingsScreen() {
               disabled={!notificationsEnabled}
             />
             <View style={styles.sliderLabels}>
-              <Text style={[styles.sliderLabel, { color: colors.textSecondary }]}>1 time</Text>
-              <Text style={[styles.sliderLabel, { color: colors.textSecondary }]}>10 times</Text>
+              <Text style={[styles.sliderLabel, { color: colors.textSecondary }]}>
+                {t('settings.frequency.min')}
+              </Text>
+              <Text style={[styles.sliderLabel, { color: colors.textSecondary }]}>
+                {t('settings.frequency.max')}
+              </Text>
             </View>
           </View>
         </View>
@@ -317,7 +325,7 @@ export default function SettingsScreen() {
           style={[
             styles.languageButton,
             {
-              borderColor: i18n.language === 'en' ? colors.primary : 'transparent',
+              borderColor: activeLanguage === 'en' ? colors.primary : 'transparent',
               backgroundColor: colors.card,
             },
           ]}
@@ -328,11 +336,11 @@ export default function SettingsScreen() {
           <Text
             style={[
               styles.languageLabel,
-              { color: i18n.language === 'en' ? colors.text : colors.textSecondary },
-              i18n.language === 'en' && { fontWeight: 'bold' },
+              { color: activeLanguage === 'en' ? colors.text : colors.textSecondary },
+              activeLanguage === 'en' && { fontWeight: 'bold' },
             ]}
           >
-            English
+            {t('settings.languages.english')}
           </Text>
         </TouchableOpacity>
 
@@ -341,7 +349,7 @@ export default function SettingsScreen() {
           style={[
             styles.languageButton,
             {
-              borderColor: i18n.language === 'pl' ? colors.primary : 'transparent',
+              borderColor: activeLanguage === 'pl' ? colors.primary : 'transparent',
               backgroundColor: colors.card,
             },
           ]}
@@ -352,11 +360,11 @@ export default function SettingsScreen() {
           <Text
             style={[
               styles.languageLabel,
-              { color: i18n.language === 'pl' ? colors.text : colors.textSecondary },
-              i18n.language === 'pl' && { fontWeight: 'bold' },
+              { color: activeLanguage === 'pl' ? colors.text : colors.textSecondary },
+              activeLanguage === 'pl' && { fontWeight: 'bold' },
             ]}
           >
-            Polski
+            {t('settings.languages.polish')}
           </Text>
         </TouchableOpacity>
       </View>
@@ -387,7 +395,7 @@ export default function SettingsScreen() {
       </Text>
       <View style={[styles.aboutCard, { backgroundColor: colors.primary }]}>
         <View style={styles.aboutContent}>
-          <Text style={styles.aboutTitle}>FitCounter Pro</Text>
+          <Text style={styles.aboutTitle}>{t('settings.productName')}</Text>
           <Text style={styles.aboutVersion}>{t('settings.version')} 2.4.1 (Build 402)</Text>
           <View style={styles.aboutLinks}>
             <TouchableOpacity style={styles.aboutLink}>
