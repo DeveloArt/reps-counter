@@ -21,7 +21,7 @@ export default function PrivacyPage() {
       </div>
       <div className="p-6 text-foreground prose dark:prose-invert">
         <p>
-          <strong>{t('privacy.effectiveDate')}:</strong> March 7, 2026
+          <strong>{t('privacy.effectiveDate')}:</strong> {t('privacy.effectiveDateValue')}
         </p>
 
         <h3>{t('privacy.section1.title')}</h3>

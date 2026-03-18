@@ -8,7 +8,6 @@ import { Alert, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } f
 import { getSettings, initDatabase, updateSettings } from '../src/db';
 import { useTheme } from '../src/hooks/useTheme';
 import type { UserSettings } from '../src/types';
-import '../src/i18n';
 
 type ThemeMode = 'light' | 'dark' | 'system';
 
@@ -53,6 +52,10 @@ export default function SettingsModalScreen() {
     i18n.changeLanguage(lng);
   };
 
+  const activeLanguage = (i18n.resolvedLanguage ?? i18n.language).toLowerCase().startsWith('pl')
+    ? 'pl'
+    : 'en';
+
   const _handleTimeChange = async (time: string) => {
     setNotificationTime(time);
     await updateSettings({ notificationTime: time });
@@ -66,16 +69,16 @@ export default function SettingsModalScreen() {
 
   const handleResetData = () => {
     Alert.alert(t('settings.resetData'), t('settings.resetDataDesc'), [
-      { text: 'Cancel', style: 'cancel' },
+      { text: t('common.cancel'), style: 'cancel' },
       {
-        text: 'Reset',
+        text: t('settings.resetData'),
         style: 'destructive',
         onPress: async () => {
           try {
             await AsyncStorage.clear();
-            Alert.alert(t('common.success'), 'Data has been reset. Please restart the app.');
+            Alert.alert(t('common.success'), t('settings.alerts.resetSuccessRestart'));
           } catch (_error) {
-            Alert.alert(t('common.error'), 'Failed to reset data');
+            Alert.alert(t('common.error'), t('settings.alerts.resetFailed'));
           }
         },
       },
@@ -143,10 +146,10 @@ export default function SettingsModalScreen() {
                   />
                   <View style={styles.sliderLabels}>
                     <Text style={[styles.sliderLabel, { color: colors.textSecondary }]}>
-                      1 time
+                      {t('settings.frequency.min')}
                     </Text>
                     <Text style={[styles.sliderLabel, { color: colors.textSecondary }]}>
-                      10 times
+                      {t('settings.frequency.max')}
                     </Text>
                   </View>
                 </>
@@ -292,7 +295,7 @@ export default function SettingsModalScreen() {
                 styles.languageCard,
                 {
                   backgroundColor: colors.card,
-                  borderColor: i18n.language === 'en' ? colors.primary : 'transparent',
+                  borderColor: activeLanguage === 'en' ? colors.primary : 'transparent',
                   borderWidth: 2,
                 },
               ]}
@@ -304,11 +307,11 @@ export default function SettingsModalScreen() {
               <Text
                 style={[
                   styles.languageLabel,
-                  { color: i18n.language === 'en' ? colors.text : colors.textSecondary },
-                  i18n.language === 'en' && styles.languageLabelBold,
+                  { color: activeLanguage === 'en' ? colors.text : colors.textSecondary },
+                  activeLanguage === 'en' && styles.languageLabelBold,
                 ]}
               >
-                English
+                {t('settings.languages.english')}
               </Text>
             </TouchableOpacity>
 
@@ -317,7 +320,7 @@ export default function SettingsModalScreen() {
                 styles.languageCard,
                 {
                   backgroundColor: colors.card,
-                  borderColor: i18n.language === 'pl' ? colors.primary : 'transparent',
+                  borderColor: activeLanguage === 'pl' ? colors.primary : 'transparent',
                   borderWidth: 2,
                 },
               ]}
@@ -329,11 +332,11 @@ export default function SettingsModalScreen() {
               <Text
                 style={[
                   styles.languageLabel,
-                  { color: i18n.language === 'pl' ? colors.text : colors.textSecondary },
-                  i18n.language === 'pl' && styles.languageLabelBold,
+                  { color: activeLanguage === 'pl' ? colors.text : colors.textSecondary },
+                  activeLanguage === 'pl' && styles.languageLabelBold,
                 ]}
               >
-                Polski
+                {t('settings.languages.polish')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -373,7 +376,7 @@ export default function SettingsModalScreen() {
           </Text>
           <View style={[styles.aboutCard, { backgroundColor: colors.primary }]}>
             <View style={styles.aboutContent}>
-              <Text style={styles.aboutTitle}>FitCounter Pro</Text>
+              <Text style={styles.aboutTitle}>{t('settings.productName')}</Text>
               <Text style={styles.aboutVersion}>{t('settings.version')} 2.4.1 (Build 402)</Text>
               <View style={styles.aboutLinks}>
                 <TouchableOpacity style={styles.aboutLink}>

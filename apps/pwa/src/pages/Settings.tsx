@@ -12,6 +12,8 @@ export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const settings = useLiveQuery(() => db.settings.get(1));
+  const activeLanguage =
+    (i18n.resolvedLanguage ?? i18n.language).toLowerCase().startsWith('pl') ? 'pl' : 'en';
 
   useEffect(() => {
     if ('Notification' in window) {
@@ -45,7 +47,7 @@ export default function SettingsPage() {
 
   const handleNotificationToggle = async () => {
     if (!('Notification' in window)) {
-      alert('This browser does not support desktop notifications');
+      alert(t('settings.alerts.notificationsNotSupported'));
       return;
     }
 
@@ -68,19 +70,19 @@ export default function SettingsPage() {
         });
       }
     } else {
-      alert('Notifications are blocked. Please enable them in your browser settings.');
+      alert(t('settings.alerts.notificationsBlocked'));
     }
   };
 
   const handleResetData = async () => {
-    if (confirm(t('settings.resetDataDesc') || 'Are you sure? This action is permanent.')) {
+    if (confirm(t('settings.resetDataDesc'))) {
       try {
         await db.delete();
         await db.open();
         window.location.reload();
       } catch (error) {
         console.error('Failed to reset data:', error);
-        alert('Failed to reset data');
+        alert(t('settings.alerts.resetFailed'));
       }
     }
   };
@@ -152,8 +154,8 @@ export default function SettingsPage() {
                 />
               </div>
               <div className="flex w-full justify-between text-[10px] text-muted-foreground font-medium">
-                <span>1 time</span>
-                <span>10 times</span>
+                <span>{t('settings.frequency.min')}</span>
+                <span>{t('settings.frequency.max')}</span>
               </div>
             </div>
 
@@ -264,7 +266,7 @@ export default function SettingsPage() {
             onClick={() => changeLanguage('en')}
             className={cn(
               'flex items-center gap-3 p-4 rounded-xl border-2 transition-all',
-              i18n.language === 'en'
+              activeLanguage === 'en'
                 ? 'bg-primary/5 border-primary'
                 : 'border-transparent bg-card hover:bg-muted'
             )}
@@ -275,17 +277,17 @@ export default function SettingsPage() {
             <span
               className={cn(
                 'text-sm font-medium',
-                i18n.language === 'en' ? 'font-bold text-foreground' : 'text-muted-foreground'
+                activeLanguage === 'en' ? 'font-bold text-foreground' : 'text-muted-foreground'
               )}
             >
-              English
+              {t('settings.languages.english')}
             </span>
           </button>
           <button
             onClick={() => changeLanguage('pl')}
             className={cn(
               'flex items-center gap-3 p-4 rounded-xl border-2 transition-all',
-              i18n.language === 'pl'
+              activeLanguage === 'pl'
                 ? 'bg-primary/5 border-primary'
                 : 'border-transparent bg-card hover:bg-muted'
             )}
@@ -296,10 +298,10 @@ export default function SettingsPage() {
             <span
               className={cn(
                 'text-sm font-medium',
-                i18n.language === 'pl' ? 'font-bold text-foreground' : 'text-muted-foreground'
+                activeLanguage === 'pl' ? 'font-bold text-foreground' : 'text-muted-foreground'
               )}
             >
-              Polski
+              {t('settings.languages.polish')}
             </span>
           </button>
         </div>
@@ -338,7 +340,7 @@ export default function SettingsPage() {
         </div>
         <div className="mx-4 mb-8 p-6 rounded-xl bg-gradient-to-br from-primary to-primary/80 text-white relative overflow-hidden shadow-lg">
           <div className="relative z-10">
-            <h4 className="text-lg font-bold">FitCounter Pro</h4>
+            <h4 className="text-lg font-bold">{t('settings.productName')}</h4>
             <p className="text-sm opacity-90 mt-1">{t('settings.version')} 1.0.0</p>
             <div className="mt-4 flex gap-3">
               <Link

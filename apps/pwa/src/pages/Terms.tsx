@@ -21,7 +21,7 @@ export default function TermsPage() {
       </div>
       <div className="p-6 text-foreground prose dark:prose-invert">
         <p>
-          <strong>{t('terms.effectiveDate')}:</strong> March 7, 2026
+          <strong>{t('terms.effectiveDate')}:</strong> {t('terms.effectiveDateValue')}
         </p>
 
         <h3>{t('terms.section1.title')}</h3>

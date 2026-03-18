@@ -32,7 +32,7 @@ export function QuickLogModal({ isOpen, onClose, onSelectExercise, onAddNew }: Q
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={t('nav.logWorkout') || 'Zaloguj aktywność'}
+      title={t('nav.logWorkout')}
       className="max-w-[480px]"
     >
       <div className="grid grid-cols-2 gap-3 max-h-[60vh] overflow-y-auto p-1">

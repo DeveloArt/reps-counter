@@ -290,7 +290,7 @@ export default function HomePage() {
               <div className="flex flex-col items-center gap-1">
                 <span className="text-lg font-bold">{todayStats?.totalReps || 0}</span>
                 <span className="text-[10px] text-white/60 uppercase font-bold tracking-widest">
-                  Reps
+                  {t('home.reps')}
                 </span>
               </div>
               <div className="w-px h-8 bg-white/10" />
@@ -299,7 +299,7 @@ export default function HomePage() {
                   {Math.round((todayStats?.totalTime || 0) / 60)}
                 </span>
                 <span className="text-[10px] text-white/60 uppercase font-bold tracking-widest">
-                  Mins
+                  {t('home.mins')}
                 </span>
               </div>
             </div>

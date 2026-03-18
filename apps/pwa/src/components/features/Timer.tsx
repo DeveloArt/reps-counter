@@ -1,5 +1,6 @@
 import { Play, RotateCcw, Square } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface TimerProps {
   value: number;
@@ -10,6 +11,7 @@ interface TimerProps {
 }
 
 export function Timer({ value, onChange, isRunning, onToggle, onReset }: TimerProps) {
+  const { t } = useTranslation();
   const startTimeRef = useRef<number>(0);
   const initialValueRef = useRef<number>(0);
 
@@ -45,7 +47,7 @@ export function Timer({ value, onChange, isRunning, onToggle, onReset }: TimerPr
             <span className="text-4xl font-bold text-primary">{minutes}</span>
           </div>
           <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground mt-2">
-            Minutes
+            {t('home.mins')}
           </span>
         </div>
         <span className="text-4xl font-bold text-primary mb-6">:</span>
@@ -54,7 +56,7 @@ export function Timer({ value, onChange, isRunning, onToggle, onReset }: TimerPr
             <span className="text-4xl font-bold text-primary">{seconds}</span>
           </div>
           <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground mt-2">
-            Seconds
+            {t('home.seconds')}
           </span>
         </div>
       </div>
@@ -65,14 +67,14 @@ export function Timer({ value, onChange, isRunning, onToggle, onReset }: TimerPr
           className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-primary h-12 text-white font-bold hover:bg-primary/90 transition-colors"
         >
           {isRunning ? <Square className="size-5 fill-current" /> : <Play className="size-5" />}
-          {isRunning ? 'Stop' : 'Start'}
+          {isRunning ? t('modals.logEntry.stop') : t('modals.logEntry.start')}
         </button>
         <button
           onClick={onReset}
           className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-muted h-12 text-foreground font-bold hover:bg-muted/80 transition-colors"
         >
           <RotateCcw className="size-5" />
-          Reset
+          {t('modals.logEntry.reset')}
         </button>
       </div>
     </div>

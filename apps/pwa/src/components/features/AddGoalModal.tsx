@@ -127,7 +127,7 @@ export function AddGoalModal({ isOpen, onClose, goalToEdit }: AddGoalModalProps)
       >
         <div className="space-y-6">
           <p className="text-muted-foreground text-sm">
-            {t('goals.confirmDeleteGoal') || 'Czy na pewno chcesz usunąć ten cel?'}
+            {t('goals.confirmDelete')}
           </p>
           <div className="flex gap-3">
             <button
@@ -152,7 +152,7 @@ export function AddGoalModal({ isOpen, onClose, goalToEdit }: AddGoalModalProps)
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={goalToEdit ? t('modals.addGoal.editTitle') || 'Edytuj cel' : t('modals.addGoal.title')}
+      title={goalToEdit ? t('modals.addGoal.editTitle') : t('modals.addGoal.title')}
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         {/* Goal Type */}
@@ -212,7 +212,8 @@ export function AddGoalModal({ isOpen, onClose, goalToEdit }: AddGoalModalProps)
               const ex = exercises?.find((ex) => ex.id === e.target.value);
               if (ex) {
                 setMetric(ex.unit === 'seconds' ? 'time' : 'reps');
-                setTitle(`${type === 'daily' ? 'Daily' : 'Weekly'} ${ex.name}`);
+                const frequency = type === 'daily' ? t('modals.addGoal.daily') : t('modals.addGoal.weekly');
+                setTitle(`${frequency} ${ex.name}`);
               }
             }}
             className="w-full p-3 rounded-xl bg-muted border-transparent focus:border-primary focus:ring-0 text-foreground"
@@ -296,7 +297,7 @@ export function AddGoalModal({ isOpen, onClose, goalToEdit }: AddGoalModalProps)
               className="flex-1 bg-destructive/10 text-destructive font-bold py-4 rounded-xl hover:bg-destructive/20 active:scale-95 transition-all flex items-center justify-center gap-2"
             >
               <Trash2 className="size-5" />
-              {t('common.delete') || 'Usuń'}
+              {t('common.delete')}
             </button>
           )}
           <button
@@ -304,7 +305,7 @@ export function AddGoalModal({ isOpen, onClose, goalToEdit }: AddGoalModalProps)
             className="flex-[2] bg-primary text-primary-foreground font-bold py-4 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-transform"
           >
             {goalToEdit ? <Save className="size-5" /> : <Check className="size-5" />}
-            {goalToEdit ? t('common.save') || 'Zapisz' : t('modals.addGoal.create')}
+            {goalToEdit ? t('common.save') : t('modals.addGoal.create')}
           </button>
         </div>
       </form>
