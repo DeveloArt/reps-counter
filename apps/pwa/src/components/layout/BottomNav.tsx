@@ -21,13 +21,13 @@ export function BottomNav({ onAddClick }: BottomNavProps) {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-card/90 backdrop-blur-lg border-t border-border/60 flex items-center justify-around py-3 px-4 z-50 safe-area-bottom">
+    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-card/90 backdrop-blur-lg border-t border-border/60 grid grid-cols-5 items-end py-3 px-4 z-50 safe-area-bottom">
       {navItems.map((item) => {
         const isActive = location.pathname === item.path;
 
         if (item.isFab) {
           return (
-            <div key={item.label} className="relative -mt-10">
+            <div key={item.label} className="relative -mt-10 flex justify-center">
               <motion.button
                 whileTap={{ scale: 0.9 }}
                 onClick={item.onClick}
@@ -44,7 +44,7 @@ export function BottomNav({ onAddClick }: BottomNavProps) {
             key={item.path}
             to={item.path}
             className={cn(
-              'flex flex-col items-center gap-1 transition-colors',
+              'w-full flex flex-col items-center gap-1 transition-colors',
               isActive ? 'text-primary' : 'text-foreground'
             )}
           >
