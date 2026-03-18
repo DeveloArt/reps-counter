@@ -14,13 +14,12 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "dexie": "^3.2.4"
+    "dexie": "^4.3.0"
   },
   "devDependencies": {
-    "@types/dexie": "^1.1.5",
     "typescript": "^5.3.0"
   },
   "peerDependencies": {
-    "dexie-react-hooks": "^1.1.7"
+    "dexie-react-hooks": "^4.0.0"
   }
 }
