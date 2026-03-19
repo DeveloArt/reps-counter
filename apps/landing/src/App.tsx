@@ -192,6 +192,88 @@ export default function App() {
             Nie chcesz instalować aplikacji ze sklepu? Użyj wersji PWA, która działa w każdej
             nowoczesnej przeglądarce i pozwala na dodanie skrótu do ekranu głównego.
           </p>
+          <div className="mt-10 mb-8 flex flex-col sm:flex-row gap-6 justify-center">
+            <div className="flex-1 bg-card border-2 border-primary/30 rounded-2xl p-6 shadow-md flex flex-col items-center">
+              <div className="flex flex-col items-center mb-3">
+                {/* Safari icon */}
+                <svg className="size-9 mb-1" viewBox="0 0 256 256" fill="none">
+                  <circle cx="128" cy="128" r="120" fill="#F4F4F4" />
+                  <circle cx="128" cy="128" r="104" fill="#007AFF" />
+                  <circle cx="128" cy="128" r="88" fill="#fff" />
+                  <g>
+                    <circle cx="128" cy="128" r="72" fill="#007AFF" />
+                    <polygon points="128,56 136,128 128,200 120,128" fill="#fff" />
+                    <polygon points="128,200 136,128 128,56 120,128" fill="#E94F35" />
+                  </g>
+                  <circle cx="128" cy="128" r="24" fill="#fff" />
+                  <circle cx="128" cy="128" r="12" fill="#007AFF" />
+                </svg>
+                <h4 className="font-bold text-base text-primary text-center">Safari (iOS)</h4>
+              </div>
+              <ol className="list-decimal list-inside text-sm text-foreground/80 space-y-1 pl-2">
+                <li>Otwórz aplikację w Safari.</li>
+                <li>
+                  Kliknij <b>Udostępnij</b> <span className="inline-block align-middle">🔗</span>.
+                </li>
+                <li>
+                  Wybierz <b>Do ekranu początkowego</b>.
+                </li>
+                <li>
+                  Potwierdź <b>Dodaj</b>.
+                </li>
+              </ol>
+            </div>
+            <div className="flex-1 bg-card border-2 border-primary/30 rounded-2xl p-6 shadow-md flex flex-col items-center">
+              <div className="flex flex-col items-center mb-3">
+                {/* Chrome icon */}
+                <svg className="size-9 mb-1" viewBox="0 0 256 256" fill="none">
+                  <circle cx="128" cy="128" r="120" fill="#F4F4F4" />
+                  <g>
+                    <path
+                      d="M128 128L44 128C44 81.6 81.6 44 128 44C154.4 44 177.6 56.8 192 76.8L128 128Z"
+                      fill="#EA4335"
+                    />
+                    <path
+                      d="M128 128L192 76.8C208 99.2 208 128 208 128C208 174.4 170.4 212 128 212C101.6 212 78.4 199.2 64 179.2L128 128Z"
+                      fill="#34A853"
+                    />
+                    <path
+                      d="M128 128L64 179.2C48 156.8 48 128 48 128C48 81.6 85.6 44 128 44C154.4 44 177.6 56.8 192 76.8L128 128Z"
+                      fill="#FBBC05"
+                    />
+                  </g>
+                  <circle cx="128" cy="128" r="44" fill="#fff" />
+                  <circle cx="128" cy="128" r="28" fill="#4285F4" />
+                </svg>
+                <h4 className="font-bold text-base text-primary text-center">Chrome (Android)</h4>
+              </div>
+              <ol className="list-decimal list-inside text-sm text-foreground/80 space-y-1 pl-2">
+                <li>Otwórz aplikację w Chrome.</li>
+                <li>
+                  Kliknij <b>menu</b>{' '}
+                  <span className="inline-block align-middle align-text-bottom ml-1">
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 18 18"
+                      className="inline"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle cx="9" cy="3.5" r="1.5" fill="#0D5D5D" />
+                      <circle cx="9" cy="9" r="1.5" fill="#0D5D5D" />
+                      <circle cx="9" cy="14.5" r="1.5" fill="#0D5D5D" />
+                    </svg>
+                  </span>
+                  .
+                </li>
+                <li>
+                  Wybierz <b>Zainstaluj aplikację</b> lub <b>Dodaj do ekranu głównego</b>.
+                </li>
+                <li>Potwierdź instalację.</li>
+              </ol>
+            </div>
+          </div>
           <div className="flex items-center justify-center gap-2 bg-muted p-4 rounded-xl font-mono text-sm mb-6 select-all">
             reps-counter-pwa.vercel.app/app
           </div>
