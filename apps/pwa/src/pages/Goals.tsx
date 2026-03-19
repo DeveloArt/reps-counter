@@ -2,8 +2,8 @@ import { AddGoalModal } from '@/components/features/AddGoalModal';
 import { cn } from '@/lib/utils';
 import { type Goal, db } from '@fitcounter/core';
 import {
-  addMonths,
   addDays,
+  addMonths,
   eachDayOfInterval,
   endOfDay,
   endOfMonth,

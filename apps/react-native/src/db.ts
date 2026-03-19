@@ -369,3 +369,17 @@ export async function updateSettings(settings: Partial<UserSettings>): Promise<v
     await database.runAsync(`UPDATE settings SET ${fields.join(', ')} WHERE id = 1`, values);
   }
 }
+
+export async function resetDatabase(): Promise<void> {
+  const database = await initDatabase();
+
+  await database.execAsync(`
+    DROP TABLE IF EXISTS exercises;
+    DROP TABLE IF EXISTS logs;
+    DROP TABLE IF EXISTS goals;
+    DROP TABLE IF EXISTS settings;
+  `);
+
+  db = null;
+  await initDatabase();
+}

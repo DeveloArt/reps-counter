@@ -11,6 +11,7 @@ import {
   Zap,
 } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {
   getExercises,
@@ -20,7 +21,6 @@ import {
   getSettings,
   initDatabase,
 } from '../../src/db';
-import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../src/hooks/useTheme';
 import type { Exercise, Goal, LogEntry, UserSettings } from '../../src/types';
 

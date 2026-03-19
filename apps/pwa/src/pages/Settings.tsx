@@ -12,8 +12,9 @@ export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const settings = useLiveQuery(() => db.settings.get(1));
-  const activeLanguage =
-    (i18n.resolvedLanguage ?? i18n.language).toLowerCase().startsWith('pl') ? 'pl' : 'en';
+  const activeLanguage = (i18n.resolvedLanguage ?? i18n.language).toLowerCase().startsWith('pl')
+    ? 'pl'
+    : 'en';
 
   useEffect(() => {
     if ('Notification' in window) {
