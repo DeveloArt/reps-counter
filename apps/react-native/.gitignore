@@ -8,4 +8,3 @@ expo-env.d.ts
 # Detox generated tests
 android/
 ios/
-artifacts/
