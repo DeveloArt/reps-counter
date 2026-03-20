@@ -198,16 +198,16 @@ export function SettingsScreen({ showBackButton = false }: { showBackButton?: bo
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <View
-        style={[
-          styles.header,
-          {
-            backgroundColor: colors.background,
-            borderBottomColor: `${colors.primary}1A`,
-          },
-        ]}
-      >
-        {showBackButton ? (
+      {showBackButton ? (
+        <View
+          style={[
+            styles.header,
+            {
+              backgroundColor: colors.background,
+              borderBottomColor: `${colors.primary}1A`,
+            },
+          ]}
+        >
           <Pressable
             accessibilityRole="button"
             onPress={() => router.back()}
@@ -218,11 +218,9 @@ export function SettingsScreen({ showBackButton = false }: { showBackButton?: bo
           >
             <ArrowLeft color={colors.primary} size={24} />
           </Pressable>
-        ) : (
-          <View style={styles.headerSpacer} />
-        )}
-        <Text style={[styles.headerTitle, { color: colors.text }]}>{t('settings.title')}</Text>
-      </View>
+          <Text style={[styles.headerTitle, { color: colors.text }]}>{t('settings.title')}</Text>
+        </View>
+      ) : null}
 
       <ScrollView
         contentContainerStyle={styles.content}
@@ -540,9 +538,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     height: 40,
     justifyContent: 'center',
-    width: 40,
-  },
-  headerSpacer: {
     width: 40,
   },
   headerTitle: {
