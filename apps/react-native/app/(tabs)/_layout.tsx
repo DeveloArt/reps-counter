@@ -46,6 +46,7 @@ export default function TabLayout() {
             title: t('nav.home'),
             headerTitle: 'FitCounter',
             tabBarIcon: ({ color, size }) => <House size={size} color={color} strokeWidth={2} />,
+            tabBarButtonTestID: 'tab-index',
           }}
         />
         <Tabs.Screen
@@ -53,6 +54,7 @@ export default function TabLayout() {
           options={{
             title: t('nav.stats'),
             tabBarIcon: ({ color, size }) => <ChartBar size={size} color={color} strokeWidth={2} />,
+            tabBarButtonTestID: 'tab-stats',
           }}
         />
         <Tabs.Screen
@@ -70,6 +72,7 @@ export default function TabLayout() {
           options={{
             title: t('nav.goals'),
             tabBarIcon: ({ color, size }) => <Target size={size} color={color} strokeWidth={2} />,
+            tabBarButtonTestID: 'tab-goals',
           }}
         />
         <Tabs.Screen
@@ -77,6 +80,7 @@ export default function TabLayout() {
           options={{
             title: t('nav.settings'),
             tabBarIcon: ({ color, size }) => <Settings size={size} color={color} strokeWidth={2} />,
+            tabBarButtonTestID: 'tab-settings',
           }}
         />
       </Tabs>
