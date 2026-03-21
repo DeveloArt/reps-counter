@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 export default function Popup() {
   const [exercises, setExercises] = useState<any[]>([]);
-  const [todayStats, _setTodayStats] = useState({ totalReps: 0, totalTime: 0 });
+  const [todayStats, setTodayStats] = useState({ totalReps: 0, totalTime: 0 });
 
   useEffect(() => {
     loadData();
@@ -12,6 +12,17 @@ export default function Popup() {
   const loadData = async () => {
     const exs = await db.exercises.filter((e) => !e.isArchived).toArray();
     setExercises(exs);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const logsToday = await db.logs
+      .where('timestamp')
+      .above(today.getTime())
+      .toArray();
+
+    const totalReps = logsToday.reduce((sum, log) => sum + log.value, 0);
+    setTodayStats({ totalReps, totalTime: 0 }); // Assuming totalTime is not calculated here
   };
 
   const quickLog = async (exerciseId: string, value: number) => {
@@ -22,6 +33,7 @@ export default function Popup() {
       value,
       timestamp: Date.now(),
     });
+    await loadData(); // Reload data to update today's stats
     alert('Logged!');
   };
 
