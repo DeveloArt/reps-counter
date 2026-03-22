@@ -152,7 +152,7 @@ export function AddGoalModal({ isOpen, onClose, goalToEdit }: AddGoalModalProps)
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={goalToEdit ? t('modals.addGoal.editTitle') : t('modals.addGoal.title')}
+      title={goalToEdit ? String(t('modals.addGoal.editTitle')) : String(t('modals.addGoal.title'))}
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         {/* Goal Type */}
