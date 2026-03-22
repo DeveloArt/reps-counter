@@ -42,6 +42,16 @@ export default function SettingsPage() {
     const val = e.target.value;
     if (settings) {
       await db.settings.update(1, { notificationTime: val });
+    } else {
+      // Fallback if settings record doesn't exist yet for some reason
+      await db.settings.put({
+        id: 1,
+        theme: 'system',
+        dailyGoalReps: 100,
+        dailyGoalTime: 600,
+        onboardingCompleted: false,
+        notificationTime: val
+      });
     }
   };
 
