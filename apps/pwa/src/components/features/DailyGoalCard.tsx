@@ -40,7 +40,7 @@ export function DailyGoalCard({ totalProgress, totalReps, totalTime }: DailyGoal
                 r="40"
                 stroke="currentColor"
                 strokeDasharray="251.3"
-                strokeDashoffset={`${251.3 * (1 - totalProgress / 100)}`}
+                strokeDashoffset={`${251.3 * (1 - Math.min(100, totalProgress) / 100)}`}
                 strokeLinecap="round"
                 strokeWidth="8"
               />
