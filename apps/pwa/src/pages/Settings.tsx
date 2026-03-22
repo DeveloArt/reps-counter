@@ -5,11 +5,12 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { ArrowLeft, ChevronRight, Info, Monitor, Moon, Sun, Trash2 } from 'lucide-react';
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function SettingsPage() {
   const { t, i18n } = useTranslation();
   const { theme, setTheme } = useTheme();
+  const navigate = useNavigate();
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const settings = useLiveQuery(() => db.settings.get(1));
   const activeLanguage =
@@ -91,7 +92,7 @@ export default function SettingsPage() {
     <div className="flex flex-col min-h-full pb-20 bg-background">
       {/* Header */}
       <div className="sticky top-0 z-10 flex items-center bg-background/80 backdrop-blur-md p-4 border-b border-primary/10">
-        <button className="flex size-10 shrink-0 items-center justify-center cursor-pointer hover:bg-muted rounded-full transition-colors">
+        <button onClick={() => navigate(-1)} className="flex size-10 shrink-0 items-center justify-center cursor-pointer hover:bg-muted rounded-full transition-colors">
           <ArrowLeft className="size-6 text-primary" />
         </button>
         <h2 className="text-foreground text-lg font-bold leading-tight tracking-tight flex-1 ml-2">
