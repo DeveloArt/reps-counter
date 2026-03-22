@@ -21,20 +21,22 @@ export function BottomNav({ onAddClick }: BottomNavProps) {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-card/90 backdrop-blur-lg border-t border-border/60 grid grid-cols-5 items-end py-3 px-4 z-50 safe-area-bottom">
+    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-card/90 backdrop-blur-lg border-t border-border/60 grid grid-cols-5 items-center py-3 px-4 z-50 safe-area-bottom h-20">
       {navItems.map((item) => {
         const isActive = location.pathname === item.path;
 
         if (item.isFab) {
           return (
-            <div key={item.label} className="relative -mt-10 flex justify-center">
-              <motion.button
-                whileTap={{ scale: 0.9 }}
-                onClick={item.onClick}
-                className="bg-primary size-14 rounded-full flex items-center justify-center text-white shadow-lg shadow-primary/30 border-4 border-background active:scale-90 transition-transform"
-              >
-                <item.icon className="size-8" strokeWidth={2} />
-              </motion.button>
+            <div key={item.label} className="flex justify-center h-full relative">
+              <div className="absolute -top-7">
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  onClick={item.onClick}
+                  className="bg-primary size-14 rounded-full flex items-center justify-center text-white shadow-lg shadow-primary/30 border-4 border-background active:scale-90 transition-transform"
+                >
+                  <item.icon className="size-8" strokeWidth={2} />
+                </motion.button>
+              </div>
             </div>
           );
         }
@@ -44,12 +46,12 @@ export function BottomNav({ onAddClick }: BottomNavProps) {
             key={item.path}
             to={item.path}
             className={cn(
-              'w-full flex flex-col items-center gap-1 transition-colors',
+              'w-full flex flex-col items-center justify-center gap-1 transition-colors h-full',
               isActive ? 'text-primary' : 'text-foreground'
             )}
           >
             <item.icon className={cn('size-6', isActive && 'fill-current')} strokeWidth={2} />
-            <span className="text-[10px] font-bold uppercase tracking-wider">{item.label}</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-center line-clamp-1">{item.label}</span>
           </Link>
         );
       })}
