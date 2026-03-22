@@ -35,6 +35,18 @@ export default function SettingsPage() {
     const val = Number.parseInt(e.target.value, 10);
     if (settings) {
       await db.settings.update(1, { notificationFrequency: val });
+    } else {
+      // Create a new settings record if it doesn\'t exist
+      await db.settings.add({
+        id: 1,
+        notificationTime: \'09:00\', // Default value
+        notificationFrequency: val,
+        notificationsEnabled: false, // Default value
+        theme: \'system\', // Default value
+        dailyGoalReps: 100, // Default value
+        dailyGoalTime: 600, // Default value
+        onboardingCompleted: false, // Default value
+      });
     }
   };
 
@@ -43,14 +55,16 @@ export default function SettingsPage() {
     if (settings) {
       await db.settings.update(1, { notificationTime: val });
     } else {
-      // Fallback if settings record doesn't exist yet for some reason
-      await db.settings.put({
+      // Create a new settings record if it doesn\'t exist
+      await db.settings.add({
         id: 1,
-        theme: 'system',
-        dailyGoalReps: 100,
-        dailyGoalTime: 600,
-        onboardingCompleted: false,
-        notificationTime: val
+        notificationTime: val,
+        notificationFrequency: 1, // Default value
+        notificationsEnabled: false, // Default value
+        theme: \'system\', // Default value
+        dailyGoalReps: 100, // Default value
+        dailyGoalTime: 600, // Default value
+        onboardingCompleted: false, // Default value
       });
     }
   };
