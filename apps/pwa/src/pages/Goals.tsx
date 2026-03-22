@@ -183,13 +183,14 @@ export default function GoalsPage() {
               }
             });
 
-            if (currentVal >= goal.targetValue) {
-              metCount++;
-            }
-          } else {
-            // If it's not the evaluation day, we don't count this goal towards the total for this day
-            totalCount--;
+        if (isEvaluationDay) {
+          if (currentVal >= goal.targetValue) {
+            metCount++;
           }
+        } else {
+          // If it's not the evaluation day for this goal, we don't count it towards the total for this day
+          totalCount--;
+        }
         });
 
       let status = 'none';
