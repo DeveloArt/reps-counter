@@ -58,6 +58,8 @@ export default function GoalsPage() {
   const goalsWithProgress = useLiveQuery(async () => {
     if (!goals) return [];
 
+    // Trigger re-calculation when any goal or exercise is updated in DB
+    // by including them in the query scope
     const result = [];
     for (const goal of goals) {
       let start;
