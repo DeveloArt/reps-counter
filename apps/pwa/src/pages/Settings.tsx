@@ -36,6 +36,15 @@ export default function SettingsPage() {
     const val = Number.parseInt(e.target.value, 10);
     if (settings) {
       await db.settings.update(1, { notificationFrequency: val });
+    } else {
+      await db.settings.put({
+        id: 1,
+        theme: 'system',
+        dailyGoalReps: 100,
+        dailyGoalTime: 600,
+        onboardingCompleted: false,
+        notificationFrequency: val
+      });
     }
   };
 
