@@ -2,7 +2,10 @@
   "name": "fitcounter-monorepo",
   "private": true,
   "version": "1.0.0",
-  "workspaces": ["apps/*", "packages/*"],
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
     "dev": "npm run dev --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
@@ -26,8 +29,24 @@
   },
   "pnpm": {
     "overrides": {
-      "@fitcounter/mobile>@types/react": "~18.2.0"
-    }
+      "react": "19.1.0",
+      "react-native": "0.81.5",
+      "react-dom": "19.1.0"
+    },
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "@parcel/watcher",
+      "@swc/core",
+      "detox",
+      "dtrace-provider",
+      "esbuild",
+      "lefthook",
+      "lmdb",
+      "msgpackr-extract",
+      "protobufjs",
+      "sharp",
+      "unrs-resolver"
+    ]
   },
   "dependencies": {
     "sharp": "^0.34.5"
