@@ -135,42 +135,62 @@ export default function GoalsPage() {
       const goalsToEvaluate =
         selectedGoalFilter === 'all' ? goals : goals.filter((g) => g.id === selectedGoalFilter);
 
-      goalsToEvaluate.forEach((goal) => {
-        totalCount++;
-        let pStart;
-        let pEnd;
-        if (goal.type === 'daily') {
-          pStart = startOfDay(day).getTime();
-          pEnd = endOfDay(day).getTime();
-        } else {
-          pStart = startOfWeek(day, { weekStartsOn: 1 }).getTime();
-          pEnd = endOfWeek(day, { weekStartsOn: 1 }).getTime();
-        }
+        goalsToEvaluate.forEach((goal) => {
+          totalCount++;
+          let pStart;
+          let pEnd;
+          let isEvaluationDay = true;
 
-        let currentVal = 0;
-        logs.forEach((log) => {
-          const logTime = log.date.getTime();
-          if (logTime >= pStart && logTime <= pEnd) {
-            const logExerciseUnit = exerciseMap.get(log.exerciseId)?.unit;
-            if (goal.exerciseId) {
-              if (goal.metric === 'workouts') {
-                currentVal += 1;
-              } else if (log.exerciseId === goal.exerciseId) {
-                currentVal += log.value;
-              }
-            } else {
-              if (goal.metric === 'reps' && logExerciseUnit === 'reps') currentVal += log.value;
-              else if (goal.metric === 'time' && logExerciseUnit === 'seconds')
-                currentVal += log.value;
-              else if (goal.metric === 'workouts') currentVal += 1;
+          if (goal.type === 'daily') {
+            pStart = startOfDay(day).getTime();
+            pEnd = endOfDay(day).getTime();
+          } else {
+            // For weekly goals, we only want to "count" them on the last day of the week (Sunday)
+            // or we need a different way to visualize them. 
+            // The issue is that it shows as met for EVERY day of that week.
+            // Let's only show the checkmark on the day it was actually completed, 
+            // OR only on the last day of the week to represent the whole week.
+            // Given the user complaint, showing it every day is wrong.
+            // Let's change it so weekly goals are only evaluated/shown on Sundays in the calendar.
+            pStart = startOfWeek(day, { weekStartsOn: 1 }).getTime();
+            pEnd = endOfWeek(day, { weekStartsOn: 1 }).getTime();
+            
+            // Only evaluate weekly goals on Sundays (day 0 in JS, but let's check date-fns)
+            // format(day, 'i') returns 1-7 (Mon-Sun)
+            if (format(day, 'i') !== '7') {
+              isEvaluationDay = false;
             }
           }
-        });
 
-        if (currentVal >= goal.targetValue) {
-          metCount++;
-        }
-      });
+          if (isEvaluationDay) {
+            let currentVal = 0;
+            logs.forEach((log) => {
+              const logTime = log.date.getTime();
+              if (logTime >= pStart && logTime <= pEnd) {
+                const logExerciseUnit = exerciseMap.get(log.exerciseId)?.unit;
+                if (goal.exerciseId) {
+                  if (goal.metric === 'workouts') {
+                    currentVal += 1;
+                  } else if (log.exerciseId === goal.exerciseId) {
+                    currentVal += log.value;
+                  }
+                } else {
+                  if (goal.metric === 'reps' && logExerciseUnit === 'reps') currentVal += log.value;
+                  else if (goal.metric === 'time' && logExerciseUnit === 'seconds')
+                    currentVal += log.value;
+                  else if (goal.metric === 'workouts') currentVal += 1;
+                }
+              }
+            });
+
+            if (currentVal >= goal.targetValue) {
+              metCount++;
+            }
+          } else {
+            // If it's not the evaluation day, we don't count this goal towards the total for this day
+            totalCount--;
+          }
+        });
 
       let status = 'none';
       if (totalCount > 0) {
