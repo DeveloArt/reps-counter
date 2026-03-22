@@ -43,7 +43,7 @@ export default function HomePage() {
   }, [currentDate]);
 
   // Fetch exercises from DB
-  const exercises = useLiveQuery(() => db.exercises.filter((e) => !e.isArchived).toArray());
+  const exercises = useLiveQuery(() => db.exercises.filter((e) => !e.isArchived).toArray(), []);
 
   // Fetch today's logs to calculate stats
   const todayStats = useLiveQuery(async () => {
