@@ -13,7 +13,7 @@ module.exports = {
     'ios.debug': {
       type: 'ios.app',
       binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/FitCounter.app',
-      build: 'xcodebuild -workspace ios/fitcounter.xcworkspace -scheme fitcounter -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
+      build: 'xcodebuild -workspace ios/FitCounter.xcworkspace -scheme FitCounter -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build'
     },
     'android.debug': {
       type: 'android.apk',
@@ -26,7 +26,7 @@ module.exports = {
     simulator: {
       type: 'ios.simulator',
       device: {
-        type: 'iPhone 15'
+        type: 'iPad (A16)'
       }
     },
     attached: {
