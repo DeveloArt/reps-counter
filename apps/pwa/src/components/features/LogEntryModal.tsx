@@ -8,9 +8,10 @@ interface LogEntryModalProps {
   isOpen: boolean;
   onClose: () => void;
   exercise: Exercise | null;
+  onSaveComplete?: () => void;
 }
 
-export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps) {
+export function LogEntryModal({ isOpen, onClose, exercise, onSaveComplete }: LogEntryModalProps) {
   const { t } = useTranslation();
   const [value, setValue] = useState<number | ''>(0); // Default value 0
   const [isRunning, setIsRunning] = useState(false);
@@ -98,6 +99,8 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
         timestamp: Date.now(),
       });
 
+      // Trigger callback to refresh stats immediately
+      onSaveComplete?.();
       onClose();
     } catch (error) {
       console.error('Failed to save log:', error);
