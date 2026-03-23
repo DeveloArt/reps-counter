@@ -83,11 +83,11 @@ export async function initDatabase(): Promise<SQLite.SQLiteDatabase> {
 
     await db.runAsync(
       'INSERT INTO goals (id, title, type, targetValue, exerciseId, metric, startDate, isActive) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      ['1', 'Daily Pushups', 'daily', 50, '1', 'reps', new Date().toISOString(), 1]
+      ['1', 'Daily Pushups', 'daily', 50, '1', 'reps', new Date().toISOString().split('T')[0], 1]
     );
     await db.runAsync(
       'INSERT INTO goals (id, title, type, targetValue, exerciseId, metric, startDate, isActive) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      ['2', 'Weekly Plank', 'weekly', 1800, '3', 'time', new Date().toISOString(), 1]
+      ['2', 'Weekly Plank', 'weekly', 1800, '3', 'time', new Date().toISOString().split('T')[0], 1]
     );
   }
 
@@ -245,10 +245,10 @@ export async function addGoal(goal: Omit<Goal, 'id'>): Promise<string> {
       goal.targetValue,
       goal.exerciseId || null,
       goal.metric,
-      goal.startDate instanceof Date ? goal.startDate.toISOString() : goal.startDate,
+      goal.startDate instanceof Date ? goal.startDate.toISOString().split('T')[0] : goal.startDate,
       goal.endDate
         ? goal.endDate instanceof Date
-          ? goal.endDate.toISOString()
+          ? goal.endDate.toISOString().split('T')[0]
           : goal.endDate
         : null,
       goal.isActive ? 1 : 0,
@@ -289,14 +289,14 @@ export async function updateGoal(id: string, goal: Partial<Goal>): Promise<void>
   }
   if (goal.startDate !== undefined) {
     fields.push('startDate = ?');
-    values.push(goal.startDate instanceof Date ? goal.startDate.toISOString() : goal.startDate);
+    values.push(goal.startDate instanceof Date ? goal.startDate.toISOString().split('T')[0] : goal.startDate);
   }
   if (goal.endDate !== undefined) {
     fields.push('endDate = ?');
     values.push(
       goal.endDate
         ? goal.endDate instanceof Date
-          ? goal.endDate.toISOString()
+          ? goal.endDate.toISOString().split('T')[0]
           : goal.endDate
         : null
     );
