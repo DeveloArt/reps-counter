@@ -1,6 +1,6 @@
+import type { ExerciseFormProps } from '@/types/components';
 import { Plus, Save, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import type { ExerciseFormProps } from '@/types/components';
 import { ColorPicker } from './ColorPicker';
 import { IconPicker } from './IconPicker';
 
@@ -86,7 +86,7 @@ export function ExerciseForm({
             className="flex-1 bg-destructive/10 text-destructive font-bold py-4 rounded-xl hover:bg-destructive/20 active:scale-95 transition-all flex items-center justify-center gap-2"
           >
             <Trash2 className="size-5" />
-            {t('common.delete') || 'Usuń'}
+            {t('common.delete')}
           </button>
         )}
         <button
@@ -94,7 +94,7 @@ export function ExerciseForm({
           className="flex-[2] bg-primary text-white font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 active:scale-95 transition-all flex items-center justify-center gap-2"
         >
           {exerciseToEdit ? <Save className="size-5" /> : <Plus className="size-5" />}
-          {exerciseToEdit ? t('common.save') || 'Zapisz' : t('modals.addExercise.create')}
+          {exerciseToEdit ? t('common.save') : t('modals.addExercise.create')}
         </button>
       </div>
     </form>

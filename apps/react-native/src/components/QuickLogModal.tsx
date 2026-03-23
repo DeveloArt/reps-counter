@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { Activity, Dumbbell, Plus, Timer } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { getExercises } from '../db';
 import { useTheme } from '../hooks/useTheme';
@@ -15,6 +16,7 @@ interface QuickLogModalProps {
 export function QuickLogModal({ isOpen, onClose }: QuickLogModalProps) {
   const { colors } = useTheme();
   const router = useRouter();
+  const { t } = useTranslation();
   const [exercises, setExercises] = useState<Exercise[]>([]);
 
   useEffect(() => {
@@ -52,7 +54,7 @@ export function QuickLogModal({ isOpen, onClose }: QuickLogModalProps) {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Zaloguj aktywność">
+    <Modal isOpen={isOpen} onClose={onClose} title={t('nav.logWorkout')}>
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.grid}>
           {exercises.map((exercise) => {
@@ -61,21 +63,19 @@ export function QuickLogModal({ isOpen, onClose }: QuickLogModalProps) {
               <TouchableOpacity
                 key={exercise.id}
                 onPress={() => handleSelectExercise(exercise)}
-                style={[styles.exerciseButton, { backgroundColor: colors.card, borderColor: colors.border }]}
+                style={[
+                  styles.exerciseButton,
+                  { backgroundColor: colors.card, borderColor: colors.border },
+                ]}
                 activeOpacity={0.7}
               >
-                <View
-                  style={[
-                    styles.iconContainer,
-                    { backgroundColor: `${exercise.color}20` },
-                  ]}
-                >
+                <View style={[styles.iconContainer, { backgroundColor: `${exercise.color}20` }]}>
                   <Icon size={24} color={exercise.color} />
                 </View>
                 <View style={styles.textContainer}>
                   <Text style={[styles.exerciseName, { color: colors.text }]}>{exercise.name}</Text>
                   <Text style={[styles.exerciseUnit, { color: colors.textSecondary }]}>
-                    {exercise.unit === 'reps' ? 'REPS' : 'MINS'}
+                    {(exercise.unit === 'reps' ? t('home.reps') : t('home.mins')).toUpperCase()}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -84,13 +84,18 @@ export function QuickLogModal({ isOpen, onClose }: QuickLogModalProps) {
 
           <TouchableOpacity
             onPress={handleAddNew}
-            style={[styles.addNewButton, { backgroundColor: colors.muted, borderColor: colors.border }]}
+            style={[
+              styles.addNewButton,
+              { backgroundColor: colors.muted, borderColor: colors.border },
+            ]}
             activeOpacity={0.7}
           >
             <View style={[styles.addIconContainer, { backgroundColor: colors.border }]}>
               <Plus size={20} color={colors.textSecondary} />
             </View>
-            <Text style={[styles.addNewText, { color: colors.textSecondary }]}>Dodaj ćwiczenie</Text>
+            <Text style={[styles.addNewText, { color: colors.textSecondary }]}>
+              {t('home.addExercise')}
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

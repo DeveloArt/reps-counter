@@ -10,7 +10,8 @@ import {
   User,
   Zap,
 } from 'lucide-react-native';
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {
   getExercises,
@@ -20,12 +21,14 @@ import {
   getSettings,
   initDatabase,
 } from '../../src/db';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../src/hooks/useTheme';
 import type { Exercise, Goal, LogEntry, UserSettings } from '../../src/types';
 
 export default function HomeScreen() {
   const { colors, isDark } = useTheme();
   const router = useRouter();
+  const { t } = useTranslation();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [weeklyLogs, setWeeklyLogs] = useState<LogEntry[]>([]);
@@ -36,38 +39,40 @@ export default function HomeScreen() {
   const [_currentDate] = useState(new Date());
   const [streak, setStreak] = useState(0);
 
-  useEffect(() => {
-    async function loadData() {
-      await initDatabase();
-      const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
+  useFocusEffect(
+    useCallback(() => {
+      async function loadData() {
+        await initDatabase();
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0];
 
-      // Calculate start and end of week (last 7 days)
-      const startOfWeek = new Date(today);
-      startOfWeek.setDate(startOfWeek.getDate() - 6);
-      const startStr = startOfWeek.toISOString().split('T')[0];
+        // Calculate start and end of week (last 7 days)
+        const startOfWeek = new Date(today);
+        startOfWeek.setDate(startOfWeek.getDate() - 6);
+        const startStr = startOfWeek.toISOString().split('T')[0];
 
-      const [exercisesData, logsData, settingsData, goalsData, weeklyData] = await Promise.all([
-        getExercises(),
-        getLogsByDate(todayStr),
-        getSettings(),
-        getGoals(),
-        getLogsForWeek(startStr, todayStr),
-      ]);
-      setExercises(exercisesData);
-      setLogs(logsData);
-      setWeeklyLogs(weeklyData);
-      setSettings(settingsData);
-      setGoals(goalsData.filter((g) => g.type === 'daily' && g.isActive));
-      
-      // Calculate streak
-      const calculatedStreak = calculateStreak(weeklyData);
-      setStreak(calculatedStreak);
-      
-      setLoading(false);
-    }
-    loadData();
-  }, []);
+        const [exercisesData, logsData, settingsData, goalsData, weeklyData] = await Promise.all([
+          getExercises(),
+          getLogsByDate(todayStr),
+          getSettings(),
+          getGoals(),
+          getLogsForWeek(startStr, todayStr),
+        ]);
+        setExercises(exercisesData);
+        setLogs(logsData);
+        setWeeklyLogs(weeklyData);
+        setSettings(settingsData);
+        setGoals(goalsData.filter((g) => g.type === 'daily' && g.isActive));
+
+        // Calculate streak
+        const calculatedStreak = calculateStreak(weeklyData);
+        setStreak(calculatedStreak);
+
+        setLoading(false);
+      }
+      loadData();
+    }, [])
+  );
 
   // Calculate streak based on consecutive days with activity
   const calculateStreak = (allLogs: LogEntry[]): number => {
@@ -75,17 +80,18 @@ export default function HomeScreen() {
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     // Group logs by date
     const dateMap = new Map<string, boolean>();
-    allLogs.forEach(log => {
-      const dateStr = typeof log.date === 'string' ? log.date : log.date.toISOString().split('T')[0];
+    allLogs.forEach((log) => {
+      const dateStr =
+        typeof log.date === 'string' ? log.date : log.date.toISOString().split('T')[0];
       dateMap.set(dateStr, true);
     });
 
     let currentStreak = 0;
-    let checkDate = new Date(today);
-    
+    const checkDate = new Date(today);
+
     // Check if today has activity, if not start from yesterday
     const todayStr = today.toISOString().split('T')[0];
     if (!dateMap.has(todayStr)) {
@@ -216,7 +222,7 @@ export default function HomeScreen() {
           { backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center' },
         ]}
       >
-        <Text style={{ color: colors.text }}>Loading...</Text>
+        <Text style={{ color: colors.text }}>{t('common.loading')}</Text>
       </View>
     );
   }
@@ -229,10 +235,12 @@ export default function HomeScreen() {
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <Text style={[styles.greeting, { color: colors.text }]}>Hello!</Text>
+          <Text style={[styles.greeting, { color: colors.text }]}>{t('home.hello')}</Text>
           <View style={styles.streakContainer}>
             <Flame size={14} color={colors.primary} />
-            <Text style={[styles.streakText, { color: colors.primary }]}>{streak} days streak</Text>
+            <Text style={[styles.streakText, { color: colors.primary }]}>
+              {streak} {t('home.streak')}
+            </Text>
           </View>
         </View>
         <View style={styles.headerRight}>
@@ -252,9 +260,11 @@ export default function HomeScreen() {
       <View style={[styles.dailyGoalCard, { backgroundColor: colors.primary }]}>
         <View style={styles.dailyGoalContent}>
           <View style={styles.dailyGoalLeft}>
-            <Text style={styles.dailyGoalLabel}>Daily Goal</Text>
-            <Text style={styles.dailyGoalValue}>{totalProgress}% Complete</Text>
-            <Text style={styles.dailyGoalHint}>Keep going! You're doing great today.</Text>
+            <Text style={styles.dailyGoalLabel}>{t('home.dailyGoal')}</Text>
+            <Text style={styles.dailyGoalValue}>
+              {totalProgress}% {t('home.complete')}
+            </Text>
+            <Text style={styles.dailyGoalHint}>{t('home.keepGoing')}</Text>
           </View>
           <View style={styles.circularProgress}>
             <View
@@ -282,19 +292,19 @@ export default function HomeScreen() {
         <View style={styles.dailyGoalStats}>
           <View style={styles.dailyGoalStat}>
             <Text style={styles.dailyGoalStatValue}>{todayStats.totalReps}</Text>
-            <Text style={styles.dailyGoalStatLabel}>Reps</Text>
+            <Text style={styles.dailyGoalStatLabel}>{t('home.reps')}</Text>
           </View>
           <View style={[styles.dailyGoalDivider, { backgroundColor: 'rgba(255,255,255,0.1)' }]} />
           <View style={styles.dailyGoalStat}>
             <Text style={styles.dailyGoalStatValue}>{Math.round(todayStats.totalTime / 60)}</Text>
-            <Text style={styles.dailyGoalStatLabel}>Mins</Text>
+            <Text style={styles.dailyGoalStatLabel}>{t('home.mins')}</Text>
           </View>
         </View>
       </View>
 
       {/* Quick Add Section */}
       <View style={styles.section}>
-        <Text style={[styles.sectionTitle, { color: colors.text }]}>Quick Add</Text>
+        <Text style={[styles.sectionTitle, { color: colors.text }]}>{t('home.quickAdd')}</Text>
         <View style={styles.exercisesGrid}>
           {exercises.map((exercise) => {
             const Icon = getIcon(exercise.icon);
@@ -328,7 +338,7 @@ export default function HomeScreen() {
                 <View style={styles.exerciseCardContent}>
                   <Text style={[styles.exerciseName, { color: colors.text }]}>{exercise.name}</Text>
                   <Text style={[styles.exerciseUnit, { color: colors.textSecondary }]}>
-                    {exercise.unit === 'reps' ? 'Reps' : 'Mins'}
+                    {exercise.unit === 'reps' ? t('home.reps') : t('home.mins')}
                   </Text>
                 </View>
                 {dailyTotal > 0 && (
@@ -358,7 +368,7 @@ export default function HomeScreen() {
               <MoreHorizontal size={24} color={colors.textSecondary} />
             </View>
             <Text style={[styles.addExerciseText, { color: colors.textSecondary }]}>
-              Add Exercise
+              {t('home.addExercise')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -368,7 +378,7 @@ export default function HomeScreen() {
       <View style={[styles.weeklyPerformanceCard, { backgroundColor: colors.card }]}>
         <View style={styles.weeklyPerformanceHeader}>
           <Text style={[styles.weeklyPerformanceTitle, { color: colors.text }]}>
-            Weekly Performance
+            {t('home.weeklyPerformance')}
           </Text>
           <View style={[styles.metricToggle, { backgroundColor: colors.border }]}>
             <TouchableOpacity
@@ -384,7 +394,7 @@ export default function HomeScreen() {
                   { color: weeklyMetric === 'reps' ? colors.text : colors.textSecondary },
                 ]}
               >
-                Reps
+                {t('home.reps')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -400,7 +410,7 @@ export default function HomeScreen() {
                   { color: weeklyMetric === 'time' ? colors.text : colors.textSecondary },
                 ]}
               >
-                Mins
+                {t('home.mins')}
               </Text>
             </TouchableOpacity>
           </View>
@@ -501,7 +511,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     marginTop: 8,
     borderRadius: 24,
-    padding: 24,
+    padding: 16,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
@@ -560,8 +570,8 @@ const styles = StyleSheet.create({
   dailyGoalStats: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 24,
-    paddingTop: 16,
+    marginTop: 16,
+    paddingTop: 12,
     borderTopWidth: 1,
     borderTopColor: 'rgba(255,255,255,0.1)',
   },
@@ -588,7 +598,7 @@ const styles = StyleSheet.create({
 
   section: {
     paddingHorizontal: 16,
-    marginTop: 24,
+    marginTop: 16,
   },
   sectionTitle: {
     fontSize: 18,
@@ -692,9 +702,10 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   weeklyPerformanceHeader: {
-    marginBottom: 16,
+    marginBottom: 24,
   },
   weeklyPerformanceTitle: {
+    marginBottom: 8,
     fontSize: 16,
     fontWeight: '700',
   },

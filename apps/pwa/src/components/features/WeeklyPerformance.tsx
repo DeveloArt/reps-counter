@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 interface WeeklyPerformanceProps {
   weeklyData: any;
   weeklyMetric: 'reps' | 'time';
@@ -9,10 +11,12 @@ export function WeeklyPerformance({
   weeklyMetric,
   onMetricChange,
 }: WeeklyPerformanceProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="bg-card rounded-xl border border-border p-4 shadow-sm">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-bold text-foreground">Weekly Performance</h3>
+        <h3 className="font-bold text-foreground">{t('home.weeklyPerformance')}</h3>
         <div className="flex bg-muted rounded-lg p-1">
           <button
             onClick={() => onMetricChange('reps')}
@@ -22,7 +26,7 @@ export function WeeklyPerformance({
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
-            Reps
+            {t('home.reps')}
           </button>
           <button
             onClick={() => onMetricChange('time')}
@@ -32,7 +36,7 @@ export function WeeklyPerformance({
                 : 'text-muted-foreground hover:text-foreground'
             }`}
           >
-            Mins
+            {t('home.mins')}
           </button>
         </div>
       </div>

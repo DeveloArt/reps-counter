@@ -1,4 +1,5 @@
 import { Zap } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface DailyGoalCardProps {
   totalProgress: number;
@@ -7,14 +8,18 @@ interface DailyGoalCardProps {
 }
 
 export function DailyGoalCard({ totalProgress, totalReps, totalTime }: DailyGoalCardProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="relative overflow-hidden rounded-2xl bg-primary p-6 shadow-xl shadow-primary/10 text-white">
       <div className="flex flex-col items-center">
         <div className="flex w-full items-start justify-between">
           <div className="flex flex-col gap-1 z-10">
-            <p className="text-white/80 text-sm font-medium">Daily Goal</p>
-            <h3 className="text-2xl font-bold">{totalProgress}% Complete</h3>
-            <p className="text-white/80 text-xs mt-2 max-w-[160px]">Keep going!</p>
+            <p className="text-white/80 text-sm font-medium">{t('home.dailyGoal')}</p>
+            <h3 className="text-2xl font-bold">
+              {totalProgress}% {t('home.complete')}
+            </h3>
+            <p className="text-white/80 text-xs mt-2 max-w-[160px]">{t('home.keepGoing')}</p>
           </div>
           <div className="relative size-24 flex items-center justify-center">
             <svg className="size-full -rotate-90">
@@ -50,14 +55,14 @@ export function DailyGoalCard({ totalProgress, totalReps, totalTime }: DailyGoal
           <div className="flex flex-col items-center gap-1">
             <span className="text-lg font-bold">{totalReps}</span>
             <span className="text-[10px] text-white/60 uppercase font-bold tracking-widest">
-              Reps
+              {t('home.reps')}
             </span>
           </div>
           <div className="w-px h-8 bg-white/10" />
           <div className="flex flex-col items-center gap-1">
             <span className="text-lg font-bold">{Math.round(totalTime / 60)}</span>
             <span className="text-[10px] text-white/60 uppercase font-bold tracking-widest">
-              Mins
+              {t('home.mins')}
             </span>
           </div>
         </div>

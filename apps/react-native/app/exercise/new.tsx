@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { Check, Plus } from 'lucide-react-native';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Alert,
   ScrollView,
@@ -17,6 +18,7 @@ import { useTheme } from '../../src/hooks/useTheme';
 export default function NewExerciseScreen() {
   const { colors } = useTheme();
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [name, setName] = useState('');
   const [unit, setUnit] = useState<'reps' | 'seconds'>('reps');
@@ -35,7 +37,7 @@ export default function NewExerciseScreen() {
 
   const handleSave = async () => {
     if (!name.trim()) {
-      Alert.alert('Error', 'Please enter exercise name');
+      Alert.alert(t('common.error'), t('exercises.alerts.enterName'));
       return;
     }
 
@@ -51,16 +53,16 @@ export default function NewExerciseScreen() {
   };
 
   return (
-    <Modal isOpen={true} onClose={() => router.back()} title="New Exercise">
+    <Modal isOpen={true} onClose={() => router.back()} title={t('modals.addExercise.title')}>
       <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
         <View style={styles.formSection}>
-          <Text style={[styles.label, { color: colors.text }]}>Name</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t('modals.addExercise.nameLabel')}</Text>
           <TextInput
             style={[
               styles.input,
               { color: colors.text, backgroundColor: colors.muted, borderColor: 'transparent' },
             ]}
-            placeholder="Exercise name"
+            placeholder={t('modals.addExercise.namePlaceholder')}
             placeholderTextColor={colors.textSecondary}
             value={name}
             onChangeText={setName}
@@ -68,15 +70,12 @@ export default function NewExerciseScreen() {
         </View>
 
         <View style={styles.formSection}>
-          <Text style={[styles.label, { color: colors.text }]}>Unit</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t('modals.addExercise.unitLabel')}</Text>
           <View style={[styles.segmentedControl, { backgroundColor: colors.muted }]}>
             <TouchableOpacity
               style={[
                 styles.segmentButton,
-                unit === 'reps' && [
-                  styles.segmentButtonActive,
-                  { backgroundColor: colors.card },
-                ],
+                unit === 'reps' && [styles.segmentButtonActive, { backgroundColor: colors.card }],
               ]}
               onPress={() => setUnit('reps')}
             >
@@ -86,7 +85,7 @@ export default function NewExerciseScreen() {
                   { color: unit === 'reps' ? colors.primary : colors.textSecondary },
                 ]}
               >
-                Reps
+                {t('home.reps')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -105,14 +104,14 @@ export default function NewExerciseScreen() {
                   { color: unit === 'seconds' ? colors.primary : colors.textSecondary },
                 ]}
               >
-                Time
+                {t('modals.addExercise.time')}
               </Text>
             </TouchableOpacity>
           </View>
         </View>
 
         <View style={styles.formSection}>
-          <Text style={[styles.label, { color: colors.text }]}>Color</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t('modals.addExercise.colorLabel')}</Text>
           <View style={styles.colorContainer}>
             {colors_list.map((c) => (
               <TouchableOpacity
@@ -138,7 +137,7 @@ export default function NewExerciseScreen() {
           onPress={handleSave}
         >
           <Plus size={20} color="white" />
-          <Text style={styles.saveButtonText}>Create Exercise</Text>
+          <Text style={styles.saveButtonText}>{t('modals.addExercise.create')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </Modal>
@@ -152,6 +151,7 @@ const styles = StyleSheet.create({
   },
   formSection: {
     gap: 8,
+    marginTop: 8,
   },
   label: {
     fontSize: 14,
@@ -189,6 +189,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 12,
+    marginBottom: 8,
   },
   colorButton: {
     width: 32,

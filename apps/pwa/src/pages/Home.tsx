@@ -1,4 +1,5 @@
-import { db, type Exercise } from '@fitcounter/core';
+import { cn } from '@/lib/utils';
+import { type Exercise, db } from '@fitcounter/core';
 import { eachDayOfInterval, endOfDay, format, isSameDay, startOfDay, subDays } from 'date-fns';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Activity, Dumbbell, Edit2, MoreHorizontal, Plus, Timer, Zap } from 'lucide-react';
@@ -6,7 +7,6 @@ import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useOutletContext } from 'react-router-dom';
-import { cn } from '@/lib/utils';
 
 interface LayoutContext {
   openAddExercise: (exercise?: Exercise) => void;
@@ -290,7 +290,7 @@ export default function HomePage() {
               <div className="flex flex-col items-center gap-1">
                 <span className="text-lg font-bold">{todayStats?.totalReps || 0}</span>
                 <span className="text-[10px] text-white/60 uppercase font-bold tracking-widest">
-                  Reps
+                  {t('home.reps')}
                 </span>
               </div>
               <div className="w-px h-8 bg-white/10" />
@@ -299,7 +299,7 @@ export default function HomePage() {
                   {Math.round((todayStats?.totalTime || 0) / 60)}
                 </span>
                 <span className="text-[10px] text-white/60 uppercase font-bold tracking-widest">
-                  Mins
+                  {t('home.mins')}
                 </span>
               </div>
             </div>
@@ -340,7 +340,7 @@ export default function HomePage() {
                     <div className="flex flex-col items-end gap-1">
                       <div
                         onClick={(e) => handleEditExercise(e, exercise)}
-                        className="p-1.5 rounded-full text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors"
+                        className="p-1.5 rounded-full text-foreground hover:bg-primary/10 transition-colors"
                       >
                         <Edit2 className="size-4" />
                       </div>
@@ -357,7 +357,7 @@ export default function HomePage() {
                       {exercise.unit === 'reps' ? t('home.reps') : t('home.mins')}
                     </p>
                   </div>
-                  <div className="flex items-center justify-center w-full py-2 bg-muted rounded-lg group-active:bg-primary group-active:text-white transition-colors">
+                  <div className="flex items-center justify-center w-full py-2 bg-muted rounded-lg text-foreground group-active:bg-primary group-active:text-white transition-colors">
                     <Plus className="size-5" />
                   </div>
                 </motion.button>

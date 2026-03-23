@@ -79,7 +79,19 @@
     "enterTitle": "Nawyk, który chcesz dodać",
     "triggerLabel": "Sygnał (Gdy...)",
     "triggerPlaceholder": "np. Włączam mikrofalę",
-    "trigger": "Sygnał"
+    "trigger": "Sygnał",
+    "paused": "Wstrzymany",
+    "allGoals": "Wszystkie cele",
+    "tooltipAll": "{{met}}/{{total}} celów",
+    "status": {
+      "met": "Zrealizowany",
+      "notMet": "Niezrealizowany"
+    },
+    "legend": {
+      "none": "Brak",
+      "some": "Część",
+      "all": "Wszystkie"
+    }
   },
   "settings": {
     "title": "Ustawienia",
@@ -105,10 +117,26 @@
     "version": "Wersja",
     "terms": "Warunki Użytkowania",
     "privacy": "Polityka Prywatności"
+    ,
+    "productName": "FitCounter Pro",
+    "frequency": {
+      "min": "1 raz",
+      "max": "10 razy"
+    },
+    "alerts": {
+      "notificationsNotSupported": "Ta przeglądarka nie obsługuje powiadomień",
+      "notificationsBlocked": "Powiadomienia są zablokowane. Włącz je w ustawieniach przeglądarki.",
+      "resetFailed": "Nie udało się zresetować danych"
+    },
+    "languages": {
+      "english": "Angielski",
+      "polish": "Polski"
+    }
   },
   "modals": {
     "addExercise": {
       "title": "Nowe Ćwiczenie",
+      "editTitle": "Edytuj ćwiczenie",
       "nameLabel": "Nazwa Ćwiczenia",
       "namePlaceholder": "Nazwa Ćwiczenia",
       "colorLabel": "Kolor",
@@ -136,6 +164,7 @@
     },
     "addGoal": {
       "title": "Dodaj Nowy Cel",
+      "editTitle": "Edytuj cel",
       "goalType": "Typ Celu",
       "daily": "Dzienny",
       "weekly": "Tygodniowy",
@@ -151,9 +180,16 @@
       "newGoal": "Nowy Cel"
     }
   },
+  "components": {
+    "manualEntry": {
+      "label": "Wpisz ręcznie liczbę sekund",
+      "placeholder": "np. 60"
+    }
+  },
   "terms": {
     "title": "Warunki Użytkowania",
     "effectiveDate": "Data Obowiązywania",
+    "effectiveDateValue": "7 marca 2026",
     "section1": {
       "title": "1. Akceptacja Warunków",
       "content": "Uzyskując dostęp i korzystając z aplikacji FitCounter, zgadzasz się na przestrzeganie niniejszych Warunków Użytkowania."
@@ -178,6 +214,7 @@
   "privacy": {
     "title": "Polityka Prywatności",
     "effectiveDate": "Data Obowiązywania",
+    "effectiveDateValue": "7 marca 2026",
     "section1": {
       "title": "1. Gromadzenie Danych",
       "content": "FitCounter nie gromadzi, nie przesyła ani nie udostępnia żadnych danych osobowych. Aplikacja działa całkowicie offline."

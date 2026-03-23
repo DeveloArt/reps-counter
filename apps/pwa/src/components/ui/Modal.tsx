@@ -1,8 +1,8 @@
+import { cn } from '@/lib/utils';
 import { X } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { type ReactNode, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { cn } from '@/lib/utils';
 
 interface ModalProps {
   isOpen: boolean;
@@ -48,7 +48,7 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
               <h3 className="text-lg font-bold text-foreground">{title}</h3>
               <button
                 onClick={onClose}
-                className="p-2 rounded-full hover:bg-muted text-muted-foreground transition-colors"
+                className="p-2 rounded-full hover:bg-muted text-foreground transition-colors"
               >
                 <X className="size-5" />
               </button>

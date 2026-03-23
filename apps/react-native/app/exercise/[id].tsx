@@ -1,6 +1,7 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Check, Save, Trash2 } from 'lucide-react-native';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Alert,
   ScrollView,
@@ -19,6 +20,7 @@ export default function ExerciseDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors } = useTheme();
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [name, setName] = useState('');
@@ -54,7 +56,7 @@ export default function ExerciseDetailScreen() {
 
   const handleSave = async () => {
     if (!name.trim()) {
-      Alert.alert('Error', 'Please enter exercise name');
+      Alert.alert(t('common.error'), t('exercises.alerts.enterName'));
       return;
     }
 
@@ -78,30 +80,30 @@ export default function ExerciseDetailScreen() {
   if (!exercise) {
     return (
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <Text style={[styles.errorText, { color: colors.text }]}>Exercise not found</Text>
+        <Text style={[styles.errorText, { color: colors.text }]}>{t('exercises.notFound')}</Text>
       </View>
     );
   }
 
   if (showDeleteConfirm) {
     return (
-      <Modal isOpen={true} onClose={() => setShowDeleteConfirm(false)} title="Delete?">
+      <Modal isOpen={true} onClose={() => setShowDeleteConfirm(false)} title={t('common.delete')}>
         <View style={styles.modalContent}>
           <Text style={[styles.confirmText, { color: colors.textSecondary }]}>
-            Are you sure you want to delete this exercise?
+            {t('home.confirmDeleteExercise')}
           </Text>
           <View style={styles.buttonRow}>
             <TouchableOpacity
               onPress={() => setShowDeleteConfirm(false)}
               style={[styles.cancelButton, { backgroundColor: colors.muted }]}
             >
-              <Text style={[styles.cancelButtonText, { color: colors.text }]}>Cancel</Text>
+              <Text style={[styles.cancelButtonText, { color: colors.text }]}>{t('common.cancel')}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={handleDelete}
               style={[styles.confirmButton, { backgroundColor: colors.error }]}
             >
-              <Text style={styles.confirmButtonText}>Delete</Text>
+              <Text style={styles.confirmButtonText}>{t('common.delete')}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -110,16 +112,16 @@ export default function ExerciseDetailScreen() {
   }
 
   return (
-    <Modal isOpen={true} onClose={() => router.back()} title="Edit Exercise">
+    <Modal isOpen={true} onClose={() => router.back()} title={t('modals.addExercise.editTitle', 'Edit Exercise')}>
       <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
         <View style={styles.formSection}>
-          <Text style={[styles.label, { color: colors.text }]}>Name</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t('modals.addExercise.nameLabel')}</Text>
           <TextInput
             style={[
               styles.input,
               { color: colors.text, backgroundColor: colors.muted, borderColor: 'transparent' },
             ]}
-            placeholder="Exercise name"
+            placeholder={t('modals.addExercise.namePlaceholder')}
             placeholderTextColor={colors.textSecondary}
             value={name}
             onChangeText={setName}
@@ -127,15 +129,12 @@ export default function ExerciseDetailScreen() {
         </View>
 
         <View style={styles.formSection}>
-          <Text style={[styles.label, { color: colors.text }]}>Unit</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t('modals.addExercise.unitLabel')}</Text>
           <View style={[styles.segmentedControl, { backgroundColor: colors.muted }]}>
             <TouchableOpacity
               style={[
                 styles.segmentButton,
-                unit === 'reps' && [
-                  styles.segmentButtonActive,
-                  { backgroundColor: colors.card },
-                ],
+                unit === 'reps' && [styles.segmentButtonActive, { backgroundColor: colors.card }],
               ]}
               onPress={() => setUnit('reps')}
             >
@@ -145,7 +144,7 @@ export default function ExerciseDetailScreen() {
                   { color: unit === 'reps' ? colors.primary : colors.textSecondary },
                 ]}
               >
-                Reps
+                {t('home.reps')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -164,14 +163,14 @@ export default function ExerciseDetailScreen() {
                   { color: unit === 'seconds' ? colors.primary : colors.textSecondary },
                 ]}
               >
-                Time
+                {t('modals.addExercise.time')}
               </Text>
             </TouchableOpacity>
           </View>
         </View>
 
         <View style={styles.formSection}>
-          <Text style={[styles.label, { color: colors.text }]}>Color</Text>
+          <Text style={[styles.label, { color: colors.text }]}>{t('modals.addExercise.colorLabel')}</Text>
           <View style={styles.colorContainer}>
             {colors_list.map((c) => (
               <TouchableOpacity
@@ -201,14 +200,14 @@ export default function ExerciseDetailScreen() {
             onPress={() => setShowDeleteConfirm(true)}
           >
             <Trash2 size={20} color={colors.error} />
-            <Text style={[styles.deleteButtonTextNew, { color: colors.error }]}>Delete</Text>
+            <Text style={[styles.deleteButtonTextNew, { color: colors.error }]}>{t('common.delete')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.saveButtonNew, { backgroundColor: colors.primary }]}
             onPress={handleSave}
           >
             <Save size={20} color="white" />
-            <Text style={styles.saveButtonTextNew}>Save</Text>
+            <Text style={styles.saveButtonTextNew}>{t('common.save')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -224,14 +223,15 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 16,
     textAlign: 'center',
-    marginTop: 100,
+    marginTop: 24,
   },
   modalContent: {
     gap: 24,
+    paddingBottom: 16,
   },
   confirmText: {
     fontSize: 14,
-    marginBottom: 24,
+    marginBottom: 16,
   },
   buttonRow: {
     flexDirection: 'row',
@@ -260,6 +260,7 @@ const styles = StyleSheet.create({
   },
   formSection: {
     gap: 8,
+    marginTop: 8,
   },
   label: {
     fontSize: 14,
@@ -297,6 +298,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 12,
+    marginBottom: 8,
   },
   colorButton: {
     width: 32,

@@ -58,7 +58,6 @@ export default function NewGoalScreen() {
   return (
     <Modal isOpen={true} onClose={() => router.back()} title={t('goals.newGoal')}>
       <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
-
         <View style={styles.typeGrid}>
           <TouchableOpacity
             style={[
@@ -117,7 +116,9 @@ export default function NewGoalScreen() {
               ]}
               onPress={() => setExerciseId('')}
             >
-              <Text style={[styles.exerciseChipText, { color: !exerciseId ? 'white' : colors.text }]}>
+              <Text
+                style={[styles.exerciseChipText, { color: !exerciseId ? 'white' : colors.text }]}
+              >
                 {t('common.all')}
               </Text>
             </TouchableOpacity>
@@ -256,6 +257,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   formSection: {
+    marginTop: 16,
     gap: 8,
   },
   label: {
@@ -283,6 +285,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   metricRow: {
+    marginTop: 16,
     flexDirection: 'row',
     gap: 16,
   },
@@ -336,7 +339,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 4,
-    marginTop: 8,
+    marginTop: 16,
   },
   saveButtonText: {
     fontSize: 16,

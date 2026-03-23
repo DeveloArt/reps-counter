@@ -1,19 +1,21 @@
 import { Tabs } from 'expo-router';
 import { ChartBar, House, Plus, Settings, Target } from 'lucide-react-native';
 import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { QuickLogModal } from '../../src/components/QuickLogModal';
 import { useTheme } from '../../src/hooks/useTheme';
 
 function FabButton({ color, onPress }: { color: string; onPress: () => void }) {
   return (
     <View style={styles.fabContainer}>
-      <View
+      <TouchableOpacity
         style={[styles.fab, { backgroundColor: color }]}
-        onTouchEnd={onPress}
+        onPress={onPress}
+        activeOpacity={0.8}
       >
         <Plus size={32} color="white" strokeWidth={2.5} />
-      </View>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -21,69 +23,79 @@ function FabButton({ color, onPress }: { color: string; onPress: () => void }) {
 export default function TabLayout() {
   const { colors } = useTheme();
   const [isQuickLogOpen, setIsQuickLogOpen] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <>
       <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textSecondary,
-        tabBarStyle: {
-          backgroundColor: colors.card,
-          borderTopColor: colors.border,
-          height: 85,
-          paddingBottom: 25,
-          paddingTop: 10,
-        },
-        headerStyle: {
-          backgroundColor: colors.card,
-        },
-        headerTintColor: colors.text,
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          headerTitle: 'FitCounter',
-          tabBarIcon: ({ color, size }) => <House size={size} color={color} strokeWidth={2} />,
+        screenOptions={{
+          tabBarActiveTintColor: colors.primary,
+          tabBarInactiveTintColor: colors.textSecondary,
+          tabBarStyle: {
+            backgroundColor: colors.card,
+            borderTopColor: colors.border,
+            height: 80,
+            paddingBottom: 20,
+            paddingTop: 8,
+          },
+          headerStyle: {
+            backgroundColor: colors.card,
+          },
+          headerTintColor: colors.text,
         }}
-      />
-      <Tabs.Screen
-        name="stats"
-        options={{
-          title: 'Stats',
-          tabBarIcon: ({ color, size }) => <ChartBar size={size} color={color} strokeWidth={2} />,
-        }}
-      />
-      <Tabs.Screen
-        name="add"
-        options={{
-          title: '',
-          headerShown: false,
-          tabBarIcon: () => <FabButton color={colors.primary} onPress={() => setIsQuickLogOpen(true)} />,
-        }}
-      />
-      <Tabs.Screen
-        name="goals"
-        options={{
-          title: 'Goals',
-          tabBarIcon: ({ color, size }) => <Target size={size} color={color} strokeWidth={2} />,
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: 'Settings',
-          tabBarIcon: ({ color, size }) => <Settings size={size} color={color} strokeWidth={2} />,
-        }}
-      />
-    </Tabs>
+      >
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: t('nav.home'),
+            headerTitle: 'FitCounter',
+            tabBarIcon: ({ color, size }) => <House size={size} color={color} strokeWidth={2} />,
+            tabBarButtonTestID: 'tab-index',
+          }}
+        />
+        <Tabs.Screen
+          name="stats"
+          options={{
+            title: t('nav.stats'),
+            tabBarIcon: ({ color, size }) => <ChartBar size={size} color={color} strokeWidth={2} />,
+            tabBarButtonTestID: 'tab-stats',
+          }}
+        />
+        <Tabs.Screen
+          name="add"
+          options={{
+            title: '',
+            headerShown: false,
+            tabBarIcon: () => (
+              <FabButton color={colors.primary} onPress={() => setIsQuickLogOpen(true)} />
+            ),
+          }}
+          listeners={{
+            tabPress: (e) => {
+              e.preventDefault();
+              setIsQuickLogOpen(true);
+            },
+          }}
+        />
+        <Tabs.Screen
+          name="goals"
+          options={{
+            title: t('nav.goals'),
+            tabBarIcon: ({ color, size }) => <Target size={size} color={color} strokeWidth={2} />,
+            tabBarButtonTestID: 'tab-goals',
+          }}
+        />
+        <Tabs.Screen
+          name="settings"
+          options={{
+            title: t('nav.settings'),
+            tabBarIcon: ({ color, size }) => <Settings size={size} color={color} strokeWidth={2} />,
+            tabBarButtonTestID: 'tab-settings',
+          }}
+        />
+      </Tabs>
 
-      <QuickLogModal
-        isOpen={isQuickLogOpen}
-        onClose={() => setIsQuickLogOpen(false)}
-      />
+      <QuickLogModal isOpen={isQuickLogOpen} onClose={() => setIsQuickLogOpen(false)} />
     </>
   );
 }

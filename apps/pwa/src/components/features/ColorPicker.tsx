@@ -1,5 +1,5 @@
-import { Check } from 'lucide-react';
 import type { ColorPickerProps } from '@/types/components';
+import { Check } from 'lucide-react';
 
 const COLORS = [
   '#0D5D5D', // Primary

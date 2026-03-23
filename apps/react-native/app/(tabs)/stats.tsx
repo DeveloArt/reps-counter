@@ -1,9 +1,13 @@
 import { useRouter } from 'expo-router';
 import { ArrowLeft, Dumbbell, Timer, TrendingUp } from 'lucide-react-native';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Defs, LinearGradient, Path, Stop } from 'react-native-svg';
+import { format } from 'date-fns';
+import { enUS, pl as plLocale } from 'date-fns/locale';
 import { getExercises, getLogs, initDatabase } from '../../src/db';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../src/hooks/useTheme';
 import type { Exercise, LogEntry } from '../../src/types';
 
@@ -13,6 +17,11 @@ type MetricType = 'reps' | 'time';
 export default function StatsScreen() {
   const { colors } = useTheme();
   const router = useRouter();
+  const { t, i18n } = useTranslation();
+  const languageKey = (i18n.resolvedLanguage ?? i18n.language).toLowerCase();
+  const locale = languageKey.startsWith('pl')
+    ? plLocale
+    : enUS;
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,16 +29,18 @@ export default function StatsScreen() {
   const [activityMetric, setActivityMetric] = useState<MetricType>('reps');
   const [_currentDate] = useState(new Date());
 
-  useEffect(() => {
-    async function loadData() {
-      await initDatabase();
-      const [logsData, exercisesData] = await Promise.all([getLogs(), getExercises()]);
-      setLogs(logsData);
-      setExercises(exercisesData);
-      setLoading(false);
-    }
-    loadData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      async function loadData() {
+        await initDatabase();
+        const [logsData, exercisesData] = await Promise.all([getLogs(), getExercises()]);
+        setLogs(logsData);
+        setExercises(exercisesData);
+        setLoading(false);
+      }
+      loadData();
+    }, [])
+  );
 
   const stats = useMemo(() => {
     if (!logs || !exercises) {
@@ -100,7 +111,7 @@ export default function StatsScreen() {
           return acc;
         }, 0);
 
-        const dayLabel = date.toLocaleDateString('en-US', { weekday: 'short' }).substring(0, 1);
+        const dayLabel = format(date, 'EEEEE', { locale });
         dailyData.push({ day: dayLabel.toUpperCase(), value: Math.round(value) });
       }
     } else if (activeTab === 'month') {
@@ -120,20 +131,6 @@ export default function StatsScreen() {
         dailyData.push({ day: String(i), value: Math.round(value) });
       }
     } else {
-      const months = [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-      ];
       for (let i = 0; i < 12; i++) {
         const monthStart = new Date(now.getFullYear(), i, 1);
         const monthEnd = new Date(now.getFullYear(), i + 1, 0);
@@ -149,7 +146,7 @@ export default function StatsScreen() {
           return acc;
         }, 0);
 
-        dailyData.push({ day: months[i], value: Math.round(value) });
+        dailyData.push({ day: format(monthStart, 'LLL', { locale }), value: Math.round(value) });
       }
     }
 
@@ -194,8 +191,7 @@ export default function StatsScreen() {
           return acc;
         }, 0);
 
-        const monthLabel = monthDate.toLocaleDateString('en-US', { month: 'short' });
-        weeklyData.push({ week: monthLabel, value: Math.round(value) });
+        weeklyData.push({ week: format(monthDate, 'LLL', { locale }), value: Math.round(value) });
       }
     } else {
       for (let i = 4; i >= 0; i--) {
@@ -238,7 +234,7 @@ export default function StatsScreen() {
       weeklyData,
       percentChange,
     };
-  }, [logs, exercises, activeTab, activityMetric]);
+  }, [logs, exercises, activeTab, activityMetric, languageKey]);
 
   const _maxDailyValue = Math.max(...stats.dailyData.map((d) => d.value), 1);
   const maxWeeklyValue = Math.max(...stats.weeklyData.map((d) => d.value), 1);
@@ -324,7 +320,7 @@ export default function StatsScreen() {
           { backgroundColor: colors.background, justifyContent: 'center', alignItems: 'center' },
         ]}
       >
-        <Text style={{ color: colors.text }}>Loading...</Text>
+        <Text style={{ color: colors.text }}>{t('common.loading')}</Text>
       </View>
     );
   }
@@ -350,7 +346,7 @@ export default function StatsScreen() {
                 { color: activeTab === tab ? colors.primary : colors.textSecondary },
               ]}
             >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              {tab === 'week' ? t('stats.week') : tab === 'month' ? t('stats.month') : t('stats.year')}
             </Text>
           </TouchableOpacity>
         ))}
@@ -363,45 +359,41 @@ export default function StatsScreen() {
           <View style={[styles.card, { backgroundColor: colors.card }]}>
             <View style={styles.cardHeader}>
               <Dumbbell size={16} color={colors.primary} />
-              <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>Reps</Text>
+              <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>{t('home.reps')}</Text>
             </View>
             <Text style={[styles.cardValue, { color: colors.text }]}>
               {stats.totalReps.toLocaleString()}
             </Text>
-            <Text style={[styles.cardSubLabel, { color: colors.textSecondary }]}>Total</Text>
+            <Text style={[styles.cardSubLabel, { color: colors.textSecondary }]}>{t('stats.total')}</Text>
             <View style={[styles.cardDivider, { backgroundColor: colors.border }]} />
             <Text style={[styles.cardSmallValue, { color: colors.text }]}>
               {stats.avgRepsPerDay}
             </Text>
-            <Text style={[styles.cardSmallLabel, { color: colors.textSecondary }]}>
-              Avg per Day
-            </Text>
+            <Text style={[styles.cardSmallLabel, { color: colors.textSecondary }]}>{t('stats.avgPerDay')}</Text>
           </View>
 
           {/* Time Card */}
           <View style={[styles.card, { backgroundColor: colors.card }]}>
             <View style={styles.cardHeader}>
               <Timer size={16} color={colors.primary} />
-              <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>Mins</Text>
+              <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>{t('home.mins')}</Text>
             </View>
             <Text style={[styles.cardValue, { color: colors.text }]}>
               {stats.totalMinutes.toLocaleString()}
             </Text>
-            <Text style={[styles.cardSubLabel, { color: colors.textSecondary }]}>Total</Text>
+            <Text style={[styles.cardSubLabel, { color: colors.textSecondary }]}>{t('stats.total')}</Text>
             <View style={[styles.cardDivider, { backgroundColor: colors.border }]} />
             <Text style={[styles.cardSmallValue, { color: colors.text }]}>
               {stats.avgMinutesPerDay}m
             </Text>
-            <Text style={[styles.cardSmallLabel, { color: colors.textSecondary }]}>
-              Avg per Day
-            </Text>
+            <Text style={[styles.cardSmallLabel, { color: colors.textSecondary }]}>{t('stats.avgPerDay')}</Text>
           </View>
         </View>
 
         {/* Daily Activity Section */}
         <View style={[styles.chartSection, { backgroundColor: colors.card }]}>
           <View style={styles.chartSectionHeader}>
-            <Text style={[styles.chartTitle, { color: colors.text }]}>Daily Activity</Text>
+            <Text style={[styles.chartTitle, { color: colors.text }]}>{t('stats.dailyActivity')}</Text>
             <View style={[styles.metricToggle, { backgroundColor: colors.border }]}>
               <TouchableOpacity
                 style={[
@@ -416,7 +408,7 @@ export default function StatsScreen() {
                     { color: activityMetric === 'reps' ? colors.text : colors.textSecondary },
                   ]}
                 >
-                  Reps
+                  {t('home.reps')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -432,7 +424,7 @@ export default function StatsScreen() {
                     { color: activityMetric === 'time' ? colors.text : colors.textSecondary },
                   ]}
                 >
-                  Mins
+                  {t('home.mins')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -443,7 +435,7 @@ export default function StatsScreen() {
               {totalActivity.toLocaleString()}
             </Text>
             <Text style={[styles.chartTotalLabel, { color: colors.textSecondary }]}>
-              Total {activityMetric === 'reps' ? 'Reps' : 'Mins'}
+              {t('stats.total')} {activityMetric === 'reps' ? t('home.reps') : t('home.mins')}
             </Text>
           </View>
 
@@ -462,7 +454,7 @@ export default function StatsScreen() {
         {/* Weekly Comparison Section */}
         <View style={[styles.chartSection, { backgroundColor: colors.card }]}>
           <View style={styles.chartSectionHeader}>
-            <Text style={[styles.chartTitle, { color: colors.text }]}>Weekly Comparison</Text>
+            <Text style={[styles.chartTitle, { color: colors.text }]}>{t('stats.weeklyComparison')}</Text>
             <View style={[styles.metricToggle, { backgroundColor: colors.border }]}>
               <TouchableOpacity
                 style={[
@@ -477,7 +469,7 @@ export default function StatsScreen() {
                     { color: activityMetric === 'reps' ? colors.text : colors.textSecondary },
                   ]}
                 >
-                  Reps
+                  {t('home.reps')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -493,7 +485,7 @@ export default function StatsScreen() {
                     { color: activityMetric === 'time' ? colors.text : colors.textSecondary },
                   ]}
                 >
-                  Mins
+                  {t('home.mins')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -516,7 +508,7 @@ export default function StatsScreen() {
               />
             </View>
             <Text style={[styles.chartTotalLabel, { color: colors.textSecondary }]}>
-              vs last period
+              {t('stats.vsLastPeriod')}
             </Text>
           </View>
 
@@ -668,7 +660,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'flex-end',
     height: 160,
-    paddingTop: 20,
+    paddingTop: 16,
   },
   barWrapper: {
     alignItems: 'center',
@@ -692,6 +684,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   bottomSpacer: {
-    height: 32,
+    height: 8,
   },
 });

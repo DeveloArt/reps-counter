@@ -1,6 +1,9 @@
-import { db, type Goal } from '@fitcounter/core';
+import { AddGoalModal } from '@/components/features/AddGoalModal';
+import { cn } from '@/lib/utils';
+import { type Goal, db } from '@fitcounter/core';
 import {
   addMonths,
+  addDays,
   eachDayOfInterval,
   endOfDay,
   endOfMonth,
@@ -29,8 +32,6 @@ import {
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { AddGoalModal } from '@/components/features/AddGoalModal';
-import { cn } from '@/lib/utils';
 
 export default function GoalsPage() {
   const { t, i18n } = useTranslation();
@@ -41,6 +42,10 @@ export default function GoalsPage() {
   const [selectedGoalFilter, setSelectedGoalFilter] = useState<string>('all');
 
   const locale = i18n.language === 'pl' ? pl : enUS;
+  const weekStart = startOfWeek(new Date(), { weekStartsOn: 1 });
+  const weekdayLabels = Array.from({ length: 7 }, (_, idx) =>
+    format(addDays(weekStart, idx), 'EEEEE', { locale })
+  );
 
   // Fetch all goals
   const goals = useLiveQuery(() => db.goals.toArray());
@@ -271,7 +276,7 @@ export default function GoalsPage() {
                           {!goal.isActive && (
                             <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider bg-destructive/10 text-destructive px-2 py-0.5 rounded-full">
                               <AlertCircle className="size-3" />
-                              Wstrzymany
+                              {t('goals.paused')}
                             </span>
                           )}
                         </div>
@@ -308,7 +313,7 @@ export default function GoalsPage() {
                       </div>
                       <button
                         onClick={() => handleEditGoal(goal)}
-                        className="p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-full transition-colors"
+                        className="p-2 text-foreground hover:bg-primary/10 rounded-full transition-colors"
                       >
                         <Edit2 className="size-4" />
                       </button>
@@ -373,7 +378,7 @@ export default function GoalsPage() {
                   onChange={(e) => setSelectedGoalFilter(e.target.value)}
                   className="w-full bg-muted text-foreground rounded-lg px-3 py-2 text-sm border-none outline-none focus:ring-2 focus:ring-primary/20"
                 >
-                  <option value="all">{t('goals.allGoals', 'Wszystkie cele')}</option>
+                  <option value="all">{t('goals.allGoals')}</option>
                   {goals.map((g) => (
                     <option key={g.id} value={g.id}>
                       {g.title}
@@ -384,7 +389,7 @@ export default function GoalsPage() {
             )}
 
             <div className="grid grid-cols-7 gap-1 mb-2">
-              {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => (
+              {weekdayLabels.map((d, i) => (
                 <div key={i} className="text-center text-[10px] font-bold text-muted-foreground">
                   {d}
                 </div>
@@ -406,10 +411,10 @@ export default function GoalsPage() {
                   )}
                   title={
                     selectedGoalFilter === 'all'
-                      ? `${day.metCount}/${day.totalCount} celów`
+                      ? t('goals.tooltipAll', { met: day.metCount, total: day.totalCount })
                       : day.status === 'all'
-                        ? t('goals.status.met', 'Zrealizowany')
-                        : t('goals.status.notMet', 'Niezrealizowany')
+                        ? t('goals.status.met')
+                        : t('goals.status.notMet')
                   }
                 >
                   {day.status === 'all' ? <Check className="size-3" /> : format(day.date, 'd')}
@@ -421,15 +426,15 @@ export default function GoalsPage() {
               <div className="flex items-center justify-center gap-4 mt-4 text-xs text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <div className="size-3 rounded-sm bg-muted/30 border border-transparent" />
-                  <span>{t('goals.legend.none', 'Brak')}</span>
+                  <span>{t('goals.legend.none')}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <div className="size-3 rounded-sm bg-primary/40 border border-primary/50" />
-                  <span>{t('goals.legend.some', 'Część')}</span>
+                  <span>{t('goals.legend.some')}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <div className="size-3 rounded-sm bg-primary border border-primary" />
-                  <span>{t('goals.legend.all', 'Wszystkie')}</span>
+                  <span>{t('goals.legend.all')}</span>
                 </div>
               </div>
             )}

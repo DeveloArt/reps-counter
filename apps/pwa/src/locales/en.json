@@ -79,7 +79,19 @@
     "enterTitle": "Habit to add",
     "triggerLabel": "Trigger (When I...)",
     "triggerPlaceholder": "e.g. Turn on the microwave",
-    "trigger": "Trigger"
+    "trigger": "Trigger",
+    "paused": "Paused",
+    "allGoals": "All goals",
+    "tooltipAll": "{{met}}/{{total}} goals",
+    "status": {
+      "met": "Met",
+      "notMet": "Not met"
+    },
+    "legend": {
+      "none": "None",
+      "some": "Some",
+      "all": "All"
+    }
   },
   "settings": {
     "title": "Settings",
@@ -105,10 +117,26 @@
     "version": "Version",
     "terms": "Terms of Use",
     "privacy": "Privacy Policy"
+    ,
+    "productName": "FitCounter Pro",
+    "frequency": {
+      "min": "1 time",
+      "max": "10 times"
+    },
+    "alerts": {
+      "notificationsNotSupported": "This browser does not support desktop notifications",
+      "notificationsBlocked": "Notifications are blocked. Please enable them in your browser settings.",
+      "resetFailed": "Failed to reset data"
+    },
+    "languages": {
+      "english": "English",
+      "polish": "Polish"
+    }
   },
   "modals": {
     "addExercise": {
       "title": "New Exercise",
+      "editTitle": "Edit exercise",
       "nameLabel": "Exercise Name",
       "namePlaceholder": "Exercise Name",
       "colorLabel": "Color",
@@ -136,6 +164,7 @@
     },
     "addGoal": {
       "title": "Add New Goal",
+      "editTitle": "Edit goal",
       "goalType": "Goal Type",
       "daily": "Daily",
       "weekly": "Weekly",
@@ -151,9 +180,16 @@
       "newGoal": "New Goal"
     }
   },
+  "components": {
+    "manualEntry": {
+      "label": "Enter seconds manually",
+      "placeholder": "e.g. 60"
+    }
+  },
   "terms": {
     "title": "Terms of Use",
     "effectiveDate": "Effective Date",
+    "effectiveDateValue": "March 7, 2026",
     "section1": {
       "title": "1. Acceptance of Terms",
       "content": "By accessing and using the FitCounter application, you agree to be bound by these Terms of Use."
@@ -178,6 +214,7 @@
   "privacy": {
     "title": "Privacy Policy",
     "effectiveDate": "Effective Date",
+    "effectiveDateValue": "March 7, 2026",
     "section1": {
       "title": "1. Data Collection",
       "content": "FitCounter does not collect, transmit, or share any personal information. The application operates entirely offline."
