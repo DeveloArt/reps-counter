@@ -293,8 +293,21 @@ export function createAnchorObserver<T>(Mount: PlasmoCSUI<T>) {
     }, 142)
   }
 
+  const stop = () => {
+    if (mountState.observer) {
+      mountState.observer.disconnect()
+      mountState.observer = null
+    }
+
+    if (mountState.mountInterval) {
+      clearInterval(mountState.mountInterval)
+      mountState.mountInterval = null
+    }
+  }
+
   return {
     start,
+    stop,
     mountState
   }
 }
