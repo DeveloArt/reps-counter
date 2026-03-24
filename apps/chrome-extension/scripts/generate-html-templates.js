@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const plasmoDir = path.join(__dirname, '..', '.plasmo');
 
@@ -11,7 +11,7 @@ const templates = [
   { name: 'newtab', title: 'New Tab' },
   { name: 'options', title: 'Options' },
   { name: 'popup', title: 'Popup' },
-  { name: 'sidepanel', title: 'Side Panel' }
+  { name: 'sidepanel', title: 'Side Panel' },
 ];
 
 // HTML template generator function
@@ -33,7 +33,7 @@ function generateHTMLTemplate(scriptName, pageTitle) {
 }
 
 // Generate HTML files
-templates.forEach(template => {
+templates.forEach((template) => {
   const filePath = path.join(plasmoDir, `${template.name}.html`);
   const content = generateHTMLTemplate(template.name, template.title);
   fs.writeFileSync(filePath, content, 'utf-8');

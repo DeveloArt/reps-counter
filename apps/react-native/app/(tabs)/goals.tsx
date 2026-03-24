@@ -1,3 +1,5 @@
+import { format } from 'date-fns';
+import { enUS, pl as plLocale } from 'date-fns/locale';
 import { useFocusEffect, useRouter } from 'expo-router';
 import {
   Activity,
@@ -14,8 +16,6 @@ import {
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { format } from 'date-fns';
-import { enUS, pl as plLocale } from 'date-fns/locale';
 import { getExercises, getGoals, getLogs, initDatabase } from '../../src/db';
 import { useTheme } from '../../src/hooks/useTheme';
 import type { Exercise, Goal, LogEntry } from '../../src/types';

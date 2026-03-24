@@ -13,8 +13,9 @@ export default function SettingsPage() {
   const navigate = useNavigate();
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const settings = useLiveQuery(() => db.settings.get(1));
-  const activeLanguage =
-    (i18n.resolvedLanguage ?? i18n.language).toLowerCase().startsWith('pl') ? 'pl' : 'en';
+  const activeLanguage = (i18n.resolvedLanguage ?? i18n.language).toLowerCase().startsWith('pl')
+    ? 'pl'
+    : 'en';
 
   useEffect(() => {
     if ('Notification' in window) {
@@ -43,7 +44,7 @@ export default function SettingsPage() {
         dailyGoalReps: 100,
         dailyGoalTime: 600,
         onboardingCompleted: false,
-        notificationFrequency: val
+        notificationFrequency: val,
       });
     }
   };
@@ -101,7 +102,10 @@ export default function SettingsPage() {
     <div className="flex flex-col min-h-full pb-20 bg-background">
       {/* Header */}
       <div className="sticky top-0 z-10 flex items-center bg-background/80 backdrop-blur-md p-4 border-b border-primary/10">
-        <button onClick={() => navigate(-1)} className="flex size-10 shrink-0 items-center justify-center cursor-pointer hover:bg-muted rounded-full transition-colors">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex size-10 shrink-0 items-center justify-center cursor-pointer hover:bg-muted rounded-full transition-colors"
+        >
           <ArrowLeft className="size-6 text-primary" />
         </button>
         <h2 className="text-foreground text-lg font-bold leading-tight tracking-tight flex-1 ml-2">
