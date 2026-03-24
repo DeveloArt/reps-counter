@@ -1,5 +1,7 @@
 import type { PlasmoCSUI, PlasmoCSUIAnchor, PlasmoCSUIMountState } from "~type"
 
+const DEFAULT_MOUNT_INTERVAL = 142
+
 async function createShadowDOM<T>(Mount: PlasmoCSUI<T>) {
   const shadowHost = document.createElement("plasmo-csui")
 
@@ -290,11 +292,24 @@ export function createAnchorObserver<T>(Mount: PlasmoCSUI<T>) {
         return
       }
       mountAnchors(render)
-    }, 142)
+    }, DEFAULT_MOUNT_INTERVAL)
+  }
+
+  const stop = () => {
+    if (mountState.observer) {
+      mountState.observer.disconnect()
+      mountState.observer = null
+    }
+
+    if (mountState.mountInterval) {
+      clearInterval(mountState.mountInterval)
+      mountState.mountInterval = null
+    }
   }
 
   return {
     start,
+    stop,
     mountState
   }
 }
