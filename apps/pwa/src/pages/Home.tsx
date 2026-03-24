@@ -50,16 +50,16 @@ export default function HomePage() {
     const start = startOfDay(currentDate).getTime();
     const end = endOfDay(currentDate).getTime();
 
+    // Get exercises to know units
+    const allExercises = await db.exercises.toArray();
+    const exerciseMap = new Map(allExercises.map((e) => [e.id, e]));
+
     // Use timestamp index for reliable date filtering
     const logs = await db.logs.where('timestamp').between(start, end).toArray();
 
     let totalReps = 0;
     let totalTime = 0;
     const exerciseTotals: Record<string, number> = {};
-
-    // Get exercises to know units
-    const allExercises = await db.exercises.toArray();
-    const exerciseMap = new Map(allExercises.map((e) => [e.id, e]));
 
     logs.forEach((log) => {
       const exercise = exerciseMap.get(log.exerciseId);
