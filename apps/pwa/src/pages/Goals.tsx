@@ -1,7 +1,7 @@
 import { db } from '@/db';
 import { cn } from '@/lib/utils';
-import { useLiveQuery } from 'dexie-react-hooks';
 import { endOfDay, endOfWeek, startOfDay, startOfWeek } from 'date-fns';
+import { useLiveQuery } from 'dexie-react-hooks';
 import { Plus, Target, TrendingUp } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,7 +24,7 @@ export default function GoalsPage() {
     const [allGoals, allExercises, allLogs] = await Promise.all([
       db.goals.toArray(),
       db.exercises.toArray(),
-      db.logs.toArray()
+      db.logs.toArray(),
     ]);
 
     if (!allGoals.length) return [];
@@ -84,7 +84,7 @@ export default function GoalsPage() {
       result.push({
         ...goal,
         currentValue: currentVal,
-        progress: Math.min(Math.round((currentVal / goal.targetValue) * 100), 100)
+        progress: Math.min(Math.round((currentVal / goal.targetValue) * 100), 100),
       });
     }
 
@@ -116,9 +116,7 @@ export default function GoalsPage() {
                 {t('goals.active')}
               </span>
             </div>
-            <div className="text-2xl font-bold text-foreground">
-              {goals?.length || 0}
-            </div>
+            <div className="text-2xl font-bold text-foreground">{goals?.length || 0}</div>
           </div>
           <div className="bg-card p-4 rounded-2xl border border-border/50">
             <div className="flex items-center gap-2 text-muted-foreground mb-1">
@@ -128,7 +126,7 @@ export default function GoalsPage() {
               </span>
             </div>
             <div className="text-2xl font-bold text-foreground">
-              {goalsWithProgress?.filter(g => g.progress >= 100).length || 0}
+              {goalsWithProgress?.filter((g) => g.progress >= 100).length || 0}
             </div>
           </div>
         </div>
@@ -139,12 +137,8 @@ export default function GoalsPage() {
             <div className="size-16 bg-muted rounded-full flex items-center justify-center mb-4">
               <Target className="size-8 text-muted-foreground/50" />
             </div>
-            <h3 className="text-foreground font-semibold mb-1">
-              {t('goals.noGoals')}
-            </h3>
-            <p className="text-muted-foreground text-sm max-w-[200px]">
-              {t('goals.noGoalsDesc')}
-            </p>
+            <h3 className="text-foreground font-semibold mb-1">{t('goals.noGoals')}</h3>
+            <p className="text-muted-foreground text-sm max-w-[200px]">{t('goals.noGoalsDesc')}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -156,19 +150,24 @@ export default function GoalsPage() {
                 <div className="flex justify-between items-start mb-3">
                   <div>
                     <h4 className="font-bold text-foreground group-hover:text-primary transition-colors">
-                      {goal.exerciseId 
-                        ? exerciseMap.get(goal.exerciseId)?.name 
+                      {goal.exerciseId
+                        ? exerciseMap.get(goal.exerciseId)?.name
                         : t(`goals.metrics.${goal.metric}`)}
                     </h4>
                     <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
-                      {t(`goals.types.${goal.type}`)} • {goal.targetValue} {goal.metric === 'workouts' ? t('goals.units.workouts') : exerciseMap.get(goal.exerciseId)?.unit || goal.metric}
+                      {t(`goals.types.${goal.type}`)} • {goal.targetValue}{' '}
+                      {goal.metric === 'workouts'
+                        ? t('goals.units.workouts')
+                        : exerciseMap.get(goal.exerciseId)?.unit || goal.metric}
                     </p>
                   </div>
                   <div className="text-right">
-                    <span className={cn(
-                      "text-sm font-bold",
-                      goal.progress >= 100 ? "text-green-500" : "text-primary"
-                    )}>
+                    <span
+                      className={cn(
+                        'text-sm font-bold',
+                        goal.progress >= 100 ? 'text-green-500' : 'text-primary'
+                      )}
+                    >
                       {goal.progress}%
                     </span>
                   </div>
@@ -176,18 +175,22 @@ export default function GoalsPage() {
 
                 {/* Progress Bar */}
                 <div className="h-2 w-full bg-muted rounded-full overflow-hidden mb-2">
-                  <div 
+                  <div
                     className={cn(
-                      "h-full transition-all duration-500",
-                      goal.progress >= 100 ? "bg-green-500" : "bg-primary"
+                      'h-full transition-all duration-500',
+                      goal.progress >= 100 ? 'bg-green-500' : 'bg-primary'
                     )}
                     style={{ width: `${goal.progress}%` }}
                   />
                 </div>
 
                 <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">
-                  <span>{goal.currentValue} {t('goals.current')}</span>
-                  <span>{goal.targetValue} {t('goals.target')}</span>
+                  <span>
+                    {goal.currentValue} {t('goals.current')}
+                  </span>
+                  <span>
+                    {goal.targetValue} {t('goals.target')}
+                  </span>
                 </div>
               </div>
             ))}
@@ -195,10 +198,7 @@ export default function GoalsPage() {
         )}
       </div>
 
-      <AddGoalModal 
-        isOpen={isAddModalOpen} 
-        onClose={() => setIsAddModalOpen(false)} 
-      />
+      <AddGoalModal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)} />
     </div>
   );
 }
