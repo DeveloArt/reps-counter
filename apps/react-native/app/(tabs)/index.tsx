@@ -11,7 +11,9 @@ import {
   User,
   Zap,
 } from 'lucide-react-native';
+
 import { useCallback, useState } from 'react';
+
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {

@@ -1,5 +1,6 @@
 import { db } from '@/db';
 import { cn } from '@/lib/utils';
+
 import { endOfDay, endOfWeek, startOfDay, startOfWeek } from 'date-fns';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Plus, Target, TrendingUp } from 'lucide-react';
