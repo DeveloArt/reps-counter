@@ -1,8 +1,10 @@
 import { format } from 'date-fns';
 import { enUS, pl as plLocale } from 'date-fns/locale';
 import { useRouter } from 'expo-router';
+import { useFocusEffect } from 'expo-router';
 import { ArrowLeft, Dumbbell, Timer, TrendingUp } from 'lucide-react-native';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Svg, { Defs, LinearGradient, Path, Stop } from 'react-native-svg';
@@ -26,16 +28,18 @@ export default function StatsScreen() {
   const [activityMetric, setActivityMetric] = useState<MetricType>('reps');
   const [_currentDate] = useState(new Date());
 
-  useEffect(() => {
-    async function loadData() {
-      await initDatabase();
-      const [logsData, exercisesData] = await Promise.all([getLogs(), getExercises()]);
-      setLogs(logsData);
-      setExercises(exercisesData);
-      setLoading(false);
-    }
-    loadData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      async function loadData() {
+        await initDatabase();
+        const [logsData, exercisesData] = await Promise.all([getLogs(), getExercises()]);
+        setLogs(logsData);
+        setExercises(exercisesData);
+        setLoading(false);
+      }
+      loadData();
+    }, [])
+  );
 
   const stats = useMemo(() => {
     if (!logs || !exercises) {

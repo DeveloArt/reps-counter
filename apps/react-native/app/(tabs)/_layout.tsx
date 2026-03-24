@@ -2,16 +2,20 @@ import { Tabs } from 'expo-router';
 import { ChartBar, House, Plus, Settings, Target } from 'lucide-react-native';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { QuickLogModal } from '../../src/components/QuickLogModal';
 import { useTheme } from '../../src/hooks/useTheme';
 
 function FabButton({ color, onPress }: { color: string; onPress: () => void }) {
   return (
     <View style={styles.fabContainer}>
-      <View style={[styles.fab, { backgroundColor: color }]} onTouchEnd={onPress}>
+      <TouchableOpacity
+        style={[styles.fab, { backgroundColor: color }]}
+        onPress={onPress}
+        activeOpacity={0.8}
+      >
         <Plus size={32} color="white" strokeWidth={2.5} />
-      </View>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -46,6 +50,7 @@ export default function TabLayout() {
             title: t('nav.home'),
             headerTitle: 'FitCounter',
             tabBarIcon: ({ color, size }) => <House size={size} color={color} strokeWidth={2} />,
+            tabBarButtonTestID: 'tab-index',
           }}
         />
         <Tabs.Screen
@@ -53,6 +58,7 @@ export default function TabLayout() {
           options={{
             title: t('nav.stats'),
             tabBarIcon: ({ color, size }) => <ChartBar size={size} color={color} strokeWidth={2} />,
+            tabBarButtonTestID: 'tab-stats',
           }}
         />
         <Tabs.Screen
@@ -64,12 +70,19 @@ export default function TabLayout() {
               <FabButton color={colors.primary} onPress={() => setIsQuickLogOpen(true)} />
             ),
           }}
+          listeners={{
+            tabPress: (e) => {
+              e.preventDefault();
+              setIsQuickLogOpen(true);
+            },
+          }}
         />
         <Tabs.Screen
           name="goals"
           options={{
             title: t('nav.goals'),
             tabBarIcon: ({ color, size }) => <Target size={size} color={color} strokeWidth={2} />,
+            tabBarButtonTestID: 'tab-goals',
           }}
         />
         <Tabs.Screen
@@ -77,6 +90,7 @@ export default function TabLayout() {
           options={{
             title: t('nav.settings'),
             tabBarIcon: ({ color, size }) => <Settings size={size} color={color} strokeWidth={2} />,
+            tabBarButtonTestID: 'tab-settings',
           }}
         />
       </Tabs>

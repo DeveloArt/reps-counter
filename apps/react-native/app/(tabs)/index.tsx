@@ -1,4 +1,5 @@
 import { useRouter } from 'expo-router';
+import { useFocusEffect } from 'expo-router';
 import {
   Activity,
   Dumbbell,
@@ -10,7 +11,9 @@ import {
   User,
   Zap,
 } from 'lucide-react-native';
-import { useEffect, useState } from 'react';
+
+import { useCallback, useState } from 'react';
+
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {
@@ -38,38 +41,40 @@ export default function HomeScreen() {
   const [_currentDate] = useState(new Date());
   const [streak, setStreak] = useState(0);
 
-  useEffect(() => {
-    async function loadData() {
-      await initDatabase();
-      const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
+  useFocusEffect(
+    useCallback(() => {
+      async function loadData() {
+        await initDatabase();
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0];
 
-      // Calculate start and end of week (last 7 days)
-      const startOfWeek = new Date(today);
-      startOfWeek.setDate(startOfWeek.getDate() - 6);
-      const startStr = startOfWeek.toISOString().split('T')[0];
+        // Calculate start and end of week (last 7 days)
+        const startOfWeek = new Date(today);
+        startOfWeek.setDate(startOfWeek.getDate() - 6);
+        const startStr = startOfWeek.toISOString().split('T')[0];
 
-      const [exercisesData, logsData, settingsData, goalsData, weeklyData] = await Promise.all([
-        getExercises(),
-        getLogsByDate(todayStr),
-        getSettings(),
-        getGoals(),
-        getLogsForWeek(startStr, todayStr),
-      ]);
-      setExercises(exercisesData);
-      setLogs(logsData);
-      setWeeklyLogs(weeklyData);
-      setSettings(settingsData);
-      setGoals(goalsData.filter((g) => g.type === 'daily' && g.isActive));
+        const [exercisesData, logsData, settingsData, goalsData, weeklyData] = await Promise.all([
+          getExercises(),
+          getLogsByDate(todayStr),
+          getSettings(),
+          getGoals(),
+          getLogsForWeek(startStr, todayStr),
+        ]);
+        setExercises(exercisesData);
+        setLogs(logsData);
+        setWeeklyLogs(weeklyData);
+        setSettings(settingsData);
+        setGoals(goalsData.filter((g) => g.type === 'daily' && g.isActive));
 
-      // Calculate streak
-      const calculatedStreak = calculateStreak(weeklyData);
-      setStreak(calculatedStreak);
+        // Calculate streak
+        const calculatedStreak = calculateStreak(weeklyData);
+        setStreak(calculatedStreak);
 
-      setLoading(false);
-    }
-    loadData();
-  }, []);
+        setLoading(false);
+      }
+      loadData();
+    }, [])
+  );
 
   // Calculate streak based on consecutive days with activity
   const calculateStreak = (allLogs: LogEntry[]): number => {

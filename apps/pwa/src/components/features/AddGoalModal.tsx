@@ -150,7 +150,7 @@ export function AddGoalModal({ isOpen, onClose, goalToEdit }: AddGoalModalProps)
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={goalToEdit ? t('modals.addGoal.editTitle') : t('modals.addGoal.title')}
+      title={goalToEdit ? String(t('modals.addGoal.editTitle')) : String(t('modals.addGoal.title'))}
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         {/* Goal Type */}
@@ -269,7 +269,7 @@ export function AddGoalModal({ isOpen, onClose, goalToEdit }: AddGoalModalProps)
                   e.target.value === '' ? '' : Number.parseInt(e.target.value, 10) || 0
                 )
               }
-              className="w-full p-3 rounded-xl bg-muted border-transparent focus:border-primary focus:ring-0 text-foreground font-bold text-center"
+              className="w-full p-3 rounded-xl bg-muted border-transparent focus:border-primary focus:ring-0 text-foreground font-bold text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
             />
           </div>
         </div>

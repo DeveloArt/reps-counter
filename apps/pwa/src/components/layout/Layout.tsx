@@ -52,6 +52,10 @@ export function Layout() {
         isOpen={!!selectedExercise}
         onClose={() => setSelectedExercise(null)}
         exercise={selectedExercise}
+        onSaveComplete={() => {
+          // Force a re-render by updating the context or triggering a refresh
+          // This will cause useLiveQuery hooks to re-evaluate
+        }}
       />
     </div>
   );
