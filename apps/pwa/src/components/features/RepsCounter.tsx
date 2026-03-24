@@ -20,12 +20,16 @@ export function RepsCounter({ value, onChange, onIncrement, onDecrement }: RepsC
         >
           <Minus className="size-6 sm:size-8" />
         </button>
-        <div className="text-center min-w-[80px] flex-shrink">
+        <div className="text-center flex-1 min-w-[80px]">
           <input
             type="number"
             value={value}
-            onChange={(e) => onChange(e.target.value === '' ? '' : Number(e.target.value))}
-            className="text-5xl sm:text-7xl font-bold text-primary tabular-nums bg-transparent text-center w-full max-w-[150px] sm:w-[180px] focus:outline-none border-none p-0 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+            onChange={(e) => {
+              const val = e.target.value === '' ? '' : Number(e.target.value);
+              onChange(val === '' ? '' : Math.max(0, val));
+            }}
+            min="0"
+            className="text-5xl sm:text-7xl font-bold text-primary tabular-nums bg-transparent text-center w-full focus:outline-none border-none p-0 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
           />
           <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground mt-2 block">
             {t('home.reps')}
