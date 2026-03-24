@@ -148,20 +148,24 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
         {exercise.unit === 'reps' ? (
           // Reps Counter View
           <div className="flex flex-col items-center mb-10">
-            <div className="bg-primary/5 rounded-2xl p-8 mb-8 flex flex-col items-center w-full">
-              <div className="flex items-center gap-8 mb-6">
+            <div className="bg-primary/5 rounded-2xl p-4 sm:p-8 mb-8 flex flex-col items-center w-full">
+              <div className="flex items-center justify-center gap-4 sm:gap-8 mb-6 w-full max-w-full overflow-hidden">
                 <button
                   onClick={decrement}
-                  className="size-14 rounded-full border-2 border-primary/20 flex items-center justify-center text-primary hover:bg-primary/5 active:scale-95 transition-all"
+                  className="size-12 sm:size-14 shrink-0 rounded-full border-2 border-primary/20 flex items-center justify-center text-primary hover:bg-primary/5 active:scale-95 transition-all"
                 >
-                  <Minus className="size-8" />
+                  <Minus className="size-6 sm:size-8" />
                 </button>
-                <div className="text-center min-w-[100px]">
+                <div className="text-center flex-1 min-w-[80px]">
                   <input
                     type="number"
                     value={value}
-                    onChange={(e) => setValue(e.target.value === '' ? '' : Number(e.target.value))}
-                    className="text-7xl font-bold text-primary tabular-nums bg-transparent text-center w-[180px] focus:outline-none border-none p-0 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                    onChange={(e) => {
+                      const val = e.target.value === '' ? '' : Number(e.target.value);
+                      setValue(val === '' ? '' : Math.max(0, val));
+                    }}
+                    min="0"
+                    className="text-5xl sm:text-7xl font-bold text-primary tabular-nums bg-transparent text-center w-full focus:outline-none border-none p-0 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                   />
                   <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground mt-2 block">
                     {t('modals.logEntry.reps')}
@@ -169,9 +173,9 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
                 </div>
                 <button
                   onClick={increment}
-                  className="size-14 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/30 hover:bg-primary/90 active:scale-95 transition-all"
+                  className="size-12 sm:size-14 shrink-0 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/30 hover:bg-primary/90 active:scale-95 transition-all"
                 >
-                  <Plus className="size-8" />
+                  <Plus className="size-6 sm:size-8" />
                 </button>
               </div>
             </div>
@@ -233,8 +237,12 @@ export function LogEntryModal({ isOpen, onClose, exercise }: LogEntryModalProps)
               <input
                 type="number"
                 value={value}
-                onChange={(e) => setValue(e.target.value === '' ? '' : Number(e.target.value))}
-                className="w-full rounded-xl border-border bg-card focus:border-primary focus:ring-primary h-14 text-lg font-medium px-4 placeholder:text-muted-foreground [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                onChange={(e) => {
+                  const val = e.target.value === '' ? '' : Number(e.target.value);
+                  setValue(val === '' ? '' : Math.max(0, val));
+                }}
+                min="0"
+                className="w-full rounded-xl border-border bg-card focus:border-primary focus:ring-primary h-14 text-lg font-medium px-4 placeholder:text-muted-foreground"
                 placeholder={t('components.manualEntry.placeholder')}
               />
             </div>

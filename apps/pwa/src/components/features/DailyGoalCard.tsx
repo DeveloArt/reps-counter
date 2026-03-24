@@ -1,5 +1,6 @@
-import { Zap } from 'lucide-react';
+import { Info, Zap } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 
 interface DailyGoalCardProps {
   totalProgress: number;
@@ -9,13 +10,29 @@ interface DailyGoalCardProps {
 
 export function DailyGoalCard({ totalProgress, totalReps, totalTime }: DailyGoalCardProps) {
   const { t } = useTranslation();
+  const [showInfo, setShowInfo] = useState(false);
 
   return (
     <div className="relative overflow-hidden rounded-2xl bg-primary p-6 shadow-xl shadow-primary/10 text-white">
       <div className="flex flex-col items-center">
         <div className="flex w-full items-start justify-between">
           <div className="flex flex-col gap-1 z-10">
-            <p className="text-white/80 text-sm font-medium">{t('home.dailyGoal')}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-white/80 text-sm font-medium">{t('home.dailyGoal')}</p>
+              <button 
+                onClick={() => setShowInfo(!showInfo)}
+                className="p-1 hover:bg-white/10 rounded-full transition-colors"
+                aria-label="Goal information"
+              >
+                <Info className="size-4 text-white/60" />
+              </button>
+            </div>
+            {showInfo && (
+              <div className="absolute top-12 left-6 right-6 z-20 bg-white text-primary p-3 rounded-xl shadow-xl text-xs animate-in fade-in slide-in-from-top-2 duration-200">
+                <p className="font-bold mb-1">{t('home.dailyGoalInfoTitle')}</p>
+                <p>{t('home.dailyGoalInfoDesc')}</p>
+              </div>
+            )}
             <h3 className="text-2xl font-bold">
               {totalProgress}% {t('home.complete')}
             </h3>
