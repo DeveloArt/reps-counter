@@ -1,4 +1,5 @@
 import { MoreHorizontal, Plus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 interface QuickAddSectionProps {
   exercises: any[];
@@ -13,6 +14,7 @@ export function QuickAddSection({
   openLogEntry,
   openAddExercise,
 }: QuickAddSectionProps) {
+  const { t } = useTranslation();
   const getIcon = (_iconName: string) => {
     // Icon mapping logic here
     return null;
@@ -21,7 +23,7 @@ export function QuickAddSection({
   return (
     <div>
       <div className="flex items-center justify-between pb-4">
-        <h2 className="text-foreground text-lg font-bold tracking-tight">Quick Add</h2>
+        <h2 className="text-foreground text-lg font-bold tracking-tight">{t('home.quickAdd')}</h2>
       </div>
       <div className="grid grid-cols-2 gap-4">
         {exercises?.map((exercise) => {
@@ -54,7 +56,7 @@ export function QuickAddSection({
               <div>
                 <p className="text-foreground text-base font-bold">{exercise.name}</p>
                 <p className="text-muted-foreground text-xs font-medium uppercase">
-                  {exercise.unit === 'reps' ? 'reps' : 'mins'}
+                  {exercise.unit === 'reps' ? t('home.reps') : t('home.mins')}
                 </p>
               </div>
               <div className="flex items-center justify-center w-full py-2 bg-primary rounded-lg hover:bg-primary/90 active:scale-95 transition-all">
@@ -71,7 +73,7 @@ export function QuickAddSection({
           <div className="size-10 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
             <MoreHorizontal className="size-5" />
           </div>
-          <p className="text-muted-foreground text-sm font-bold">Add Exercise</p>
+          <p className="text-muted-foreground text-sm font-bold">{t('home.addExercise')}</p>
         </button>
       </div>
     </div>

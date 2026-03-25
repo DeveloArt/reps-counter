@@ -289,7 +289,9 @@ export async function updateGoal(id: string, goal: Partial<Goal>): Promise<void>
   }
   if (goal.startDate !== undefined) {
     fields.push('startDate = ?');
-    values.push(goal.startDate instanceof Date ? goal.startDate.toISOString().split('T')[0] : goal.startDate);
+    values.push(
+      goal.startDate instanceof Date ? goal.startDate.toISOString().split('T')[0] : goal.startDate
+    );
   }
   if (goal.endDate !== undefined) {
     fields.push('endDate = ?');
@@ -368,4 +370,18 @@ export async function updateSettings(settings: Partial<UserSettings>): Promise<v
   if (fields.length > 0) {
     await database.runAsync(`UPDATE settings SET ${fields.join(', ')} WHERE id = 1`, values);
   }
+}
+
+export async function resetDatabase(): Promise<void> {
+  const database = await initDatabase();
+
+  await database.execAsync(`
+    DROP TABLE IF EXISTS exercises;
+    DROP TABLE IF EXISTS logs;
+    DROP TABLE IF EXISTS goals;
+    DROP TABLE IF EXISTS settings;
+  `);
+
+  db = null;
+  await initDatabase();
 }
