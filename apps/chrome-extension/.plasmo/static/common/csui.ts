@@ -1,6 +1,7 @@
 import type { PlasmoCSUI, PlasmoCSUIAnchor, PlasmoCSUIMountState } from "~type"
 
 const DEFAULT_MOUNT_INTERVAL = 142
+const MOUNT_DEBOUNCE_DELAY = 50 // Debounce delay in milliseconds
 
 async function createShadowDOM<T>(mount: PlasmoCSUI<T>) {
   const shadowHost = document.createElement("plasmo-csui")
@@ -76,44 +77,59 @@ export async function createShadowContainer<T>(
   return shadowDom.shadowContainer
 }
 
-const isVisible = (el: Element) => {
-  if (!el) {
-    return false
-  }
-  const elementRect = el.getBoundingClientRect()
-  const elementStyle = globalThis.getComputedStyle(el)
-
-  // console.log(elementRect, elementStyle)
-
-  if (elementStyle.display === "none") {
-    return false
-  }
-
-  if (elementStyle.visibility === "hidden") {
+/**
+ * Check if an element is visible in the viewport
+ * @param el - The element to check (must be a valid DOM Element)
+ * @returns true if the element is visible, false otherwise
+ */
+const isVisible = (el: Element | null | undefined): el is Element => {
+  // Guard clause: ensure el is a valid Element
+  if (!el || !(el instanceof Element)) {
     return false
   }
 
-  if (elementStyle.opacity === "0") {
+  try {
+    const elementRect = el.getBoundingClientRect()
+    const elementStyle = globalThis.getComputedStyle(el)
+
+    // Check display property
+    if (elementStyle.display === "none") {
+      return false
+    }
+
+    // Check visibility property
+    if (elementStyle.visibility === "hidden") {
+      return false
+    }
+
+    // Check opacity
+    if (elementStyle.opacity === "0") {
+      return false
+    }
+
+    // Check if element has zero dimensions and is not hidden by overflow
+    if (
+      elementRect.width === 0 &&
+      elementRect.height === 0 &&
+      elementStyle.overflow !== "hidden"
+    ) {
+      return false
+    }
+
+    // Check if the element is irrevocably off-screen
+    if (
+      elementRect.x + elementRect.width < 0 ||
+      elementRect.y + elementRect.height < 0
+    ) {
+      return false
+    }
+
+    return true
+  } catch (error) {
+    // Handle any errors that might occur during visibility check
+    console.warn("Error checking element visibility:", error)
     return false
   }
-
-  if (
-    elementRect.width === 0 &&
-    elementRect.height === 0 &&
-    elementStyle.overflow !== "hidden"
-  ) {
-    return false
-  }
-
-  // Check if the element is irrevocably off-screen:
-  if (
-    elementRect.x + elementRect.width < 0 ||
-    elementRect.y + elementRect.height < 0
-  ) {
-    return false
-  }
-
-  return true
 }
 
 export function createAnchorObserver<T>(mount: PlasmoCSUI<T>) {
@@ -152,6 +168,9 @@ export function createAnchorObserver<T>(mount: PlasmoCSUI<T>) {
   if (!shouldObserve) {
     return null
   }
+
+  // Debounce timer for mountAnchors calls
+  let debounceTimer: NodeJS.Timeout | null = null
 
   async function mountAnchors(renderFn: (anchor?: PlasmoCSUIAnchor) => void) {
     mountState.isMounting = true
@@ -234,13 +253,13 @@ export function createAnchorObserver<T>(mount: PlasmoCSUI<T>) {
 
     const overlayTargetList = []
 
-    if (!!overlayAnchor && isVisible(overlayAnchor)) {
+    if (isVisible(overlayAnchor)) {
       overlayTargetList.push(overlayAnchor)
     }
 
     if ((overlayAnchorList?.length || 0) > 0) {
       overlayAnchorList.forEach((el) => {
-        if (el instanceof Element && isVisible(el)) {
+        if (isVisible(el)) {
           overlayTargetList.push(el)
         }
       })
@@ -265,19 +284,31 @@ export function createAnchorObserver<T>(mount: PlasmoCSUI<T>) {
 
     if (mountState.isMutated) {
       mountState.isMutated = false
-      await mountAnchors(render)
+      await mountAnchors(renderFn)
     }
 
     mountState.isMounting = false
   }
 
-  const start = (renderFn: (anchor?: PlasmoCSUIAnchor) => void) => {
-    mountState.observer = new MutationObserver(() => {
+  // Debounced version of mountAnchors
+  const debouncedMountAnchors = (renderFn: (anchor?: PlasmoCSUIAnchor) => void) => {
+    if (debounceTimer) {
+      clearTimeout(debounceTimer)
+    }
+
+    debounceTimer = setTimeout(() => {
       if (mountState.isMounting) {
         mountState.isMutated = true
         return
       }
       mountAnchors(renderFn)
+      debounceTimer = null
+    }, MOUNT_DEBOUNCE_DELAY)
+  }
+
+  const start = (renderFn: (anchor?: PlasmoCSUIAnchor) => void) => {
+    mountState.observer = new MutationObserver(() => {
+      debouncedMountAnchors(renderFn)
     })
 
     // Need to watch the subtree for shadowDOM
@@ -287,15 +318,16 @@ export function createAnchorObserver<T>(mount: PlasmoCSUI<T>) {
     })
 
     mountState.mountInterval = setInterval(() => {
-      if (mountState.isMounting) {
-        mountState.isMutated = true
-        return
-      }
-      mountAnchors(renderFn)
+      debouncedMountAnchors(renderFn)
     }, DEFAULT_MOUNT_INTERVAL)
   }
 
   const stop = () => {
+    if (debounceTimer) {
+      clearTimeout(debounceTimer)
+      debounceTimer = null
+    }
+
     if (mountState.observer) {
       mountState.observer.disconnect()
       mountState.observer = null
