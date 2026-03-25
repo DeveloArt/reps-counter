@@ -12,10 +12,13 @@
     "allowJs": true,
     "jsx": "react-jsx",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@fitcounter/core": ["../../packages/core/src/index.ts"],
+      "@fitcounter/core/*": ["../../packages/core/src/*"]
     },
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "types": ["vite/client"]
-  }
+  },
+  "include": ["src", "../../packages/core/src"]
 }
