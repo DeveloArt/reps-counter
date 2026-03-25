@@ -1,0 +1,2 @@
+W języku polskim litery dni tygodnia są z angielskiego, np. 'M' dla poniedziałku.
+Status: in progress

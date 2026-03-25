@@ -18,7 +18,7 @@ export const createOverlayCSUIContainer = (props: PlasmoCSUIContainerProps) => {
       return container
     }
 
-    const updatePosition = () => {
+    const updatePosition = async () => {
       if (!props.anchor.element) {
         return
       }

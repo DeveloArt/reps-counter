@@ -6,27 +6,35 @@ import type { RawImport } from "@plasmo-static-common/react"
 
 import * as Component from "~devtools"
 
-let __plasmoRoot: HTMLElement | null = null
+/**
+ * Initialize the DevTools UI when DOM is ready
+ * Uses IIFE pattern to encapsulate state and avoid global variables
+ */
+(() => {
+  let isInitialized = false
 
-document.addEventListener("DOMContentLoaded", () => {
-  if (!!__plasmoRoot) {
-    return
-  }
+  document.addEventListener("DOMContentLoaded", () => {
+    if (isInitialized) {
+      return
+    }
 
-  __plasmoRoot = document.getElementById("__plasmo")
+    const plasmoRoot = document.getElementById("__plasmo")
 
-  if (!__plasmoRoot) {
-    console.error("Failed to find __plasmo root element")
-    return
-  }
+    if (!plasmoRoot) {
+      console.error("Failed to find __plasmo root element")
+      return
+    }
 
-  const root = createRoot(__plasmoRoot)
+    const root = createRoot(plasmoRoot)
 
-  const Layout = getLayout(Component as unknown as RawImport)
+    const Layout = getLayout(Component as unknown as RawImport)
 
-  root.render(
-    <Layout>
-      <Component.default />
-    </Layout>
-  )
-})
+    root.render(
+      <Layout>
+        <Component.default />
+      </Layout>
+    )
+
+    isInitialized = true
+  })
+})()

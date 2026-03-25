@@ -73,6 +73,16 @@
     "createFirst": "Stwórz swój pierwszy cel!",
     "confirmDelete": "Czy na pewno chcesz usunąć ten cel?",
     "noGoals": "Brak aktywnych celów.",
+    "units": {
+      "workouts": "treningów",
+      "reps": "powtórzeń",
+      "time": "sekund"
+    },
+    "metrics": {
+      "workouts": "Treningi",
+      "reps": "Powtórzenia",
+      "time": "Czas"
+    },
     "when": "Gdy",
     "dailyGoal": "Cel Codzienny",
     "weeklyGoal": "Cel Tygodniowy",
