@@ -161,7 +161,7 @@ export default function GoalsPage() {
                         : t(`goals.metrics.${goal.metric}`)}
                     </h4>
                     <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
-                      {t(`goals.types.${goal.type}`)} • {goal.targetValue} {goal.metric === 'workouts' ? t('goals.units.workouts') : exerciseMap.get(goal.exerciseId)?.unit || goal.metric}
+                      {t(`goals.types.${goal.type}`)} • {goal.targetValue} {exerciseMap.get(goal.exerciseId)?.unit || t(`goals.units.${goal.metric}`)}
                     </p>
                   </div>
                   <div className="text-right">
