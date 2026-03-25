@@ -5,6 +5,9 @@ import { defineConfig } from 'vite';
 export default defineConfig({
   base: './',
   plugins: [react(), tailwindcss()],
+  resolve: {
+    dedupe: ['react', 'react-dom'],
+  },
   server: {
     fs: {
       deny: ['**/playwright-report/**', '**/test-results/**'],
