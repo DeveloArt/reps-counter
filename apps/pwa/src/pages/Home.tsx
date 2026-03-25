@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import { type Exercise, db } from '@fitcounter/core';
 import { eachDayOfInterval, endOfDay, format, isSameDay, startOfDay, subDays } from 'date-fns';
+import { enUS, pl as plLocale } from 'date-fns/locale';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { Activity, Dumbbell, Edit2, MoreHorizontal, Plus, Timer, Zap } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -14,7 +15,7 @@ interface LayoutContext {
 }
 
 export default function HomePage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { openAddExercise, openLogEntry } = useOutletContext<LayoutContext>();
   const [weeklyMetric, setWeeklyMetric] = useState<'reps' | 'time'>('reps');
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -50,16 +51,16 @@ export default function HomePage() {
     const start = startOfDay(currentDate).getTime();
     const end = endOfDay(currentDate).getTime();
 
+    // Get exercises to know units
+    const allExercises = await db.exercises.toArray();
+    const exerciseMap = new Map(allExercises.map((e) => [e.id, e]));
+
     // Use timestamp index for reliable date filtering
     const logs = await db.logs.where('timestamp').between(start, end).toArray();
 
     let totalReps = 0;
     let totalTime = 0;
     const exerciseTotals: Record<string, number> = {};
-
-    // Get exercises to know units
-    const allExercises = await db.exercises.toArray();
-    const exerciseMap = new Map(allExercises.map((e) => [e.id, e]));
 
     logs.forEach((log) => {
       const exercise = exerciseMap.get(log.exerciseId);
@@ -109,9 +110,12 @@ export default function HomePage() {
         }
         return acc;
       }, 0);
+      const currentLang = i18n.language || 'en';
+      const locale = currentLang.startsWith('pl') ? plLocale : enUS;
+
       return {
-        day: format(day, 'EEEEE'), // Single letter day
-        fullDay: format(day, 'EEE'),
+        day: format(day, 'EEEEE', { locale }), // Single letter day
+        fullDay: format(day, 'EEE', { locale }),
         value: Math.round(value),
         isToday: isSameDay(day, currentDate),
       };

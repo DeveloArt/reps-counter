@@ -8,12 +8,7 @@ interface ManualEntryProps {
   placeholder?: string;
 }
 
-export function ManualEntry({
-  value,
-  onChange,
-  label,
-  placeholder,
-}: ManualEntryProps) {
+export function ManualEntry({ value, onChange, label, placeholder }: ManualEntryProps) {
   const { t } = useTranslation();
   const resolvedLabel = label ?? t('components.manualEntry.label');
   const resolvedPlaceholder = placeholder ?? t('components.manualEntry.placeholder');

@@ -97,7 +97,9 @@ export default function ExerciseDetailScreen() {
               onPress={() => setShowDeleteConfirm(false)}
               style={[styles.cancelButton, { backgroundColor: colors.muted }]}
             >
-              <Text style={[styles.cancelButtonText, { color: colors.text }]}>{t('common.cancel')}</Text>
+              <Text style={[styles.cancelButtonText, { color: colors.text }]}>
+                {t('common.cancel')}
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={handleDelete}
@@ -112,10 +114,16 @@ export default function ExerciseDetailScreen() {
   }
 
   return (
-    <Modal isOpen={true} onClose={() => router.back()} title={t('modals.addExercise.editTitle', 'Edit Exercise')}>
+    <Modal
+      isOpen={true}
+      onClose={() => router.back()}
+      title={t('modals.addExercise.editTitle', 'Edit Exercise')}
+    >
       <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
         <View style={styles.formSection}>
-          <Text style={[styles.label, { color: colors.text }]}>{t('modals.addExercise.nameLabel')}</Text>
+          <Text style={[styles.label, { color: colors.text }]}>
+            {t('modals.addExercise.nameLabel')}
+          </Text>
           <TextInput
             style={[
               styles.input,
@@ -129,7 +137,9 @@ export default function ExerciseDetailScreen() {
         </View>
 
         <View style={styles.formSection}>
-          <Text style={[styles.label, { color: colors.text }]}>{t('modals.addExercise.unitLabel')}</Text>
+          <Text style={[styles.label, { color: colors.text }]}>
+            {t('modals.addExercise.unitLabel')}
+          </Text>
           <View style={[styles.segmentedControl, { backgroundColor: colors.muted }]}>
             <TouchableOpacity
               style={[
@@ -170,7 +180,9 @@ export default function ExerciseDetailScreen() {
         </View>
 
         <View style={styles.formSection}>
-          <Text style={[styles.label, { color: colors.text }]}>{t('modals.addExercise.colorLabel')}</Text>
+          <Text style={[styles.label, { color: colors.text }]}>
+            {t('modals.addExercise.colorLabel')}
+          </Text>
           <View style={styles.colorContainer}>
             {colors_list.map((c) => (
               <TouchableOpacity
@@ -200,7 +212,9 @@ export default function ExerciseDetailScreen() {
             onPress={() => setShowDeleteConfirm(true)}
           >
             <Trash2 size={20} color={colors.error} />
-            <Text style={[styles.deleteButtonTextNew, { color: colors.error }]}>{t('common.delete')}</Text>
+            <Text style={[styles.deleteButtonTextNew, { color: colors.error }]}>
+              {t('common.delete')}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.saveButtonNew, { backgroundColor: colors.primary }]}

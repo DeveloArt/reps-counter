@@ -1,11 +1,13 @@
 import type { PlasmoCSUI, PlasmoCSUIAnchor, PlasmoCSUIMountState } from "~type"
 
-async function createShadowDOM<T>(Mount: PlasmoCSUI<T>) {
+const DEFAULT_MOUNT_INTERVAL = 142
+
+async function createShadowDOM<T>(mount: PlasmoCSUI<T>) {
   const shadowHost = document.createElement("plasmo-csui")
 
   const shadowRoot =
-    typeof Mount.createShadowRoot === "function"
-      ? await Mount.createShadowRoot(shadowHost)
+    typeof mount.createShadowRoot === "function"
+      ? await mount.createShadowRoot(shadowHost)
       : shadowHost.attachShadow({ mode: "open" })
 
   const shadowContainer = document.createElement("div")
@@ -26,25 +28,25 @@ async function createShadowDOM<T>(Mount: PlasmoCSUI<T>) {
 export type PlasmoCSUIShadowDOM = Awaited<ReturnType<typeof createShadowDOM>>
 
 async function injectAnchor<T>(
-  Mount: PlasmoCSUI<T>,
+  mount: PlasmoCSUI<T>,
   anchor: PlasmoCSUIAnchor,
   { shadowHost, shadowRoot }: PlasmoCSUIShadowDOM,
   mountState?: PlasmoCSUIMountState
 ) {
-  if (typeof Mount.getStyle === "function") {
+  if (typeof mount.getStyle === "function") {
     const sfcStyleContent =
-      typeof Mount.getSfcStyleContent === "function"
-        ? await Mount.getSfcStyleContent()
+      typeof mount.getSfcStyleContent === "function"
+        ? await mount.getSfcStyleContent()
         : ""
-    shadowRoot.prepend(await Mount.getStyle({ ...anchor, sfcStyleContent }))
+    shadowRoot.prepend(await mount.getStyle({ ...anchor, sfcStyleContent }))
   }
 
-  if (typeof Mount.getShadowHostId === "function") {
-    shadowHost.id = await Mount.getShadowHostId(anchor)
+  if (typeof mount.getShadowHostId === "function") {
+    shadowHost.id = await mount.getShadowHostId(anchor)
   }
 
-  if (typeof Mount.mountShadowHost === "function") {
-    await Mount.mountShadowHost({
+  if (typeof mount.mountShadowHost === "function") {
+    await mount.mountShadowHost({
       shadowHost,
       anchor,
       mountState
@@ -60,16 +62,16 @@ async function injectAnchor<T>(
 }
 
 export async function createShadowContainer<T>(
-  Mount: PlasmoCSUI<T>,
+  mount: PlasmoCSUI<T>,
   anchor: PlasmoCSUIAnchor,
   mountState?: PlasmoCSUIMountState
 ) {
-  const shadowDom = await createShadowDOM(Mount)
+  const shadowDom = await createShadowDOM(mount)
 
   mountState?.hostSet.add(shadowDom.shadowHost)
   mountState?.hostMap.set(shadowDom.shadowHost, anchor)
 
-  await injectAnchor(Mount, anchor, shadowDom, mountState)
+  await injectAnchor(mount, anchor, shadowDom, mountState)
 
   return shadowDom.shadowContainer
 }
@@ -114,7 +116,7 @@ const isVisible = (el: Element) => {
   return true
 }
 
-export function createAnchorObserver<T>(Mount: PlasmoCSUI<T>) {
+export function createAnchorObserver<T>(mount: PlasmoCSUI<T>) {
   const mountState: PlasmoCSUIMountState = {
     document: document || window.document,
     observer: null,
@@ -135,11 +137,11 @@ export function createAnchorObserver<T>(Mount: PlasmoCSUI<T>) {
       ? !!document.getElementById(el.id)
       : el?.getRootNode({ composed: true }) === mountState.document
 
-  const hasInlineAnchor = typeof Mount.getInlineAnchor === "function"
-  const hasOverlayAnchor = typeof Mount.getOverlayAnchor === "function"
+  const hasInlineAnchor = typeof mount.getInlineAnchor === "function"
+  const hasOverlayAnchor = typeof mount.getOverlayAnchor === "function"
 
-  const hasInlineAnchorList = typeof Mount.getInlineAnchorList === "function"
-  const hasOverlayAnchorList = typeof Mount.getOverlayAnchorList === "function"
+  const hasInlineAnchorList = typeof mount.getInlineAnchorList === "function"
+  const hasOverlayAnchorList = typeof mount.getOverlayAnchorList === "function"
 
   const shouldObserve =
     hasInlineAnchor ||
@@ -151,7 +153,7 @@ export function createAnchorObserver<T>(Mount: PlasmoCSUI<T>) {
     return null
   }
 
-  async function mountAnchors(render: (anchor?: PlasmoCSUIAnchor) => void) {
+  async function mountAnchors(renderFn: (anchor?: PlasmoCSUIAnchor) => void) {
     mountState.isMounting = true
 
     const mountedInlineAnchorSet = new WeakSet()
@@ -179,10 +181,10 @@ export function createAnchorObserver<T>(Mount: PlasmoCSUI<T>) {
 
     const [inlineAnchor, inlineAnchorList, overlayAnchor, overlayAnchorList] =
       await Promise.all([
-        hasInlineAnchor ? Mount.getInlineAnchor() : null,
-        hasInlineAnchorList ? Mount.getInlineAnchorList() : null,
-        hasOverlayAnchor ? Mount.getOverlayAnchor() : null,
-        hasOverlayAnchorList ? Mount.getOverlayAnchorList() : null
+        hasInlineAnchor ? mount.getInlineAnchor() : null,
+        hasInlineAnchorList ? mount.getInlineAnchorList() : null,
+        hasOverlayAnchor ? mount.getOverlayAnchor() : null,
+        hasOverlayAnchorList ? mount.getOverlayAnchorList() : null
       ])
 
     const renderList: PlasmoCSUIAnchor[] = []
@@ -259,7 +261,7 @@ export function createAnchorObserver<T>(Mount: PlasmoCSUI<T>) {
       mountState.hostSet.delete(overlayHost)
     }
 
-    await Promise.all(renderList.map(render))
+    await Promise.all(renderList.map(renderFn))
 
     if (mountState.isMutated) {
       mountState.isMutated = false
@@ -269,13 +271,13 @@ export function createAnchorObserver<T>(Mount: PlasmoCSUI<T>) {
     mountState.isMounting = false
   }
 
-  const start = (render: (anchor?: PlasmoCSUIAnchor) => void) => {
+  const start = (renderFn: (anchor?: PlasmoCSUIAnchor) => void) => {
     mountState.observer = new MutationObserver(() => {
       if (mountState.isMounting) {
         mountState.isMutated = true
         return
       }
-      mountAnchors(render)
+      mountAnchors(renderFn)
     })
 
     // Need to watch the subtree for shadowDOM
@@ -289,33 +291,55 @@ export function createAnchorObserver<T>(Mount: PlasmoCSUI<T>) {
         mountState.isMutated = true
         return
       }
-      mountAnchors(render)
-    }, 142)
+      mountAnchors(renderFn)
+    }, DEFAULT_MOUNT_INTERVAL)
+  }
+
+  const stop = () => {
+    if (mountState.observer) {
+      mountState.observer.disconnect()
+      mountState.observer = null
+    }
+
+    if (mountState.mountInterval) {
+      clearInterval(mountState.mountInterval)
+      mountState.mountInterval = null
+    }
   }
 
   return {
     start,
+    stop,
     mountState
   }
 }
 
-export const createRender = <T>(
-  Mount: PlasmoCSUI<T>,
-  containers: [T, T],
+/**
+ * Create a render function for mounting UI components
+ * @template T - The type of containers being used
+ * @param mount - The Plasmo CSU configuration
+ * @param containers - A tuple of two containers for rendering
+ * @param mountState - Optional mount state for tracking mounted components
+ * @param renderFx - Optional custom render function
+ * @returns A function that renders the component for a given anchor
+ */
+export const createRender = <T extends unknown>(
+  mount: PlasmoCSUI<T>,
+  containers: readonly [T, T],
   mountState?: PlasmoCSUIMountState,
   renderFx?: (anchor: PlasmoCSUIAnchor, rootContainer: Element) => Promise<void>
 ) => {
   const createRootContainer = (anchor: PlasmoCSUIAnchor) =>
-    typeof Mount.getRootContainer === "function"
-      ? Mount.getRootContainer({
+    typeof mount.getRootContainer === "function"
+      ? mount.getRootContainer({
           anchor,
           mountState
         })
-      : createShadowContainer(Mount, anchor, mountState)
+      : createShadowContainer(mount, anchor, mountState)
 
-  if (typeof Mount.render === "function") {
+  if (typeof mount.render === "function") {
     return (anchor: PlasmoCSUIAnchor) =>
-      Mount.render(
+      mount.render(
         {
           anchor,
           createRootContainer

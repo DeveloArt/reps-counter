@@ -6,6 +6,7 @@ coverage/
 *.log
 .env*
 !.env.example
+AGENTS.md
 
 # Next.js
 .next/
