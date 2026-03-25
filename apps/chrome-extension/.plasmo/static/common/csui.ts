@@ -314,9 +314,18 @@ export function createAnchorObserver<T>(mount: PlasmoCSUI<T>) {
   }
 }
 
-export const createRender = <T>(
+/**
+ * Create a render function for mounting UI components
+ * @template T - The type of containers being used
+ * @param mount - The Plasmo CSU configuration
+ * @param containers - A tuple of two containers for rendering
+ * @param mountState - Optional mount state for tracking mounted components
+ * @param renderFx - Optional custom render function
+ * @returns A function that renders the component for a given anchor
+ */
+export const createRender = <T extends unknown>(
   mount: PlasmoCSUI<T>,
-  containers: [T, T],
+  containers: readonly [T, T],
   mountState?: PlasmoCSUIMountState,
   renderFx?: (anchor: PlasmoCSUIAnchor, rootContainer: Element) => Promise<void>
 ) => {

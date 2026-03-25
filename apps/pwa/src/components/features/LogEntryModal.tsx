@@ -141,9 +141,7 @@ export function LogEntryModal({ isOpen, onClose, exercise, onSaveComplete }: Log
               <h2 className="text-xl font-bold leading-tight tracking-tight text-foreground">
                 {exercise.name}
               </h2>
-              <p className="text-sm text-muted-foreground">
-                {t('modals.logEntry.addNewEntry')}
-              </p>
+              <p className="text-sm text-muted-foreground">{t('modals.logEntry.addNewEntry')}</p>
             </div>
           </div>
         </div>
