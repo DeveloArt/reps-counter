@@ -143,7 +143,7 @@ export function AddExerciseModal({ isOpen, onClose, exerciseToEdit }: AddExercis
         exerciseToEdit
           ? String(t('modals.addExercise.editTitle'))
           : String(t('modals.addExercise.title'))
-      }
+      } >
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">
