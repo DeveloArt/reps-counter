@@ -289,7 +289,9 @@ export async function updateGoal(id: string, goal: Partial<Goal>): Promise<void>
   }
   if (goal.startDate !== undefined) {
     fields.push('startDate = ?');
-    values.push(goal.startDate instanceof Date ? goal.startDate.toISOString().split('T')[0] : goal.startDate);
+    values.push(
+      goal.startDate instanceof Date ? goal.startDate.toISOString().split('T')[0] : goal.startDate
+    );
   }
   if (goal.endDate !== undefined) {
     fields.push('endDate = ?');
