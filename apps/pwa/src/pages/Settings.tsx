@@ -5,15 +5,17 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { ArrowLeft, ChevronRight, Info, Monitor, Moon, Sun, Trash2 } from 'lucide-react';
 import { type ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function SettingsPage() {
   const { t, i18n } = useTranslation();
   const { theme, setTheme } = useTheme();
+  const navigate = useNavigate();
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const settings = useLiveQuery(() => db.settings.get(1));
-  const activeLanguage =
-    (i18n.resolvedLanguage ?? i18n.language).toLowerCase().startsWith('pl') ? 'pl' : 'en';
+  const activeLanguage = (i18n.resolvedLanguage ?? i18n.language).toLowerCase().startsWith('pl')
+    ? 'pl'
+    : 'en';
 
   useEffect(() => {
     if ('Notification' in window) {
@@ -36,13 +38,12 @@ export default function SettingsPage() {
     if (settings) {
       await db.settings.update(1, { notificationFrequency: val });
     } else {
-      // Create a new settings record if it doesn\'t exist
       await db.settings.add({
         id: 1,
-        notificationTime: \'09:00\', // Default value
+        notificationTime: '09:00', // Default value
         notificationFrequency: val,
         notificationsEnabled: false, // Default value
-        theme: \'system\', // Default value
+        theme: 'system', // Default value
         dailyGoalReps: 100, // Default value
         dailyGoalTime: 600, // Default value
         onboardingCompleted: false, // Default value
@@ -55,13 +56,13 @@ export default function SettingsPage() {
     if (settings) {
       await db.settings.update(1, { notificationTime: val });
     } else {
-      // Create a new settings record if it doesn\'t exist
+      // Create a new settings record if it doesn't exist
       await db.settings.add({
         id: 1,
         notificationTime: val,
         notificationFrequency: 1, // Default value
         notificationsEnabled: false, // Default value
-        theme: \'system\', // Default value
+        theme: 'system', // Default value
         dailyGoalReps: 100, // Default value
         dailyGoalTime: 600, // Default value
         onboardingCompleted: false, // Default value
@@ -115,7 +116,10 @@ export default function SettingsPage() {
     <div className="flex flex-col min-h-full pb-20 bg-background">
       {/* Header */}
       <div className="sticky top-0 z-10 flex items-center bg-background/80 backdrop-blur-md p-4 border-b border-primary/10">
-        <button className="flex size-10 shrink-0 items-center justify-center cursor-pointer hover:bg-muted rounded-full transition-colors">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex size-10 shrink-0 items-center justify-center cursor-pointer hover:bg-muted rounded-full transition-colors"
+        >
           <ArrowLeft className="size-6 text-primary" />
         </button>
         <h2 className="text-foreground text-lg font-bold leading-tight tracking-tight flex-1 ml-2">
@@ -265,8 +269,13 @@ export default function SettingsPage() {
                 : 'border-transparent bg-card hover:bg-muted'
             )}
           >
-            <div className="w-full aspect-video rounded bg-gradient-to-br from-muted to-foreground border border-border flex items-center justify-center">
-              <Monitor className="size-6 text-muted-foreground mix-blend-difference" />
+            <div className="w-full aspect-video rounded bg-muted border border-border flex overflow-hidden">
+              <div className="flex-1 bg-muted flex items-center justify-center">
+                <Sun className="size-4 text-muted-foreground" />
+              </div>
+              <div className="flex-1 bg-foreground flex items-center justify-center">
+                <Moon className="size-4 text-background" />
+              </div>
             </div>
             <span
               className={cn(
@@ -285,105 +294,94 @@ export default function SettingsPage() {
             {t('settings.language')}
           </h3>
         </div>
-        <div className="px-4 grid grid-cols-2 gap-3">
+        <div className="px-4 space-y-2">
           <button
             onClick={() => changeLanguage('en')}
             className={cn(
-              'flex items-center gap-3 p-4 rounded-xl border-2 transition-all',
+              'flex w-full items-center justify-between p-4 rounded-xl border transition-all',
               activeLanguage === 'en'
-                ? 'bg-primary/5 border-primary'
-                : 'border-transparent bg-card hover:bg-muted'
+                ? 'bg-primary/5 border-primary shadow-sm'
+                : 'border-primary/10 bg-card hover:bg-muted'
             )}
           >
-            <div className="size-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xs">
-              EN
+            <div className="flex items-center gap-3">
+              <span className="text-xl">🇺🇸</span>
+              <span
+                className={cn(
+                  'text-sm font-medium',
+                  activeLanguage === 'en' ? 'font-bold text-foreground' : 'text-muted-foreground'
+                )}
+              >
+                English
+              </span>
             </div>
-            <span
-              className={cn(
-                'text-sm font-medium',
-                activeLanguage === 'en' ? 'font-bold text-foreground' : 'text-muted-foreground'
-              )}
-            >
-              {t('settings.languages.english')}
-            </span>
+            {activeLanguage === 'en' && <div className="size-2 rounded-full bg-primary" />}
           </button>
           <button
             onClick={() => changeLanguage('pl')}
             className={cn(
-              'flex items-center gap-3 p-4 rounded-xl border-2 transition-all',
+              'flex w-full items-center justify-between p-4 rounded-xl border transition-all',
               activeLanguage === 'pl'
-                ? 'bg-primary/5 border-primary'
-                : 'border-transparent bg-card hover:bg-muted'
+                ? 'bg-primary/5 border-primary shadow-sm'
+                : 'border-primary/10 bg-card hover:bg-muted'
             )}
           >
-            <div className="size-8 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-xs">
-              PL
-            </div>
-            <span
-              className={cn(
-                'text-sm font-medium',
-                activeLanguage === 'pl' ? 'font-bold text-foreground' : 'text-muted-foreground'
-              )}
-            >
-              {t('settings.languages.polish')}
-            </span>
-          </button>
-        </div>
-
-        {/* Data Management Section */}
-        <div className="px-4 pt-6 pb-2">
-          <h3 className="text-foreground text-sm font-semibold uppercase tracking-wider opacity-60">
-            {t('settings.dataManagement')}
-          </h3>
-        </div>
-        <div className="px-4 flex flex-col gap-3">
-          <button
-            onClick={handleResetData}
-            className="flex items-center justify-between p-4 rounded-xl border border-destructive/20 bg-destructive/5 hover:bg-destructive/10 transition-all group"
-          >
             <div className="flex items-center gap-3">
-              <div className="size-10 rounded-full bg-destructive/10 flex items-center justify-center text-foreground group-hover:bg-destructive group-hover:text-white transition-colors">
-                <Trash2 className="size-5" />
-              </div>
-              <div className="flex flex-col items-start">
-                <span className="text-base font-bold text-foreground">
-                  {t('settings.resetData')}
-                </span>
-                <span className="text-xs text-muted-foreground">{t('settings.resetDataDesc')}</span>
-              </div>
+              <span className="text-xl">🇵🇱</span>
+              <span
+                className={cn(
+                  'text-sm font-medium',
+                  activeLanguage === 'pl' ? 'font-bold text-foreground' : 'text-muted-foreground'
+                )}
+              >
+                Polski
+              </span>
             </div>
-            <ChevronRight className="size-5 text-muted-foreground" />
+            {activeLanguage === 'pl' && <div className="size-2 rounded-full bg-primary" />}
           </button>
         </div>
 
         {/* About Section */}
-        <div className="px-4 pt-8 pb-2">
+        <div className="px-4 pt-6 pb-2">
           <h3 className="text-foreground text-sm font-semibold uppercase tracking-wider opacity-60">
             {t('settings.about')}
           </h3>
         </div>
-        <div className="mx-4 mb-8 p-6 rounded-xl bg-gradient-to-br from-primary to-primary/80 text-white relative overflow-hidden shadow-lg">
-          <div className="relative z-10">
-            <h4 className="text-lg font-bold">{t('settings.productName')}</h4>
-            <p className="text-sm opacity-90 mt-1">{t('settings.version')} 1.0.0</p>
-            <div className="mt-4 flex gap-3">
-              <Link
-                to="/app/terms"
-                className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-xs font-medium backdrop-blur-sm transition-colors"
-              >
-                {t('settings.terms')}
-              </Link>
-              <Link
-                to="/app/privacy"
-                className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-xs font-medium backdrop-blur-sm transition-colors"
-              >
-                {t('settings.privacy')}
-              </Link>
+        <div className="px-4 space-y-2">
+          <Link
+            to="/privacy"
+            className="flex items-center justify-between p-4 rounded-xl border border-primary/10 bg-card hover:bg-muted transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <Info className="size-5 text-muted-foreground" />
+              <span className="text-sm font-medium text-foreground">{t('settings.privacy')}</span>
             </div>
-          </div>
-          <div className="absolute -right-4 -bottom-4 opacity-20">
-            <Info className="size-32" />
-          </div>
+            <ChevronRight className="size-4 text-muted-foreground" />
+          </Link>
+          <Link
+            to="/terms"
+            className="flex items-center justify-between p-4 rounded-xl border border-primary/10 bg-card hover:bg-muted transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <Info className="size-5 text-muted-foreground" />
+              <span className="text-sm font-medium text-foreground">{t('settings.terms')}</span>
+            </div>
+            <ChevronRight className="size-4 text-muted-foreground" />
+          </Link>
+        </div>
+
+        {/* Danger Zone */}
+        <div className="px-4 pt-8 pb-4">
+          <button
+            onClick={handleResetData}
+            className="flex w-full items-center justify-center gap-2 p-4 rounded-xl border border-red-500/20 bg-red-500/5 text-red-500 hover:bg-red-500/10 transition-all font-bold text-sm"
+          >
+            <Trash2 className="size-5" />
+            {t('settings.resetData')}
+          </button>
+          <p className="text-center text-[10px] text-muted-foreground mt-4 uppercase tracking-widest font-bold">
+            FitCounter v1.0.0
+          </p>
         </div>
       </div>
     </div>

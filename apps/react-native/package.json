@@ -6,12 +6,16 @@
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "build:android": "expo run:android",
     "build:ios": "expo run:ios",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "e2e:build:android": "detox build -c android.emu.debug",
+    "e2e:test:android": "node -e \"require('fs').rmSync('artifacts/android', { recursive: true, force: true })\" && detox test -c android.emu.debug --artifacts-location artifacts/android --take-screenshots manual",
+    "e2e:build:ios": "detox build -c ios.sim.debug",
+    "e2e:test:ios": "node -e \"require('fs').rmSync('artifacts/ios', { recursive: true, force: true })\" && detox test -c ios.sim.debug --artifacts-location artifacts/ios --take-screenshots manual"
   },
   "dependencies": {
     "@expo/metro-runtime": "~6.1.2",
@@ -31,14 +35,21 @@
     "expo-updates": "~29.0.16",
     "i18next": "^25.8.14",
     "lucide-react-native": "^0.577.0",
-    "react": "18.2.0",
+    "react": "19.1.0",
     "react-i18next": "^16.5.6",
-    "react-native": "0.74.5",
+    "react-native": "0.81.5",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@config-plugins/detox": "^11.0.0",
+    "@types/jest": "^30.0.0",
+    "detox": "^20.47.0",
+    "expo-build-properties": "^55.0.10",
+    "jest": "^30.3.0",
+    "jest-circus": "^30.3.0",
+    "ts-jest": "^29.4.6",
     "typescript": "~5.9.2"
   }
 }

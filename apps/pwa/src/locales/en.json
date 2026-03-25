@@ -26,6 +26,8 @@
     "keepGoing": "Keep going! You're doing great today.",
     "viewAll": "View All",
     "dailyGoal": "Daily Goal",
+    "dailyGoalInfoTitle": "What is Daily Goal?",
+    "dailyGoalInfoDesc": "Daily goal is the average progress of all your active daily habits and exercises. Complete your workouts to reach 100%!",
     "quickAdd": "Quick Add",
     "weeklyPerformance": "Weekly Performance",
     "addExercise": "Add Exercise",
@@ -71,6 +73,16 @@
     "createFirst": "Create your first goal!",
     "confirmDelete": "Are you sure you want to delete this goal?",
     "noGoals": "No active goals.",
+    "units": {
+      "workouts": "workouts",
+      "reps": "reps",
+      "time": "seconds"
+    },
+    "metrics": {
+      "workouts": "Workouts",
+      "reps": "Reps",
+      "time": "Time"
+    },
     "when": "When",
     "dailyGoal": "Daily Goal",
     "weeklyGoal": "Weekly Goal",
@@ -116,8 +128,7 @@
     "about": "About FitCounter",
     "version": "Version",
     "terms": "Terms of Use",
-    "privacy": "Privacy Policy"
-    ,
+    "privacy": "Privacy Policy",
     "productName": "FitCounter Pro",
     "frequency": {
       "min": "1 time",

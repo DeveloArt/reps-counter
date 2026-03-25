@@ -26,6 +26,8 @@
     "keepGoing": "Tak trzymaj! Świetnie ci idzie.",
     "viewAll": "Zobacz Wszystkie",
     "dailyGoal": "Dzienny Cel",
+    "dailyGoalInfoTitle": "Czym jest dzienny cel?",
+    "dailyGoalInfoDesc": "Dzienny cel to średnia postępów wszystkich Twoich aktywnych celów ustawionych na dany dzień. Wykonuj ćwiczenia, aby go zapełnić!",
     "quickAdd": "Szybkie Dodawanie",
     "weeklyPerformance": "Wyniki Tygodniowe",
     "addExercise": "Dodaj Ćwiczenie",
@@ -71,6 +73,16 @@
     "createFirst": "Stwórz swój pierwszy cel!",
     "confirmDelete": "Czy na pewno chcesz usunąć ten cel?",
     "noGoals": "Brak aktywnych celów.",
+    "units": {
+      "workouts": "treningów",
+      "reps": "powtórzeń",
+      "time": "sekund"
+    },
+    "metrics": {
+      "workouts": "Treningi",
+      "reps": "Powtórzenia",
+      "time": "Czas"
+    },
     "when": "Gdy",
     "dailyGoal": "Cel Codzienny",
     "weeklyGoal": "Cel Tygodniowy",
@@ -116,8 +128,7 @@
     "about": "O FitCounter",
     "version": "Wersja",
     "terms": "Warunki Użytkowania",
-    "privacy": "Polityka Prywatności"
-    ,
+    "privacy": "Polityka Prywatności",
     "productName": "FitCounter Pro",
     "frequency": {
       "min": "1 raz",
