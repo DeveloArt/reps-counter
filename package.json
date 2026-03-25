@@ -2,10 +2,7 @@
   "name": "fitcounter-monorepo",
   "private": true,
   "version": "1.0.0",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "dev": "npm run dev --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
@@ -17,7 +14,7 @@
     "build:landing": "npm run build -w fitcounter-landing",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
-    "format": "biome format --write .",
+    "format": "biome check --write .",
     "test": "npm run test --workspaces --if-present",
     "test:e2e": "npm run test:e2e -w @fitcounter/pwa",
     "prepare": "node -e \"if (!process.env.CI && !process.env.VERCEL) { require('child_process').execSync('lefthook install', {stdio: 'inherit'}) }\""
