@@ -26,13 +26,5 @@
   },
   "submit": {
     "production": {}
-  },
-  "update": {
-    "testing": {
-      "channel": "testing"
-    },
-    "production": {
-      "channel": "production"
-    }
   }
 }

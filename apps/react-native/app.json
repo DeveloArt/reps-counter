@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "FitCounter",
-    "slug": "fitcounter",
+    "slug": "reps-counter",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "fitcounter",
@@ -14,17 +14,15 @@
       "checkAutomatically": "ON_LOAD",
       "fallbackToCacheTimeout": 0
     },
-    "extra": {
-      "eas": {
-        "projectId": "YOUR_PROJECT_ID"
-      }
-    },
     "splash": {
       "backgroundColor": "#0D5D5D"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.fitcounter.app"
+      "bundleIdentifier": "com.fitcounter.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -50,6 +48,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "507f8d24-d599-4adc-ae0b-a5e453d57ae3"
+      }
+    },
+    "owner": "develo_art"
   }
 }

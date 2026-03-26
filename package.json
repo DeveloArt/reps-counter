@@ -17,11 +17,9 @@
     "format": "biome format --write .",
     "test": "npm run test --workspaces --if-present",
     "test:e2e": "npm run test:e2e -w @fitcounter/pwa",
-    "prepare": "node -e \"if (!process.env.CI && !process.env.VERCEL) { require('child_process').execSync('lefthook install', {stdio: 'inherit'}) }\""
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.0",
-    "lefthook": "^1.10.0",
     "typescript": "~5.8.2"
   },
   "pnpm": {
