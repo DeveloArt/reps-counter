@@ -13,16 +13,7 @@ export const createOverlayCSUIContainer = (props: PlasmoCSUIContainerProps) => {
   `
 
   if (props.anchor.type === "overlay") {
-    // Guard clause: check if anchor element exists
-    if (!props.anchor.element) {
-      return container
-    }
-
     const updatePosition = async () => {
-      if (!props.anchor.element) {
-        return
-      }
-
       const rect = props.anchor.element.getBoundingClientRect()
 
       if (!rect) {
@@ -43,32 +34,6 @@ export const createOverlayCSUIContainer = (props: PlasmoCSUIContainerProps) => {
     props.watchOverlayAnchor?.(updatePosition)
     window.addEventListener("scroll", updatePosition)
     window.addEventListener("resize", updatePosition)
-
-    // Return cleanup function to remove event listeners when container is removed
-    const cleanup = () => {
-      window.removeEventListener("scroll", updatePosition)
-      window.removeEventListener("resize", updatePosition)
-    }
-
-    // Store cleanup function on container for later use
-    ;(container as any).__cleanup = cleanup
-
-    // Observe container removal and cleanup
-    const observer = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
-        for (const node of mutation.removedNodes) {
-          if (node === container) {
-            cleanup()
-            observer.disconnect()
-          }
-        }
-      }
-    })
-
-    observer.observe(container.parentNode || document.body, {
-      childList: true,
-      subtree: true
-    })
   }
 
   return container

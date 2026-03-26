@@ -46,9 +46,26 @@ export default defineConfig(({ mode }) => {
       },
       dedupe: ['react', 'react-dom'],
     },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom'],
+            router: ['react-router-dom'],
+            ui: ['lucide-react', 'motion'],
+            charts: ['recharts'],
+            i18n: ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
+            db: ['dexie', 'dexie-react-hooks'],
+            utils: ['date-fns', 'canvas-confetti'],
+            ai: ['@google/genai'],
+          },
+        },
+      },
+      chunkSizeWarningLimit: 1000,
+    },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
+      // Do not modify—file watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
     },
   };

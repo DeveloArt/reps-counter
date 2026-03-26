@@ -1,14 +1,11 @@
 import type { PlasmoCSUI, PlasmoCSUIAnchor, PlasmoCSUIMountState } from "~type"
 
-const DEFAULT_MOUNT_INTERVAL = 142
-const MOUNT_DEBOUNCE_DELAY = 50 // Debounce delay in milliseconds
-
-async function createShadowDOM<T>(mount: PlasmoCSUI<T>) {
+async function createShadowDOM<T>(Mount: PlasmoCSUI<T>) {
   const shadowHost = document.createElement("plasmo-csui")
 
   const shadowRoot =
-    typeof mount.createShadowRoot === "function"
-      ? await mount.createShadowRoot(shadowHost)
+    typeof Mount.createShadowRoot === "function"
+      ? await Mount.createShadowRoot(shadowHost)
       : shadowHost.attachShadow({ mode: "open" })
 
   const shadowContainer = document.createElement("div")
@@ -29,25 +26,25 @@ async function createShadowDOM<T>(mount: PlasmoCSUI<T>) {
 export type PlasmoCSUIShadowDOM = Awaited<ReturnType<typeof createShadowDOM>>
 
 async function injectAnchor<T>(
-  mount: PlasmoCSUI<T>,
+  Mount: PlasmoCSUI<T>,
   anchor: PlasmoCSUIAnchor,
   { shadowHost, shadowRoot }: PlasmoCSUIShadowDOM,
   mountState?: PlasmoCSUIMountState
 ) {
-  if (typeof mount.getStyle === "function") {
+  if (typeof Mount.getStyle === "function") {
     const sfcStyleContent =
-      typeof mount.getSfcStyleContent === "function"
-        ? await mount.getSfcStyleContent()
+      typeof Mount.getSfcStyleContent === "function"
+        ? await Mount.getSfcStyleContent()
         : ""
-    shadowRoot.prepend(await mount.getStyle({ ...anchor, sfcStyleContent }))
+    shadowRoot.prepend(await Mount.getStyle({ ...anchor, sfcStyleContent }))
   }
 
-  if (typeof mount.getShadowHostId === "function") {
-    shadowHost.id = await mount.getShadowHostId(anchor)
+  if (typeof Mount.getShadowHostId === "function") {
+    shadowHost.id = await Mount.getShadowHostId(anchor)
   }
 
-  if (typeof mount.mountShadowHost === "function") {
-    await mount.mountShadowHost({
+  if (typeof Mount.mountShadowHost === "function") {
+    await Mount.mountShadowHost({
       shadowHost,
       anchor,
       mountState
@@ -63,76 +60,61 @@ async function injectAnchor<T>(
 }
 
 export async function createShadowContainer<T>(
-  mount: PlasmoCSUI<T>,
+  Mount: PlasmoCSUI<T>,
   anchor: PlasmoCSUIAnchor,
   mountState?: PlasmoCSUIMountState
 ) {
-  const shadowDom = await createShadowDOM(mount)
+  const shadowDom = await createShadowDOM(Mount)
 
   mountState?.hostSet.add(shadowDom.shadowHost)
   mountState?.hostMap.set(shadowDom.shadowHost, anchor)
 
-  await injectAnchor(mount, anchor, shadowDom, mountState)
+  await injectAnchor(Mount, anchor, shadowDom, mountState)
 
   return shadowDom.shadowContainer
 }
 
-/**
- * Check if an element is visible in the viewport
- * @param el - The element to check (must be a valid DOM Element)
- * @returns true if the element is visible, false otherwise
- */
-const isVisible = (el: Element | null | undefined): el is Element => {
-  // Guard clause: ensure el is a valid Element
-  if (!el || !(el instanceof Element)) {
+const isVisible = (el: Element) => {
+  if (!el) {
+    return false
+  }
+  const elementRect = el.getBoundingClientRect()
+  const elementStyle = globalThis.getComputedStyle(el)
+
+  // console.log(elementRect, elementStyle)
+
+  if (elementStyle.display === "none") {
     return false
   }
 
-  try {
-    const elementRect = el.getBoundingClientRect()
-    const elementStyle = globalThis.getComputedStyle(el)
-
-    // Check display property
-    if (elementStyle.display === "none") {
-      return false
-    }
-
-    // Check visibility property
-    if (elementStyle.visibility === "hidden") {
-      return false
-    }
-
-    // Check opacity
-    if (elementStyle.opacity === "0") {
-      return false
-    }
-
-    // Check if element has zero dimensions and is not hidden by overflow
-    if (
-      elementRect.width === 0 &&
-      elementRect.height === 0 &&
-      elementStyle.overflow !== "hidden"
-    ) {
-      return false
-    }
-
-    // Check if the element is irrevocably off-screen
-    if (
-      elementRect.x + elementRect.width < 0 ||
-      elementRect.y + elementRect.height < 0
-    ) {
-      return false
-    }
-
-    return true
-  } catch (error) {
-    // Handle any errors that might occur during visibility check
-    console.warn("Error checking element visibility:", error)
+  if (elementStyle.visibility === "hidden") {
     return false
   }
+
+  if (elementStyle.opacity === "0") {
+    return false
+  }
+
+  if (
+    elementRect.width === 0 &&
+    elementRect.height === 0 &&
+    elementStyle.overflow !== "hidden"
+  ) {
+    return false
+  }
+
+  // Check if the element is irrevocably off-screen:
+  if (
+    elementRect.x + elementRect.width < 0 ||
+    elementRect.y + elementRect.height < 0
+  ) {
+    return false
+  }
+
+  return true
 }
 
-export function createAnchorObserver<T>(mount: PlasmoCSUI<T>) {
+export function createAnchorObserver<T>(Mount: PlasmoCSUI<T>) {
   const mountState: PlasmoCSUIMountState = {
     document: document || window.document,
     observer: null,
@@ -153,11 +135,11 @@ export function createAnchorObserver<T>(mount: PlasmoCSUI<T>) {
       ? !!document.getElementById(el.id)
       : el?.getRootNode({ composed: true }) === mountState.document
 
-  const hasInlineAnchor = typeof mount.getInlineAnchor === "function"
-  const hasOverlayAnchor = typeof mount.getOverlayAnchor === "function"
+  const hasInlineAnchor = typeof Mount.getInlineAnchor === "function"
+  const hasOverlayAnchor = typeof Mount.getOverlayAnchor === "function"
 
-  const hasInlineAnchorList = typeof mount.getInlineAnchorList === "function"
-  const hasOverlayAnchorList = typeof mount.getOverlayAnchorList === "function"
+  const hasInlineAnchorList = typeof Mount.getInlineAnchorList === "function"
+  const hasOverlayAnchorList = typeof Mount.getOverlayAnchorList === "function"
 
   const shouldObserve =
     hasInlineAnchor ||
@@ -169,10 +151,7 @@ export function createAnchorObserver<T>(mount: PlasmoCSUI<T>) {
     return null
   }
 
-  // Debounce timer for mountAnchors calls
-  let debounceTimer: NodeJS.Timeout | null = null
-
-  async function mountAnchors(renderFn: (anchor?: PlasmoCSUIAnchor) => void) {
+  async function mountAnchors(render: (anchor?: PlasmoCSUIAnchor) => void) {
     mountState.isMounting = true
 
     const mountedInlineAnchorSet = new WeakSet()
@@ -200,10 +179,10 @@ export function createAnchorObserver<T>(mount: PlasmoCSUI<T>) {
 
     const [inlineAnchor, inlineAnchorList, overlayAnchor, overlayAnchorList] =
       await Promise.all([
-        hasInlineAnchor ? mount.getInlineAnchor() : null,
-        hasInlineAnchorList ? mount.getInlineAnchorList() : null,
-        hasOverlayAnchor ? mount.getOverlayAnchor() : null,
-        hasOverlayAnchorList ? mount.getOverlayAnchorList() : null
+        hasInlineAnchor ? Mount.getInlineAnchor() : null,
+        hasInlineAnchorList ? Mount.getInlineAnchorList() : null,
+        hasOverlayAnchor ? Mount.getOverlayAnchor() : null,
+        hasOverlayAnchorList ? Mount.getOverlayAnchorList() : null
       ])
 
     const renderList: PlasmoCSUIAnchor[] = []
@@ -253,13 +232,13 @@ export function createAnchorObserver<T>(mount: PlasmoCSUI<T>) {
 
     const overlayTargetList = []
 
-    if (isVisible(overlayAnchor)) {
+    if (!!overlayAnchor && isVisible(overlayAnchor)) {
       overlayTargetList.push(overlayAnchor)
     }
 
     if ((overlayAnchorList?.length || 0) > 0) {
       overlayAnchorList.forEach((el) => {
-        if (isVisible(el)) {
+        if (el instanceof Element && isVisible(el)) {
           overlayTargetList.push(el)
         }
       })
@@ -280,35 +259,23 @@ export function createAnchorObserver<T>(mount: PlasmoCSUI<T>) {
       mountState.hostSet.delete(overlayHost)
     }
 
-    await Promise.all(renderList.map(renderFn))
+    await Promise.all(renderList.map(render))
 
     if (mountState.isMutated) {
       mountState.isMutated = false
-      await mountAnchors(renderFn)
+      await mountAnchors(render)
     }
 
     mountState.isMounting = false
   }
 
-  // Debounced version of mountAnchors
-  const debouncedMountAnchors = (renderFn: (anchor?: PlasmoCSUIAnchor) => void) => {
-    if (debounceTimer) {
-      clearTimeout(debounceTimer)
-    }
-
-    debounceTimer = setTimeout(() => {
+  const start = (render: (anchor?: PlasmoCSUIAnchor) => void) => {
+    mountState.observer = new MutationObserver(() => {
       if (mountState.isMounting) {
         mountState.isMutated = true
         return
       }
-      mountAnchors(renderFn)
-      debounceTimer = null
-    }, MOUNT_DEBOUNCE_DELAY)
-  }
-
-  const start = (renderFn: (anchor?: PlasmoCSUIAnchor) => void) => {
-    mountState.observer = new MutationObserver(() => {
-      debouncedMountAnchors(renderFn)
+      mountAnchors(render)
     })
 
     // Need to watch the subtree for shadowDOM
@@ -318,60 +285,37 @@ export function createAnchorObserver<T>(mount: PlasmoCSUI<T>) {
     })
 
     mountState.mountInterval = setInterval(() => {
-      debouncedMountAnchors(renderFn)
-    }, DEFAULT_MOUNT_INTERVAL)
-  }
-
-  const stop = () => {
-    if (debounceTimer) {
-      clearTimeout(debounceTimer)
-      debounceTimer = null
-    }
-
-    if (mountState.observer) {
-      mountState.observer.disconnect()
-      mountState.observer = null
-    }
-
-    if (mountState.mountInterval) {
-      clearInterval(mountState.mountInterval)
-      mountState.mountInterval = null
-    }
+      if (mountState.isMounting) {
+        mountState.isMutated = true
+        return
+      }
+      mountAnchors(render)
+    }, 142)
   }
 
   return {
     start,
-    stop,
     mountState
   }
 }
 
-/**
- * Create a render function for mounting UI components
- * @template T - The type of containers being used
- * @param mount - The Plasmo CSU configuration
- * @param containers - A tuple of two containers for rendering
- * @param mountState - Optional mount state for tracking mounted components
- * @param renderFx - Optional custom render function
- * @returns A function that renders the component for a given anchor
- */
-export const createRender = <T extends unknown>(
-  mount: PlasmoCSUI<T>,
-  containers: readonly [T, T],
+export const createRender = <T>(
+  Mount: PlasmoCSUI<T>,
+  containers: [T, T],
   mountState?: PlasmoCSUIMountState,
   renderFx?: (anchor: PlasmoCSUIAnchor, rootContainer: Element) => Promise<void>
 ) => {
   const createRootContainer = (anchor: PlasmoCSUIAnchor) =>
-    typeof mount.getRootContainer === "function"
-      ? mount.getRootContainer({
+    typeof Mount.getRootContainer === "function"
+      ? Mount.getRootContainer({
           anchor,
           mountState
         })
-      : createShadowContainer(mount, anchor, mountState)
+      : createShadowContainer(Mount, anchor, mountState)
 
-  if (typeof mount.render === "function") {
+  if (typeof Mount.render === "function") {
     return (anchor: PlasmoCSUIAnchor) =>
-      mount.render(
+      Mount.render(
         {
           anchor,
           createRootContainer
