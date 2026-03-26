@@ -12,6 +12,7 @@
     "dev:mobile": "npm run start -w @fitcounter/mobile",
     "build:pwa": "npm run build -w @fitcounter/pwa",
     "build:landing": "npm run build -w fitcounter-landing",
+    "vercel-build": "npm run build:pwa",
     "lint": "biome check .",
     "lint:fix": "biome check --write .",
     "format": "biome check --write .",
