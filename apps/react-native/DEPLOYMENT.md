@@ -132,7 +132,72 @@ eas update --branch production --message "Hotfix: poprawka krytycznego błędu"
 - **testing**: Dla testerów (preview builds)
 - **production**: Dla użytkowników końcowych (production builds)
 
-## Komendy pomocnicze
+## Skrypty NPM (Szybkie komendy)
+
+### Budowanie aplikacji
+
+**Produkcja:**
+```bash
+npm run build:prod:android      # Build Android (AAB)
+npm run build:prod:ios          # Build iOS
+npm run build:prod:all          # Build obie platformy
+```
+
+**Preview/Testing:**
+```bash
+npm run build:preview:android   # Build Android (APK)
+npm run build:preview:ios       # Build iOS
+npm run build:preview:all       # Build obie platformy
+```
+
+### Publikowanie aktualizacji OTA
+
+**Produkcja:**
+```bash
+npm run update:prod "Opis zmian"
+```
+
+**Preview/Testing:**
+```bash
+npm run update:preview "Opis zmian"
+```
+
+## Skrypty pomocnicze (PowerShell/Bash)
+
+W katalogu `scripts/` znajdują się skrypty do łatwiejszego zarządzania buildami:
+
+### Windows (PowerShell)
+
+**Build:**
+```powershell
+.\scripts\build.ps1 -Environment prod -Platform android
+.\scripts\build.ps1 -Environment preview -Platform ios
+.\scripts\build.ps1 -Environment prod -Platform all
+```
+
+**Update:**
+```powershell
+.\scripts\update.ps1 -Environment prod -Message "Opis zmian"
+.\scripts\update.ps1 -Environment preview -Message "Testowanie"
+```
+
+### Linux/Mac (Bash)
+
+**Build:**
+```bash
+chmod +x scripts/*.sh  # Tylko raz, aby nadać uprawnienia
+./scripts/build.sh prod android
+./scripts/build.sh preview ios
+./scripts/build.sh prod all
+```
+
+**Update:**
+```bash
+./scripts/update.sh prod "Opis zmian"
+./scripts/update.sh preview "Testowanie"
+```
+
+## Komendy pomocnicze EAS CLI
 
 ### Sprawdź status buildów
 ```bash

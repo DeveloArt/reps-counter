@@ -1,6 +1,6 @@
 import { Info, Zap } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface DailyGoalCardProps {
   totalProgress: number;
@@ -19,7 +19,7 @@ export function DailyGoalCard({ totalProgress, totalReps, totalTime }: DailyGoal
           <div className="flex flex-col gap-1 z-10">
             <div className="flex items-center gap-2">
               <p className="text-white/80 text-sm font-medium">{t('home.dailyGoal')}</p>
-              <button 
+              <button
                 onClick={() => setShowInfo(!showInfo)}
                 className="p-1 hover:bg-white/10 rounded-full transition-colors"
                 aria-label="Goal information"

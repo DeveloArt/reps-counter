@@ -1,4 +1,5 @@
 import { useRouter } from 'expo-router';
+import { useFocusEffect } from 'expo-router';
 import {
   Activity,
   Dumbbell,
@@ -11,7 +12,7 @@ import {
   Zap,
 } from 'lucide-react-native';
 import { useCallback, useState } from 'react';
-import { useFocusEffect } from 'expo-router';
+import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import {
   getExercises,
@@ -21,7 +22,6 @@ import {
   getSettings,
   initDatabase,
 } from '../../src/db';
-import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../src/hooks/useTheme';
 import type { Exercise, Goal, LogEntry, UserSettings } from '../../src/types';
 
