@@ -1,4 +1,5 @@
 import { AddGoalModal } from '@/components/features/AddGoalModal';
+import { getIcon } from '@/lib/iconUtils';
 import { cn } from '@/lib/utils';
 import { type Goal, db } from '@fitcounter/core';
 import {
@@ -188,19 +189,6 @@ export default function GoalsPage() {
 
     return dayStats;
   }, [currentMonth, exercises, goals, selectedGoalFilter]); // Re-run when month, goals or filter changes
-
-  const getIcon = (iconName: string | undefined) => {
-    switch (iconName) {
-      case 'Dumbbell':
-        return Dumbbell;
-      case 'Activity':
-        return Activity;
-      case 'Timer':
-        return Timer;
-      default:
-        return Activity;
-    }
-  };
 
   const handleEditGoal = (goal: Goal) => {
     setGoalToEdit(goal);

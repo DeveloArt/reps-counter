@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils';
 import { X } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
-import { type ReactNode, useEffect } from 'react';
+import { type ReactNode, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
 interface ModalProps {
@@ -13,16 +13,28 @@ interface ModalProps {
 }
 
 export function Modal({ isOpen, onClose, title, children, className }: ModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          onClose();
+        }
+      };
+      
+      document.addEventListener('keydown', handleEscape);
+      
+      return () => {
+        document.body.style.overflow = 'unset';
+        document.removeEventListener('keydown', handleEscape);
+      };
     } else {
       document.body.style.overflow = 'unset';
     }
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   return createPortal(
     <AnimatePresence>
@@ -36,6 +48,10 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60]"
           />
           <motion.div
+            ref={modalRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="modal-title"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -45,9 +61,10 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
             )}
           >
             <div className="flex items-center justify-between p-4 border-b border-border">
-              <h3 className="text-lg font-bold text-foreground">{title}</h3>
+              <h3 id="modal-title" className="text-lg font-bold text-foreground">{title}</h3>
               <button
                 onClick={onClose}
+                aria-label="Close modal"
                 className="p-2 rounded-full hover:bg-muted text-foreground transition-colors"
               >
                 <X className="size-5" />

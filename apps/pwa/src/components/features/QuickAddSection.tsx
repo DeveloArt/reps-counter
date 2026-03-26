@@ -1,3 +1,4 @@
+import { getIcon } from '@/lib/iconUtils';
 import { MoreHorizontal, Plus } from 'lucide-react';
 
 interface QuickAddSectionProps {
@@ -13,10 +14,6 @@ export function QuickAddSection({
   openLogEntry,
   openAddExercise,
 }: QuickAddSectionProps) {
-  const getIcon = (_iconName: string) => {
-    // Icon mapping logic here
-    return null;
-  };
 
   return (
     <div>

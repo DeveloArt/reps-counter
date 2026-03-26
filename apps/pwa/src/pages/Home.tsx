@@ -1,8 +1,9 @@
+import { getIcon } from '@/lib/iconUtils';
 import { cn } from '@/lib/utils';
 import { type Exercise, db } from '@fitcounter/core';
 import { eachDayOfInterval, endOfDay, format, isSameDay, startOfDay, subDays } from 'date-fns';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { Activity, Dumbbell, Edit2, MoreHorizontal, Plus, Timer, Zap } from 'lucide-react';
+import { Edit2, MoreHorizontal, Plus, Zap } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -198,19 +199,6 @@ export default function HomePage() {
       : 0;
     totalProgress = Math.round((progressReps + progressTime) / 2);
   }
-
-  const getIcon = (iconName: string) => {
-    switch (iconName) {
-      case 'Dumbbell':
-        return Dumbbell;
-      case 'Activity':
-        return Activity;
-      case 'Timer':
-        return Timer;
-      default:
-        return Activity;
-    }
-  };
 
   // ... (existing code)
 

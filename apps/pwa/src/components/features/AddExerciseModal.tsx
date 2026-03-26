@@ -1,7 +1,10 @@
 import { Modal } from '@/components/ui/Modal';
+import { exercisesApi, goalsApi } from '@/lib/api';
+import { handleError } from '@/lib/errorHandler';
+import { EXERCISE_ICONS } from '@/lib/iconUtils';
 import { cn } from '@/lib/utils';
-import { type Exercise, db } from '@fitcounter/core';
-import { Activity, Check, Dumbbell, Plus, Save, Timer, Trash2 } from 'lucide-react';
+import { EXERCISE_COLORS, type Exercise } from '@fitcounter/core';
+import { Check, Plus, Save, Trash2 } from 'lucide-react';
 import { type FormEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,33 +14,19 @@ interface AddExerciseModalProps {
   exerciseToEdit?: Exercise;
 }
 
-const ICONS = [
-  { name: 'Dumbbell', icon: Dumbbell },
-  { name: 'Activity', icon: Activity },
-  { name: 'Timer', icon: Timer },
-];
-
-const COLORS = [
-  '#0D5D5D', // Primary
-  '#10B981', // Emerald
-  '#F59E0B', // Amber
-  '#EF4444', // Red
-  '#6366F1', // Indigo
-  '#8B5CF6', // Violet
-  '#EC4899', // Pink
-];
-
 export function AddExerciseModal({ isOpen, onClose, exerciseToEdit }: AddExerciseModalProps) {
   const { t } = useTranslation();
   const [name, setName] = useState('');
   const [unit, setUnit] = useState<'reps' | 'seconds'>('reps');
-  const [selectedColor, setSelectedColor] = useState(COLORS[0]);
+  const [selectedColor, setSelectedColor] = useState<string>(EXERCISE_COLORS[0]);
   const [selectedIcon, setSelectedIcon] = useState('Dumbbell');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen) {
       setShowDeleteConfirm(false);
+      setError(null);
       if (exerciseToEdit) {
         setName(exerciseToEdit.name);
         setUnit(exerciseToEdit.unit);
@@ -46,45 +35,41 @@ export function AddExerciseModal({ isOpen, onClose, exerciseToEdit }: AddExercis
       } else {
         setName('');
         setUnit('reps');
-        setSelectedColor(COLORS[0]);
+        setSelectedColor(EXERCISE_COLORS[0]);
         setSelectedIcon('Dumbbell');
       }
     }
   }, [isOpen, exerciseToEdit]);
 
-  // robust ID generator
-  const generateId = () => {
-    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-      return crypto.randomUUID();
-    }
-    return (
-      Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-    );
-  };
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setError(null);
+
+    if (!name.trim()) {
+      setError(t('modals.addExercise.nameRequired') || 'Name is required');
+      return;
+    }
+
     try {
       if (exerciseToEdit) {
-        await db.exercises.update(exerciseToEdit.id, {
-          name,
+        await exercisesApi.update(exerciseToEdit.id, {
+          name: name.trim(),
           unit,
           color: selectedColor,
           icon: selectedIcon,
         });
       } else {
-        await db.exercises.add({
-          id: generateId(),
-          name,
+        await exercisesApi.create({
+          name: name.trim(),
           unit,
           color: selectedColor,
           icon: selectedIcon,
         });
       }
       onClose();
-    } catch (error) {
-      console.error('Failed to save exercise:', error);
-      alert(`${t('common.error')}: ${error instanceof Error ? error.message : String(error)}`);
+    } catch (err) {
+      const appError = handleError(err, t('common.error'));
+      setError(appError.userMessage || appError.message);
     }
   };
 
@@ -92,18 +77,19 @@ export function AddExerciseModal({ isOpen, onClose, exerciseToEdit }: AddExercis
     if (!exerciseToEdit) return;
 
     try {
-      await db.exercises.update(exerciseToEdit.id, { isArchived: true });
+      await exercisesApi.archive(exerciseToEdit.id);
 
-      // Pause goals that depend on this exercise
-      const goals = await db.goals.where('exerciseId').equals(exerciseToEdit.id).toArray();
-      for (const goal of goals) {
-        await db.goals.update(goal.id, { isActive: false });
+      const goals = await goalsApi.getAll();
+      const relatedGoals = goals.filter((g) => g.exerciseId === exerciseToEdit.id);
+      
+      for (const goal of relatedGoals) {
+        await goalsApi.update(goal.id, { isActive: false });
       }
 
       onClose();
-    } catch (error) {
-      console.error('Failed to delete exercise:', error);
-      alert(`${t('common.error')}: ${error instanceof Error ? error.message : String(error)}`);
+    } catch (err) {
+      const appError = handleError(err, t('common.error'));
+      setError(appError.userMessage || appError.message);
     }
   };
 
@@ -143,20 +129,30 @@ export function AddExerciseModal({ isOpen, onClose, exerciseToEdit }: AddExercis
       onClose={onClose}
       title={
         exerciseToEdit
-          ? String(t('modals.addExercise.editTitle'))
-          : String(t('modals.addExercise.title'))
+          ? t('modals.addExercise.editTitle')
+          : t('modals.addExercise.title')
       }
     >
       <form onSubmit={handleSubmit} className="space-y-6">
+        {error && (
+          <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-xl">
+            <p className="text-sm text-destructive">{error}</p>
+          </div>
+        )}
+
         <div className="space-y-2">
-          <label className="text-sm font-medium text-foreground">
+          <label htmlFor="exercise-name" className="text-sm font-medium text-foreground">
             {t('modals.addExercise.nameLabel')}
           </label>
           <input
+            id="exercise-name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder={t('modals.addExercise.namePlaceholder')}
+            required
+            aria-invalid={!!error}
+            aria-describedby={error ? 'exercise-error' : undefined}
             className="w-full px-4 py-3 rounded-xl bg-muted border-transparent focus:border-primary focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all outline-none text-foreground placeholder:text-muted-foreground"
           />
         </div>
@@ -165,10 +161,11 @@ export function AddExerciseModal({ isOpen, onClose, exerciseToEdit }: AddExercis
           <label className="text-sm font-medium text-foreground">
             {t('modals.addExercise.unitLabel')}
           </label>
-          <div className="grid grid-cols-2 gap-2 p-1 bg-muted rounded-xl">
+          <div className="grid grid-cols-2 gap-2 p-1 bg-muted rounded-xl" role="group" aria-label={t('modals.addExercise.unitLabel')}>
             <button
               type="button"
               onClick={() => setUnit('reps')}
+              aria-pressed={unit === 'reps'}
               className={cn(
                 'py-2 rounded-lg text-sm font-bold transition-all',
                 unit === 'reps'
@@ -181,6 +178,7 @@ export function AddExerciseModal({ isOpen, onClose, exerciseToEdit }: AddExercis
             <button
               type="button"
               onClick={() => setUnit('seconds')}
+              aria-pressed={unit === 'seconds'}
               className={cn(
                 'py-2 rounded-lg text-sm font-bold transition-all',
                 unit === 'seconds'
@@ -197,12 +195,14 @@ export function AddExerciseModal({ isOpen, onClose, exerciseToEdit }: AddExercis
           <label className="text-sm font-medium text-foreground">
             {t('modals.addExercise.iconLabel')}
           </label>
-          <div className="flex gap-3">
-            {ICONS.map(({ name, icon: Icon }) => (
+          <div className="flex gap-3" role="group" aria-label={t('modals.addExercise.iconLabel')}>
+            {EXERCISE_ICONS.map(({ name, icon: Icon }) => (
               <button
                 key={name}
                 type="button"
                 onClick={() => setSelectedIcon(name)}
+                aria-label={`Select ${name} icon`}
+                aria-pressed={selectedIcon === name}
                 className={cn(
                   'size-10 rounded-xl flex items-center justify-center transition-all',
                   selectedIcon === name
@@ -220,12 +220,14 @@ export function AddExerciseModal({ isOpen, onClose, exerciseToEdit }: AddExercis
           <label className="text-sm font-medium text-foreground">
             {t('modals.addExercise.colorLabel')}
           </label>
-          <div className="flex flex-wrap gap-3">
-            {COLORS.map((color) => (
+          <div className="flex flex-wrap gap-3" role="group" aria-label={t('modals.addExercise.colorLabel')}>
+            {EXERCISE_COLORS.map((color) => (
               <button
                 key={color}
                 type="button"
                 onClick={() => setSelectedColor(color)}
+                aria-label={`Select color ${color}`}
+                aria-pressed={selectedColor === color}
                 className={cn(
                   'size-8 rounded-full transition-transform hover:scale-110 flex items-center justify-center',
                   selectedColor === color && 'ring-2 ring-offset-2 ring-primary'

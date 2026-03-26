@@ -1,7 +1,8 @@
 import { Modal } from '@/components/ui/Modal';
+import { getIcon } from '@/lib/iconUtils';
 import { type Exercise, db } from '@fitcounter/core';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { Activity, Dumbbell, Plus, Timer } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 interface QuickLogModalProps {
@@ -14,19 +15,6 @@ interface QuickLogModalProps {
 export function QuickLogModal({ isOpen, onClose, onSelectExercise, onAddNew }: QuickLogModalProps) {
   const { t } = useTranslation();
   const exercises = useLiveQuery(() => db.exercises.filter((e) => !e.isArchived).toArray());
-
-  const getIcon = (iconName: string) => {
-    switch (iconName) {
-      case 'Dumbbell':
-        return Dumbbell;
-      case 'Activity':
-        return Activity;
-      case 'Timer':
-        return Timer;
-      default:
-        return Activity;
-    }
-  };
 
   return (
     <Modal

@@ -12,8 +12,8 @@ const db = new Dexie('FitCounterDB') as Dexie & {
 
 db.version(3).stores({
   exercises: 'id, name, isArchived',
-  logs: 'id, exerciseId, date, timestamp',
-  goals: 'id, type, isActive, exerciseId',
+  logs: 'id, exerciseId, timestamp, [exerciseId+timestamp]',
+  goals: 'id, type, isActive, exerciseId, [exerciseId+isActive]',
   settings: 'id',
 });
 
