@@ -48,7 +48,6 @@
         }
       ],
       "expo-updates",
-      "@config-plugins/detox",
       "expo-build-properties"
     ],
     "experiments": {
