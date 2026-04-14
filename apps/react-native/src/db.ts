@@ -369,3 +369,67 @@ export async function updateSettings(settings: Partial<UserSettings>): Promise<v
     await database.runAsync(`UPDATE settings SET ${fields.join(', ')} WHERE id = 1`, values);
   }
 }
+
+export async function seedE2EMockData(): Promise<void> {
+  const database = await initDatabase();
+  const today = new Date();
+
+  const formatDate = (offsetDays: number) => {
+    const date = new Date(today);
+    date.setDate(today.getDate() - offsetDays);
+    return date.toISOString().split('T')[0];
+  };
+
+  await database.execAsync(`
+    DELETE FROM logs;
+    DELETE FROM goals;
+    DELETE FROM exercises;
+  `);
+
+  await database.runAsync(
+    'INSERT INTO exercises (id, name, unit, color, icon, isArchived) VALUES (?, ?, ?, ?, ?, ?)',
+    ['e2e-pushups', 'Pushups', 'reps', '#0D5D5D', 'Dumbbell', 0]
+  );
+  await database.runAsync(
+    'INSERT INTO exercises (id, name, unit, color, icon, isArchived) VALUES (?, ?, ?, ?, ?, ?)',
+    ['e2e-squats', 'Squats', 'reps', '#10B981', 'Activity', 0]
+  );
+  await database.runAsync(
+    'INSERT INTO exercises (id, name, unit, color, icon, isArchived) VALUES (?, ?, ?, ?, ?, ?)',
+    ['e2e-plank', 'Plank', 'seconds', '#147A7A', 'Timer', 0]
+  );
+
+  await database.runAsync(
+    'INSERT INTO goals (id, title, type, targetValue, exerciseId, metric, startDate, isActive) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    ['e2e-goal-daily-push', 'Daily Pushups', 'daily', 120, 'e2e-pushups', 'reps', today.toISOString(), 1]
+  );
+  await database.runAsync(
+    'INSERT INTO goals (id, title, type, targetValue, exerciseId, metric, startDate, isActive) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    ['e2e-goal-weekly-plank', 'Weekly Plank', 'weekly', 2400, 'e2e-plank', 'time', today.toISOString(), 1]
+  );
+
+  const mockLogs: Array<[string, string, string, number, string, number]> = [
+    ['e2e-log-1', 'e2e-pushups', formatDate(0), 80, '', Date.now() - 1_000],
+    ['e2e-log-2', 'e2e-squats', formatDate(0), 60, '', Date.now() - 2_000],
+    ['e2e-log-3', 'e2e-plank', formatDate(0), 180, '', Date.now() - 3_000],
+    ['e2e-log-4', 'e2e-pushups', formatDate(1), 110, '', Date.now() - 86_400_000],
+    ['e2e-log-5', 'e2e-plank', formatDate(1), 240, '', Date.now() - 86_401_000],
+    ['e2e-log-6', 'e2e-squats', formatDate(2), 75, '', Date.now() - 172_800_000],
+    ['e2e-log-7', 'e2e-pushups', formatDate(3), 95, '', Date.now() - 259_200_000],
+    ['e2e-log-8', 'e2e-plank', formatDate(4), 300, '', Date.now() - 345_600_000],
+    ['e2e-log-9', 'e2e-squats', formatDate(5), 65, '', Date.now() - 432_000_000],
+    ['e2e-log-10', 'e2e-pushups', formatDate(6), 120, '', Date.now() - 518_400_000],
+  ];
+
+  for (const log of mockLogs) {
+    await database.runAsync(
+      'INSERT INTO logs (id, exerciseId, date, value, notes, timestamp) VALUES (?, ?, ?, ?, ?, ?)',
+      log
+    );
+  }
+
+  await database.runAsync(
+    'UPDATE settings SET theme = ?, dailyGoalReps = ?, dailyGoalTime = ?, onboardingCompleted = ?, notificationsEnabled = ?, notificationFrequency = ?, notificationTime = ? WHERE id = 1',
+    ['system', 150, 900, 1, 0, 1, '09:00']
+  );
+}

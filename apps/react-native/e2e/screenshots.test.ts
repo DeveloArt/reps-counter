@@ -1,11 +1,13 @@
-import { by, device, element } from 'detox';
+import { by, device, element, waitFor } from 'detox';
 
 describe('App Screenshots (App Store / Google Play)', () => {
   beforeAll(async () => {
     await device.launchApp({
       newInstance: true,
-      permissions: { notifications: 'YES' }
+      permissions: { notifications: 'YES' },
+      url: 'fitcounter://e2e-seed',
     });
+    await waitFor(element(by.id('tab-index'))).toBeVisible().withTimeout(15000);
   });
 
   it('should go through all tabs and take screenshots', async () => {

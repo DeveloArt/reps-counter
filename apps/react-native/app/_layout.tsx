@@ -4,12 +4,13 @@ import { ThemeProvider } from '../src/hooks/useTheme';
 import '../src/i18n';
 import { useEffect } from 'react';
 import { Platform, AppState } from 'react-native';
+import type { AppStateStatus } from 'react-native';
 import * as NavigationBar from 'expo-navigation-bar';
 export default function RootLayout() {
   useEffect(() => {
     if(Platform.OS !== 'android') return;
     NavigationBar.setVisibilityAsync('hidden');
-    const subscription = AppState.addEventListener("change", (nextAppState) => {
+    const subscription = AppState.addEventListener("change", (nextAppState: AppStateStatus) => {
       if(nextAppState === 'active') {
         NavigationBar.setVisibilityAsync('hidden');
       }
@@ -57,6 +58,12 @@ export default function RootLayout() {
           name="settings"
           options={{
             presentation: 'modal',
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="e2e-seed"
+          options={{
             headerShown: false,
           }}
         />
