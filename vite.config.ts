@@ -14,8 +14,8 @@ export default defineConfig(({mode}) => {
         registerType: 'autoUpdate',
         includeAssets: ['icon.svg'],
         manifest: {
-          name: 'RepsCounter',
-          short_name: 'RepsCounter',
+          name: 'Licznik Powtórzeń',
+          short_name: 'Licznik Powtórzeń',
           description: 'Track micro-workouts throughout the day',
           theme_color: '#0D5D5D',
           background_color: '#F9F9F7',

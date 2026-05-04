@@ -101,7 +101,7 @@
     "importDataDesc": "Restore from .csv file",
     "resetData": "Reset All Data",
     "resetDataDesc": "This action is permanent",
-    "about": "About RepsCounter",
+    "about": "About Reps Counter",
     "version": "Version",
     "terms": "Terms of Use",
     "privacy": "Privacy Policy"
@@ -156,11 +156,11 @@
     "effectiveDate": "Effective Date",
     "section1": {
       "title": "1. Acceptance of Terms",
-      "content": "By accessing and using the RepsCounter application, you agree to be bound by these Terms of Use."
+      "content": "By accessing and using the Reps Counter application, you agree to be bound by these Terms of Use."
     },
     "section2": {
       "title": "2. Disclaimer of Liability",
-      "content": "RepsCounter is provided \"as is\" without any warranties. We are not responsible for any damages, health issues, or data loss resulting from the use of this application. Use it at your own risk."
+      "content": "Reps Counter is provided \"as is\" without any warranties. We are not responsible for any damages, health issues, or data loss resulting from the use of this application. Use it at your own risk."
     },
     "section3": {
       "title": "3. Data Storage",
@@ -180,7 +180,7 @@
     "effectiveDate": "Effective Date",
     "section1": {
       "title": "1. Data Collection",
-      "content": "RepsCounter does not collect, transmit, or share any personal information. The application operates entirely offline."
+      "content": "Reps Counter does not collect, transmit, or share any personal information. The application operates entirely offline."
     },
     "section2": {
       "title": "2. Local Storage",

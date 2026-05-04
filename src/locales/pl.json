@@ -101,7 +101,7 @@
     "importDataDesc": "Przywróć z pliku .csv",
     "resetData": "Zresetuj Wszystkie Dane",
     "resetDataDesc": "Ta akcja jest nieodwracalna",
-    "about": "O RepsCounter",
+    "about": "O Liczniku Powtórzeń",
     "version": "Wersja",
     "terms": "Warunki Użytkowania",
     "privacy": "Polityka Prywatności"
@@ -156,11 +156,11 @@
     "effectiveDate": "Data Obowiązywania",
     "section1": {
       "title": "1. Akceptacja Warunków",
-      "content": "Uzyskując dostęp i korzystając z aplikacji RepsCounter, zgadzasz się na przestrzeganie niniejszych Warunków Użytkowania."
+      "content": "Uzyskując dostęp i korzystając z aplikacji Licznik Powtórzeń, zgadzasz się na przestrzeganie niniejszych Warunków Użytkowania."
     },
     "section2": {
       "title": "2. Wyłączenie Odpowiedzialności",
-      "content": "RepsCounter jest dostarczany „tak jak jest” bez żadnych gwarancji. Nie ponosimy odpowiedzialności za jakiekolwiek szkody, problemy zdrowotne lub utratę danych wynikające z korzystania z tej aplikacji. Używasz jej na własne ryzyko."
+      "content": "Licznik Powtórzeń jest dostarczany „tak jak jest” bez żadnych gwarancji. Nie ponosimy odpowiedzialności za jakiekolwiek szkody, problemy zdrowotne lub utratę danych wynikające z korzystania z tej aplikacji. Używasz jej na własne ryzyko."
     },
     "section3": {
       "title": "3. Przechowywanie Danych",
@@ -180,7 +180,7 @@
     "effectiveDate": "Data Obowiązywania",
     "section1": {
       "title": "1. Gromadzenie Danych",
-      "content": "RepsCounter nie gromadzi, nie przesyła ani nie udostępnia żadnych danych osobowych. Aplikacja działa całkowicie offline."
+      "content": "Licznik Powtórzeń nie gromadzi, nie przesyła ani nie udostępnia żadnych danych osobowych. Aplikacja działa całkowicie offline."
     },
     "section2": {
       "title": "2. Lokalne Przechowywanie",
