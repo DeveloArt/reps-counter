@@ -6,22 +6,3 @@ coverage/
 *.log
 .env*
 !.env.example
-
-# Next.js
-.next/
-out/
-
-# Expo
-.expo/
-
-# Testing
-playwright-report/
-test-results/
-
-# Cache
-.cache/
-.turbo/
-
-# pnpm
-.pnpm-store/
-pnpm-lock.yaml

@@ -1,0 +1,40 @@
+name: Deploy to FTP
+
+on:
+  push:
+    branches:
+      - main # Upewnij się, że to nazwa Twojej głównej gałęzi (czasem to 'master')
+
+jobs:
+  web-deploy:
+    name: Build and Deploy to FTP
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 🚚 Checkout code
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Najnowsza stabilna wersja Node.js
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: npm ci
+
+      - name: 🏗️ Build project
+        run: npm run build
+
+      - name: 🚀 Sync files to FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps  # Wymuszenie bezpiecznego połączenia
+          port: 21
+          # Katalog z którego wrzucamy (zbudowany React)
+          local-dir: ./dist/ 
+          # Usunięto początkowy slash, aby ścieżka była relatywna dla logującego się FTP
+          server-dir: public_html/licznikpowtorzen.pl/

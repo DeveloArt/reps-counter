@@ -1,25 +1,14 @@
 {
-  "name": "@fitcounter/chrome-extension",
+  "name": "@repscounter/chrome-extension",
   "version": "1.0.0",
   "private": true,
   "description": "Rozszerzenie do przeglądarki Chrome (Plasmo)",
   "scripts": {
     "dev": "plasmo dev",
-    "build": "plasmo build",
-    "package": "plasmo package"
+    "build": "plasmo build"
   },
   "dependencies": {
-    "@fitcounter/core": "file:../../packages/core",
-    "@fitcounter/ui": "file:../../packages/ui",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "devDependencies": {
-    "@plasmohq/messaging": "^0.6.0",
-    "@types/chrome": "^0.0.270",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "plasmo": "^0.88.0",
-    "typescript": "^5.3.0"
+    "@repscounter/core": "*",
+    "@repscounter/ui": "*"
   }
 }

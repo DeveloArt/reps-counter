@@ -1,7 +1,8 @@
+import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { Dumbbell, Activity, Target, Smartphone, Zap, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Dumbbell, Activity, Target, Smartphone, Zap, ShieldCheck, ArrowRight, CheckCircle2 } from 'lucide-react';
 
-export default function App() {
+export default function LandingPage() {
   return (
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/30">
       {/* Navigation */}
@@ -14,12 +15,12 @@ export default function App() {
             <span className="font-bold text-xl tracking-tight">RepsCounter</span>
           </div>
           <div className="flex items-center gap-4">
-            <a 
-              href="https://app.repscounter.com" 
+            <Link 
+              to="/app" 
               className="bg-primary text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all hover:-translate-y-0.5"
             >
               Uruchom PWA
-            </a>
+            </Link>
           </div>
         </div>
       </nav>
@@ -63,13 +64,13 @@ export default function App() {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
         >
-          <a 
-            href="https://app.repscounter.com" 
+          <Link 
+            to="/app" 
             className="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white px-8 py-4 rounded-full text-lg font-bold shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-all hover:-translate-y-1"
           >
             Przejdź do aplikacji
             <ArrowRight className="size-5" />
-          </a>
+          </Link>
         </motion.div>
 
         <motion.div 
@@ -181,15 +182,15 @@ export default function App() {
             Nie chcesz instalować aplikacji ze sklepu? Użyj wersji PWA, która działa w każdej nowoczesnej przeglądarce i pozwala na dodanie skrótu do ekranu głównego.
           </p>
           <div className="flex items-center justify-center gap-2 bg-muted p-4 rounded-xl font-mono text-sm mb-6 select-all">
-            app.repscounter.com
+            develoart.com/PWA/reps-counter
           </div>
-          <a 
-            href="https://app.repscounter.com" 
+          <Link 
+            to="/app" 
             className="inline-flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-full font-bold shadow-md hover:shadow-lg transition-all"
           >
             Uruchom teraz w przeglądarce
             <ArrowRight className="size-4" />
-          </a>
+          </Link>
         </div>
       </section>
 

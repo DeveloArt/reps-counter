@@ -1,4 +1,4 @@
-# FitCounter - React Native (Expo) - Plan Migracji
+# RepsCounter - React Native (Expo) - Plan Migracji
 
 ## 1. Koncepcja i Działanie
 Celem jest przepisanie obecnej aplikacji webowej (React, Vite, Tailwind) na natywną aplikację mobilną dla systemów iOS i Android przy użyciu frameworka React Native oraz Expo.
@@ -22,7 +22,7 @@ Aplikacja mobilna zachowa 100% obecnej funkcjonalności (local-first, brak logow
 ## 3. Plan Wdrożenia (Krok po Kroku)
 
 ### Etap 1: Inicjalizacja Projektu i Konfiguracja
-*   [ ] **Utworzenie Projektu:** `npx create-expo-app FitCounter -t expo-template-blank-typescript`.
+*   [ ] **Utworzenie Projektu:** `npx create-expo-app RepsCounter -t expo-template-blank-typescript`.
 *   [ ] **Instalacja Zależności:** React Navigation, NativeWind, Reanimated, Lucide-React-Native, Expo SQLite, date-fns, i18next.
 *   [ ] **Konfiguracja NativeWind:** Skonfigurowanie `tailwind.config.js` oraz Babel pluginu dla NativeWind.
 *   [ ] **Struktura Katalogów:** Odtworzenie struktury z wersji webowej (`src/components`, `src/screens`, `src/db`, `src/utils`).
