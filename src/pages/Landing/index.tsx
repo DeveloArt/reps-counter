@@ -3,6 +3,8 @@ import { motion } from 'motion/react';
 import { Dumbbell, Activity, Target, Smartphone, Zap, ShieldCheck, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 export default function LandingPage() {
+  const APP_URL = "https://pwa.licznikpowtorzen.pl";
+
   return (
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/30">
       {/* Navigation */}
@@ -15,12 +17,12 @@ export default function LandingPage() {
             <span className="font-bold text-xl tracking-tight">LicznikPowtórzeń.pl</span>
           </div>
           <div className="flex items-center gap-4">
-            <Link 
-              to="/app" 
+            <a 
+              href={APP_URL}
               className="bg-primary text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all hover:-translate-y-0.5"
             >
               Uruchom Aplikację
-            </Link>
+            </a>
           </div>
         </div>
       </nav>
@@ -64,13 +66,13 @@ export default function LandingPage() {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
         >
-          <Link 
-            to="/app" 
+          <a 
+            href={APP_URL}
             className="w-full sm:w-auto flex items-center justify-center gap-2 bg-primary text-white px-8 py-4 rounded-full text-lg font-bold shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-all hover:-translate-y-1"
           >
             Uruchom teraz
             <ArrowRight className="size-5" />
-          </Link>
+          </a>
         </motion.div>
 
         <motion.div 
@@ -188,15 +190,15 @@ export default function LandingPage() {
             Zainstaluj aplikację bezpośrednio z przeglądarki na ekranie głównym swojego telefonu.
           </p>
           <div className="flex items-center justify-center gap-2 bg-muted p-4 rounded-xl font-mono text-sm mb-6 select-all">
-            licznikpowtorzen.pl
+            pwa.licznikpowtorzen.pl
           </div>
-          <Link 
-            to="/app" 
+          <a 
+            href={APP_URL}
             className="inline-flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-full font-bold shadow-md hover:shadow-lg transition-all"
           >
             Uruchom teraz
             <ArrowRight className="size-4" />
-          </Link>
+          </a>
         </div>
       </section>
 

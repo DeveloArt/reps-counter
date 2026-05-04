@@ -18,20 +18,38 @@ import './i18n';
 
 function AppContent() {
   useNotificationScheduler();
+  const hostname = window.location.hostname;
+  const isPwaSubdomain = hostname.startsWith('pwa.');
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/app" element={<Layout />}>
-          <Route index element={<HomePage />} />
-          <Route path="stats" element={<StatsPage />} />
-          <Route path="goals" element={<GoalsPage />} />
-          <Route path="settings" element={<SettingsPage />} />
-          <Route path="terms" element={<TermsPage />} />
-          <Route path="privacy" element={<PrivacyPage />} />
-          <Route path="add" element={<HomePage />} /> {/* Placeholder for now */}
-        </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {isPwaSubdomain ? (
+          <Route path="/" element={<Layout />}>
+            <Route index element={<HomePage />} />
+            <Route path="stats" element={<StatsPage />} />
+            <Route path="goals" element={<GoalsPage />} />
+            <Route path="settings" element={<SettingsPage />} />
+            <Route path="terms" element={<TermsPage />} />
+            <Route path="privacy" element={<PrivacyPage />} />
+            <Route path="add" element={<HomePage />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
+        ) : (
+          <>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/app" element={<Layout />}>
+              <Route index element={<HomePage />} />
+              <Route path="stats" element={<StatsPage />} />
+              <Route path="goals" element={<GoalsPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path="terms" element={<TermsPage />} />
+              <Route path="privacy" element={<PrivacyPage />} />
+              <Route path="add" element={<HomePage />} />
+            </Route>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </>
+        )}
       </Routes>
     </BrowserRouter>
   );
