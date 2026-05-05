@@ -26,15 +26,24 @@ jobs:
       - name: 🏗️ Build project
         run: npm run build
 
-      - name: 🚀 Sync files to FTP
+      - name: 🚀 Sync files to Main Domain
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps  # Wymuszenie bezpiecznego połączenia
+          protocol: ftps
           port: 21
-          # Katalog z którego wrzucamy (zbudowany React)
           local-dir: ./dist/ 
-          # Usunięto początkowy slash, aby ścieżka była relatywna dla logującego się FTP
           server-dir: public_html/licznikpowtorzen.pl/
+
+      - name: 🚀 Sync files to Subdomain
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          local-dir: ./dist/ 
+          server-dir: public_html/pwa.licznikpowtorzen.pl/
