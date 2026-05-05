@@ -36,6 +36,14 @@ jobs:
           port: 21
           local-dir: ./dist/ 
           server-dir: public_html/licznikpowtorzen.pl/
+          state-name: .deploy-main.json
+          exclude: |
+            **/*.map
+            .git*
+            .github*
+
+      - name: 💤 Wait for server
+        run: sleep 10
 
       - name: 🚀 Sync files to Subdomain
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -47,3 +55,8 @@ jobs:
           port: 21
           local-dir: ./dist/ 
           server-dir: public_html/pwa.licznikpowtorzen.pl/
+          state-name: .deploy-subdomain.json
+          exclude: |
+            **/*.map
+            .git*
+            .github*
