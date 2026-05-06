@@ -6,6 +6,9 @@ import { QuickLogModal } from '@/components/features/QuickLogModal';
 import { LogEntryModal } from '@/components/features/LogEntryModal';
 import { type Exercise } from '@/db/db';
 
+import { AdBanner } from '@/components/features/AdBanner';
+import { CookieBanner } from '@/components/ui/CookieBanner';
+
 export function Layout() {
   const [isAddExerciseOpen, setIsAddExerciseOpen] = useState(false);
   const [exerciseToEdit, setExerciseToEdit] = useState<Exercise | undefined>();
@@ -23,6 +26,9 @@ export function Layout() {
       <main className="flex-1">
         <Outlet context={{ openAddExercise, openLogEntry }} />
       </main>
+      
+      <CookieBanner />
+
       <BottomNav onAddClick={() => setIsQuickLogOpen(true)} />
       
       <AddExerciseModal 

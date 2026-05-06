@@ -12,12 +12,16 @@ export function BottomNav({ onAddClick }: BottomNavProps) {
   const location = useLocation();
   const { t } = useTranslation();
 
+  const hostname = window.location.hostname;
+  const isPwaSubdomain = hostname.startsWith('pwa.');
+  const base = isPwaSubdomain ? '' : '/app';
+
   const navItems = [
-    { icon: Home, label: t('nav.home'), path: '/app' },
-    { icon: BarChart2, label: t('nav.stats'), path: '/app/stats' },
+    { icon: Home, label: t('nav.home'), path: base || '/' },
+    { icon: BarChart2, label: t('nav.stats'), path: `${base}/stats` },
     { icon: Plus, label: t('nav.add'), path: '#', isFab: true, onClick: onAddClick },
-    { icon: Target, label: t('nav.goals'), path: '/app/goals' },
-    { icon: Settings, label: t('nav.settings'), path: '/app/settings' },
+    { icon: Target, label: t('nav.goals'), path: `${base}/goals` },
+    { icon: Settings, label: t('nav.settings'), path: `${base}/settings` },
   ];
 
   return (

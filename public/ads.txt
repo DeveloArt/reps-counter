@@ -1,0 +1,3 @@
+# ads.txt dla licznikpowtorzen.pl
+# Podmień poniższe dane na swoje z panelu Google AdSense
+google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
