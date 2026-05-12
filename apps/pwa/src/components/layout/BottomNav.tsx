@@ -51,7 +51,9 @@ export function BottomNav({ onAddClick }: BottomNavProps) {
             )}
           >
             <item.icon className={cn('size-6', isActive && 'fill-current')} strokeWidth={2} />
-            <span className="text-[10px] font-bold uppercase tracking-wider text-center line-clamp-1">{item.label}</span>
+            <span className="text-[10px] font-bold uppercase tracking-wider text-center line-clamp-1">
+              {item.label}
+            </span>
           </Link>
         );
       })}

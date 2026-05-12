@@ -1,5 +1,7 @@
+import { termsOfServicePL } from '@fitcounter/core';
 import { ArrowLeft } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import ReactMarkdown from 'react-markdown';
 import { useNavigate } from 'react-router-dom';
 
 export default function TermsPage() {
@@ -16,28 +18,13 @@ export default function TermsPage() {
           <ArrowLeft className="size-6 text-primary" />
         </button>
         <h2 className="text-foreground text-lg font-bold leading-tight tracking-tight flex-1 ml-2">
-          {t('terms.title')}
+          Regulamin
         </h2>
       </div>
-      <div className="p-6 text-foreground prose dark:prose-invert">
-        <p>
-          <strong>{t('terms.effectiveDate')}:</strong> {t('terms.effectiveDateValue')}
-        </p>
-
-        <h3>{t('terms.section1.title')}</h3>
-        <p>{t('terms.section1.content')}</p>
-
-        <h3>{t('terms.section2.title')}</h3>
-        <p>{t('terms.section2.content')}</p>
-
-        <h3>{t('terms.section3.title')}</h3>
-        <p>{t('terms.section3.content')}</p>
-
-        <h3>{t('terms.section4.title')}</h3>
-        <p>{t('terms.section4.content')}</p>
-
-        <h3>{t('terms.section5.title')}</h3>
-        <p>{t('terms.section5.content')}</p>
+      <div className="p-6">
+        <div className="prose dark:prose-invert prose-primary max-w-none">
+          <ReactMarkdown>{termsOfServicePL}</ReactMarkdown>
+        </div>
       </div>
     </div>
   );

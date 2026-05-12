@@ -288,8 +288,16 @@ export default function App() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 border-t border-border text-center text-muted-foreground text-sm">
+      <footer className="py-8 border-t border-border text-center text-muted-foreground text-sm flex flex-col items-center gap-4">
         <p>© {new Date().getFullYear()} FitCounter. Zbudowane dla lepszych nawyków.</p>
+        <div className="flex items-center gap-4">
+          <a href="/regulamin" className="hover:text-foreground transition-colors">
+            Regulamin
+          </a>
+          <a href="/polityka-prywatnosci" className="hover:text-foreground transition-colors">
+            Polityka Prywatności
+          </a>
+        </div>
       </footer>
     </div>
   );

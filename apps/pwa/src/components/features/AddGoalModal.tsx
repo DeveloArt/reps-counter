@@ -126,9 +126,7 @@ export function AddGoalModal({ isOpen, onClose, goalToEdit }: AddGoalModalProps)
         title={`${t('common.delete')}?`}
       >
         <div className="space-y-6">
-          <p className="text-muted-foreground text-sm">
-            {t('goals.confirmDelete')}
-          </p>
+          <p className="text-muted-foreground text-sm">{t('goals.confirmDelete')}</p>
           <div className="flex gap-3">
             <button
               onClick={() => setShowDeleteConfirm(false)}
@@ -212,7 +210,8 @@ export function AddGoalModal({ isOpen, onClose, goalToEdit }: AddGoalModalProps)
               const ex = exercises?.find((ex) => ex.id === e.target.value);
               if (ex) {
                 setMetric(ex.unit === 'seconds' ? 'time' : 'reps');
-                const frequency = type === 'daily' ? t('modals.addGoal.daily') : t('modals.addGoal.weekly');
+                const frequency =
+                  type === 'daily' ? t('modals.addGoal.daily') : t('modals.addGoal.weekly');
                 setTitle(`${frequency} ${ex.name}`);
               }
             }}

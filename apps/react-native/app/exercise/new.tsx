@@ -56,7 +56,9 @@ export default function NewExerciseScreen() {
     <Modal isOpen={true} onClose={() => router.back()} title={t('modals.addExercise.title')}>
       <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
         <View style={styles.formSection}>
-          <Text style={[styles.label, { color: colors.text }]}>{t('modals.addExercise.nameLabel')}</Text>
+          <Text style={[styles.label, { color: colors.text }]}>
+            {t('modals.addExercise.nameLabel')}
+          </Text>
           <TextInput
             style={[
               styles.input,
@@ -70,7 +72,9 @@ export default function NewExerciseScreen() {
         </View>
 
         <View style={styles.formSection}>
-          <Text style={[styles.label, { color: colors.text }]}>{t('modals.addExercise.unitLabel')}</Text>
+          <Text style={[styles.label, { color: colors.text }]}>
+            {t('modals.addExercise.unitLabel')}
+          </Text>
           <View style={[styles.segmentedControl, { backgroundColor: colors.muted }]}>
             <TouchableOpacity
               style={[
@@ -111,7 +115,9 @@ export default function NewExerciseScreen() {
         </View>
 
         <View style={styles.formSection}>
-          <Text style={[styles.label, { color: colors.text }]}>{t('modals.addExercise.colorLabel')}</Text>
+          <Text style={[styles.label, { color: colors.text }]}>
+            {t('modals.addExercise.colorLabel')}
+          </Text>
           <View style={styles.colorContainer}>
             {colors_list.map((c) => (
               <TouchableOpacity

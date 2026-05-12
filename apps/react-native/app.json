@@ -14,11 +14,7 @@
       "checkAutomatically": "ON_LOAD",
       "fallbackToCacheTimeout": 0
     },
-    "extra": {
-      "eas": {
-        "projectId": "507f8d24-d599-4adc-ae0b-a5e453d57ae3"
-      }
-    },
+
     "splash": {
       "backgroundColor": "#0D5D5D"
     },

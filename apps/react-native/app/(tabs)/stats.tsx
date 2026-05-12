@@ -1,13 +1,13 @@
-import { useRouter } from 'expo-router';
-import { ArrowLeft, Dumbbell, Timer, TrendingUp } from 'lucide-react-native';
-import { useCallback, useMemo, useState } from 'react';
-import { useFocusEffect } from 'expo-router';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Svg, { Defs, LinearGradient, Path, Stop } from 'react-native-svg';
 import { format } from 'date-fns';
 import { enUS, pl as plLocale } from 'date-fns/locale';
-import { getExercises, getLogs, initDatabase } from '../../src/db';
+import { useRouter } from 'expo-router';
+import { useFocusEffect } from 'expo-router';
+import { ArrowLeft, Dumbbell, Timer, TrendingUp } from 'lucide-react-native';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Svg, { Defs, LinearGradient, Path, Stop } from 'react-native-svg';
+import { getExercises, getLogs, initDatabase } from '../../src/db';
 import { useTheme } from '../../src/hooks/useTheme';
 import type { Exercise, LogEntry } from '../../src/types';
 
@@ -19,9 +19,7 @@ export default function StatsScreen() {
   const router = useRouter();
   const { t, i18n } = useTranslation();
   const languageKey = (i18n.resolvedLanguage ?? i18n.language).toLowerCase();
-  const locale = languageKey.startsWith('pl')
-    ? plLocale
-    : enUS;
+  const locale = languageKey.startsWith('pl') ? plLocale : enUS;
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
@@ -346,7 +344,11 @@ export default function StatsScreen() {
                 { color: activeTab === tab ? colors.primary : colors.textSecondary },
               ]}
             >
-              {tab === 'week' ? t('stats.week') : tab === 'month' ? t('stats.month') : t('stats.year')}
+              {tab === 'week'
+                ? t('stats.week')
+                : tab === 'month'
+                  ? t('stats.month')
+                  : t('stats.year')}
             </Text>
           </TouchableOpacity>
         ))}
@@ -359,41 +361,55 @@ export default function StatsScreen() {
           <View style={[styles.card, { backgroundColor: colors.card }]}>
             <View style={styles.cardHeader}>
               <Dumbbell size={16} color={colors.primary} />
-              <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>{t('home.reps')}</Text>
+              <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>
+                {t('home.reps')}
+              </Text>
             </View>
             <Text style={[styles.cardValue, { color: colors.text }]}>
               {stats.totalReps.toLocaleString()}
             </Text>
-            <Text style={[styles.cardSubLabel, { color: colors.textSecondary }]}>{t('stats.total')}</Text>
+            <Text style={[styles.cardSubLabel, { color: colors.textSecondary }]}>
+              {t('stats.total')}
+            </Text>
             <View style={[styles.cardDivider, { backgroundColor: colors.border }]} />
             <Text style={[styles.cardSmallValue, { color: colors.text }]}>
               {stats.avgRepsPerDay}
             </Text>
-            <Text style={[styles.cardSmallLabel, { color: colors.textSecondary }]}>{t('stats.avgPerDay')}</Text>
+            <Text style={[styles.cardSmallLabel, { color: colors.textSecondary }]}>
+              {t('stats.avgPerDay')}
+            </Text>
           </View>
 
           {/* Time Card */}
           <View style={[styles.card, { backgroundColor: colors.card }]}>
             <View style={styles.cardHeader}>
               <Timer size={16} color={colors.primary} />
-              <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>{t('home.mins')}</Text>
+              <Text style={[styles.cardLabel, { color: colors.textSecondary }]}>
+                {t('home.mins')}
+              </Text>
             </View>
             <Text style={[styles.cardValue, { color: colors.text }]}>
               {stats.totalMinutes.toLocaleString()}
             </Text>
-            <Text style={[styles.cardSubLabel, { color: colors.textSecondary }]}>{t('stats.total')}</Text>
+            <Text style={[styles.cardSubLabel, { color: colors.textSecondary }]}>
+              {t('stats.total')}
+            </Text>
             <View style={[styles.cardDivider, { backgroundColor: colors.border }]} />
             <Text style={[styles.cardSmallValue, { color: colors.text }]}>
               {stats.avgMinutesPerDay}m
             </Text>
-            <Text style={[styles.cardSmallLabel, { color: colors.textSecondary }]}>{t('stats.avgPerDay')}</Text>
+            <Text style={[styles.cardSmallLabel, { color: colors.textSecondary }]}>
+              {t('stats.avgPerDay')}
+            </Text>
           </View>
         </View>
 
         {/* Daily Activity Section */}
         <View style={[styles.chartSection, { backgroundColor: colors.card }]}>
           <View style={styles.chartSectionHeader}>
-            <Text style={[styles.chartTitle, { color: colors.text }]}>{t('stats.dailyActivity')}</Text>
+            <Text style={[styles.chartTitle, { color: colors.text }]}>
+              {t('stats.dailyActivity')}
+            </Text>
             <View style={[styles.metricToggle, { backgroundColor: colors.border }]}>
               <TouchableOpacity
                 style={[
@@ -454,7 +470,9 @@ export default function StatsScreen() {
         {/* Weekly Comparison Section */}
         <View style={[styles.chartSection, { backgroundColor: colors.card }]}>
           <View style={styles.chartSectionHeader}>
-            <Text style={[styles.chartTitle, { color: colors.text }]}>{t('stats.weeklyComparison')}</Text>
+            <Text style={[styles.chartTitle, { color: colors.text }]}>
+              {t('stats.weeklyComparison')}
+            </Text>
             <View style={[styles.metricToggle, { backgroundColor: colors.border }]}>
               <TouchableOpacity
                 style={[

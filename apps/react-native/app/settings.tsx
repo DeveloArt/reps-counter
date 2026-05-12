@@ -379,10 +379,26 @@ export default function SettingsModalScreen() {
               <Text style={styles.aboutTitle}>{t('settings.productName')}</Text>
               <Text style={styles.aboutVersion}>{t('settings.version')} 2.4.1 (Build 402)</Text>
               <View style={styles.aboutLinks}>
-                <TouchableOpacity style={styles.aboutLink}>
+                <TouchableOpacity
+                  style={styles.aboutLink}
+                  onPress={() =>
+                    import('react-native').then((rn) =>
+                      rn.Linking.openURL('https://reps-counter-landing.vercel.app/regulamin')
+                    )
+                  }
+                >
                   <Text style={styles.aboutLinkText}>{t('settings.terms')}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.aboutLink}>
+                <TouchableOpacity
+                  style={styles.aboutLink}
+                  onPress={() =>
+                    import('react-native').then((rn) =>
+                      rn.Linking.openURL(
+                        'https://reps-counter-landing.vercel.app/polityka-prywatnosci'
+                      )
+                    )
+                  }
+                >
                   <Text style={styles.aboutLinkText}>{t('settings.privacy')}</Text>
                 </TouchableOpacity>
               </View>

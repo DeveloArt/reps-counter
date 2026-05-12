@@ -115,9 +115,7 @@ export function AddExerciseModal({ isOpen, onClose, exerciseToEdit }: AddExercis
         title={`${t('common.delete')}?`}
       >
         <div className="space-y-6">
-          <p className="text-muted-foreground text-sm">
-            {t('home.confirmDeleteExercise')}
-          </p>
+          <p className="text-muted-foreground text-sm">{t('home.confirmDeleteExercise')}</p>
           <div className="flex gap-3">
             <button
               onClick={() => setShowDeleteConfirm(false)}

@@ -2,15 +2,15 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider } from '../src/hooks/useTheme';
 import '../src/i18n';
-import { useEffect } from 'react';
-import { Platform, AppState } from 'react-native';
 import * as NavigationBar from 'expo-navigation-bar';
+import { useEffect } from 'react';
+import { AppState, Platform } from 'react-native';
 export default function RootLayout() {
   useEffect(() => {
-    if(Platform.OS !== 'android') return;
+    if (Platform.OS !== 'android') return;
     NavigationBar.setVisibilityAsync('hidden');
-    const subscription = AppState.addEventListener("change", (nextAppState) => {
-      if(nextAppState === 'active') {
+    const subscription = AppState.addEventListener('change', (nextAppState) => {
+      if (nextAppState === 'active') {
         NavigationBar.setVisibilityAsync('hidden');
       }
     });
