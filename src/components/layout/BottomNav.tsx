@@ -12,9 +12,8 @@ export function BottomNav({ onAddClick }: BottomNavProps) {
   const location = useLocation();
   const { t } = useTranslation();
 
-  const hostname = window.location.hostname;
-  const isPwaSubdomain = hostname.startsWith('pwa.');
-  const base = isPwaSubdomain ? '' : '/app';
+  const isAppUrl = location.pathname.startsWith('/app');
+  const base = isAppUrl ? '/app' : '';
 
   const navItems = [
     { icon: Home, label: t('nav.home'), path: base || '/' },
@@ -27,7 +26,7 @@ export function BottomNav({ onAddClick }: BottomNavProps) {
   return (
     <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] bg-card/90 backdrop-blur-lg border-t border-border/60 flex items-center justify-around py-3 px-4 z-50 safe-area-bottom">
       {navItems.map((item) => {
-        const isActive = location.pathname === item.path;
+        const isActive = location.pathname === item.path || (item.path !== '/' && item.path !== '/app' && location.pathname.startsWith(item.path));
         
         if (item.isFab) {
           return (

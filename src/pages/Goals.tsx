@@ -1,6 +1,7 @@
 import { ArrowLeft, Settings, PlusCircle, Dumbbell, Timer, Activity, MoreHorizontal, ChevronLeft, ChevronRight, Check, X, Edit2, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
+import { AdBanner } from '@/components/features/AdBanner';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, type Goal } from '@/db/db';
 import { startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval, format, isSameDay, isToday, addMonths, subMonths } from 'date-fns';
@@ -275,6 +276,9 @@ export default function GoalsPage() {
               </div>
             )}
           </div>
+
+          {/* Ad Banner pod ostatnim aktywnym celem */}
+          <AdBanner className="!px-0 mt-2" adSlot="1801975324" />
         </div>
 
         {/* History Calendar */}

@@ -159,12 +159,12 @@
       "content": "Uzyskując dostęp i korzystając z aplikacji Licznik Powtórzeń, zgadzasz się na przestrzeganie niniejszych Warunków Użytkowania."
     },
     "section2": {
-      "title": "2. Wyłączenie Odpowiedzialności",
-      "content": "Licznik Powtórzeń jest dostarczany „tak jak jest” bez żadnych gwarancji. Nie ponosimy odpowiedzialności za jakiekolwiek szkody, problemy zdrowotne lub utratę danych wynikające z korzystania z tej aplikacji. Używasz jej na własne ryzyko."
+      "title": "2. Wyłączenie Odpowiedzialności i Treści Reklamowe",
+      "content": "Licznik Powtórzeń jest dostarczany „tak jak jest” bez żadnych gwarancji. Nie ponosimy odpowiedzialności za jakiekolwiek szkody, problemy zdrowotne lub utratę danych wynikające z korzystania z tej aplikacji. W aplikacji wyświetlane są reklamy zewnętrznych dostawców (Google AdSense), za których treść nie odpowiadamy. Korzystasz z aplikacji na własną odpowiedzialność."
     },
     "section3": {
-      "title": "3. Przechowywanie Danych",
-      "content": "Wszystkie dane są przechowywane lokalnie na Twoim urządzeniu. Nie przesyłamy, nie przechowujemy ani nie przetwarzamy Twoich danych osobowych na zewnętrznych serwerach."
+      "title": "3. Przechowywanie Danych i Usługi Zewnętrzne",
+      "content": "Większość danych treningowych jest przechowywana lokalnie na Twoim urządzeniu. Aplikacja wczytuje jednak zewnętrzne skrypty reklamowe usługi Google AdSense w celu finansowania i utrzymania projektu."
     },
     "section4": {
       "title": "4. Rozstrzyganie Sporów",
@@ -180,23 +180,23 @@
     "effectiveDate": "Data Obowiązywania",
     "section1": {
       "title": "1. Gromadzenie Danych",
-      "content": "Licznik Powtórzeń nie gromadzi, nie przesyła ani nie udostępnia żadnych danych osobowych. Aplikacja działa całkowicie offline."
+      "content": "Twoje osobiste wpisy treningowe, cele i nawyki nie są przez nas gromadzone ani przesyłane na żadne zewnętrzne serwery. Aplikacja może jednak pobierać i przesyłać anonimowe dane techniczne niezbędne do prawidłowego funkcjonowania witryny oraz wyświetlania reklam."
     },
     "section2": {
       "title": "2. Lokalne Przechowywanie",
       "content": "Wszystkie dzienniki treningowe, cele i ustawienia są przechowywane lokalnie w pamięci Twojego urządzenia (IndexedDB/LocalStorage). Masz pełną kontrolę nad swoimi danymi."
     },
     "section3": {
-      "title": "3. Brak Udostępniania Osobom Trzecim",
-      "content": "Ponieważ nie gromadzimy danych, nie udostępniamy żadnych danych osobom trzecim, reklamodawcom ani dostawcom analityki."
+      "title": "3. Reklamy spersonalizowane i pliki cookie (Google AdSense)",
+      "content": "Aplikacja wyświetla reklamy za pośrednictwem systemu Google AdSense. Google, jako dostawca zewnętrzny, wykorzystuje pliki cookie do wyświetlania reklam w tej witrynie. Wykorzystanie reklamowych plików cookie umożliwia firmie Google i jej partnerom wyświetlanie reklam użytkownikom na podstawie ich wizyt w tej oraz/lub innych witrynach internetowych. Możesz zrezygnować ze spersonalizowanych reklam w Ustawieniach reklam Google (adssettings.google.com) lub odwiedzając stronę www.aboutads.info."
     },
     "section4": {
-      "title": "4. Bezpieczeństwo Danych",
-      "content": "Twoje dane pozostają na Twoim urządzeniu. Zalecamy zabezpieczenie urządzenia kodem dostępu lub biometrią w celu ochrony informacji."
+      "title": "4. Bezpieczeństwo Danych i Przeglądarki",
+      "content": "Dbamy o maksymalne bezpieczeństwo. Twoje lokalne dane są chronione mechanizmami izolacji przeglądarki. Zalecamy dodatkowo zabezpieczenie swojego fizycznego urządzenia kodem dostępu lub uwierzytelnieniem biometrycznym."
     },
     "section5": {
       "title": "5. Kontakt",
-      "content": "Jeśli masz jakiekolwiek pytania dotyczące tej Polityki Prywatności, skontaktuj się z nami."
+      "content": "Jeśli masz jakiekolwiek pytania dotyczące tej Polityki Prywatności lub chcesz skonsultować kwestie ochrony prywatności, skontaktuj się z nami pod adresem kontakt@licznikpowtorzen.pl."
     }
   }
 }

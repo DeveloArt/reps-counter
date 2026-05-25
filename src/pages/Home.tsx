@@ -8,6 +8,7 @@ import { startOfDay, endOfDay, subDays, isSameDay, format, eachDayOfInterval } f
 import { cn } from '@/lib/utils';
 import { useOutletContext } from 'react-router-dom';
 import { AdBanner } from '@/components/features/AdBanner';
+import { ProfilePromoBanner } from '@/components/features/ProfilePromoBanner';
 
 interface LayoutContext {
   openAddExercise: (exercise?: Exercise) => void;
@@ -279,8 +280,11 @@ export default function HomePage() {
           <div className="absolute -right-4 -bottom-4 size-32 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
         </motion.div>
 
+        {/* Profile Promo Banner */}
+        <ProfilePromoBanner />
+
         {/* Ad Banner */}
-        <AdBanner className="!px-0" />
+        <AdBanner className="!px-0" adSlot="9872037035" />
 
         {/* Quick Add Section */}
         <div>

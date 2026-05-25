@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Dumbbell, Activity, Target, Smartphone, Zap, ShieldCheck, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { AdBanner } from '@/components/features/AdBanner';
 
 export default function LandingPage() {
   const APP_URL = "https://pwa.licznikpowtorzen.pl";
@@ -95,6 +96,11 @@ export default function LandingPage() {
           </div>
         </motion.div>
       </section>
+
+      {/* Ad Banner on Landing */}
+      <div className="max-w-4xl mx-auto px-4 py-6">
+        <AdBanner />
+      </div>
 
       {/* Features Section */}
       <section className="py-20 bg-muted/30 border-y border-border">
@@ -203,8 +209,12 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 border-t border-border text-center text-muted-foreground text-sm">
-        <p>© {new Date().getFullYear()} LicznikPowtórzeń.pl. Zbudowane dla lepszych nawyków.</p>
+      <footer className="py-12 border-t border-border text-center text-muted-foreground text-sm">
+        <p className="mb-4">© {new Date().getFullYear()} LicznikPowtórzeń.pl. Zbudowane dla lepszych nawyków.</p>
+        <div className="flex justify-center gap-6 text-xs mb-4">
+          <Link to="/app/terms" className="hover:text-foreground transition-colors font-semibold">Regulamin</Link>
+          <Link to="/app/privacy" className="hover:text-foreground transition-colors font-semibold">Polityka Prywatności</Link>
+        </div>
       </footer>
     </div>
   );
