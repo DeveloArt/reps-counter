@@ -248,7 +248,7 @@ export default function SettingsPage() {
 
         {/* Kwadratowa reklama AdSense */}
         <div className="mt-4">
-          <AdBanner className="!px-0" adSlot="3946895151" />
+          <AdBanner className="!px-0" adSlot="3946895151" adFormat="rectangle" maxHeight={300} />
         </div>
 
         {/* About Section */}

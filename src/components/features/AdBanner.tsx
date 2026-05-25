@@ -1,16 +1,20 @@
-import { ExternalLink, X } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { useState, useEffect, useRef } from 'react';
 
 interface AdBannerProps {
   className?: string;
   adClient?: string;
   adSlot?: string;
+  adFormat?: 'auto' | 'horizontal' | 'rectangle' | 'vertical';
+  maxHeight?: number;
 }
 
 export function AdBanner({ 
   className = "", 
   adClient = "ca-pub-2472121183637363", 
-  adSlot = "3946895151" 
+  adSlot = "3946895151",
+  adFormat = "horizontal",
+  maxHeight = 100
 }: AdBannerProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [isAdSenseLoaded, setIsAdSenseLoaded] = useState(false);
@@ -74,24 +78,30 @@ export function AdBanner({
   return (
     <div className={`px-4 py-2 w-full flex flex-col items-center ${className}`}>
       {/* Informacja o reklamie */}
-      <div className="w-full flex justify-between items-center px-2 mb-1">
+      <div className="w-full flex justify-start items-center px-2 mb-1">
         <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Reklama</span>
-        <button onClick={() => setIsVisible(false)} className="text-muted-foreground hover:text-foreground">
-          <X className="size-3" />
-        </button>
       </div>
 
-      <div className="relative w-full bg-muted/20 border border-border/50 rounded-xl overflow-hidden min-h-[100px] flex items-center justify-center">
+      <div 
+        className="relative w-full bg-muted/20 border border-border/50 rounded-xl overflow-hidden min-h-[100px] flex items-center justify-center"
+        style={{ maxHeight: maxHeight ? `${maxHeight}px` : undefined }}
+      >
         {/* Prawdziwa jednostka AdSense */}
         <ins 
              ref={insRef}
              key={adSlot}
              className="adsbygoogle"
-             style={{ display: 'block', textAlign: 'center', width: '100%', minWidth: '250px' }}
+             style={{ 
+               display: 'block', 
+               textAlign: 'center', 
+               width: '100%', 
+               minWidth: '250px', 
+               maxHeight: maxHeight ? `${maxHeight}px` : undefined 
+             }}
              data-ad-client={adClient}
              data-ad-slot={adSlot}
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
+             data-ad-format={adFormat}
+             data-full-width-responsive={adFormat === 'horizontal' ? "true" : "false"}></ins>
 
         {/* Fallback - widoczny jeśli AdSense nie zadziała lub nie ma klucza */}
         {!isAdSenseLoaded && (
