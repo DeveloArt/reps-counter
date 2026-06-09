@@ -53,7 +53,15 @@
     "total": "Razem",
     "totalReps": "Łącznie Powtórzeń",
     "totalMinutes": "Łącznie Minut",
-    "active": "Aktywny"
+    "active": "Aktywny",
+    "recentEntries": "Ostatnie wpisy",
+    "noEntries": "Brak wpisów w wybranym okresie.",
+    "editEntry": "Edytuj wpis",
+    "confirmDeleteEntry": "Czy na pewno chcesz usunąć ten wpis?",
+    "date": "Data",
+    "amount": "Ilość",
+    "exercise": "Ćwiczenie",
+    "loadMore": "Pokaż więcej"
   },
   "goals": {
     "title": "Cele",
