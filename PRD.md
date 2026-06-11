@@ -1,7 +1,7 @@
-# FitCounter - Product Requirements Document (PRD)
+# RepsCounter - Product Requirements Document (PRD)
 
 ## 1. Cel Projektu (Wizja)
-FitCounter to prosta, szybka i w 100% prywatna aplikacja (PWA - Progressive Web App) do śledzenia codziennej aktywności fizycznej. Aplikacja jest zaprojektowana w architekturze "local-first", co oznacza, że wszystkie dane są przechowywane wyłącznie na urządzeniu użytkownika. Nie wymaga logowania, połączenia z internetem ani zewnętrznej bazy danych.
+RepsCounter to prosta, szybka i w 100% prywatna aplikacja (PWA - Progressive Web App) do śledzenia codziennej aktywności fizycznej. Aplikacja jest zaprojektowana w architekturze "local-first", co oznacza, że wszystkie dane są przechowywane wyłącznie na urządzeniu użytkownika. Nie wymaga logowania, połączenia z internetem ani zewnętrznej bazy danych.
 
 ## 2. Grupa Docelowa
 Osoby pracujące przy biurku, sportowcy amatorzy oraz każdy, kto chce w szybki sposób (1-2 kliknięcia) zanotować wykonanie serii ćwiczeń (np. pompki, przysiady, deska) w ciągu dnia, bez konieczności uruchamiania skomplikowanych aplikacji treningowych.

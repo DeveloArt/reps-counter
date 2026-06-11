@@ -1,6 +1,6 @@
-# FitCounter Landing Page
+# RepsCounter Landing Page
 
-To jest wyodrębniony, samodzielny projekt Landing Page'a dla aplikacji FitCounter. Został przygotowany jako osobna aplikacja w architekturze monorepo.
+To jest wyodrębniony, samodzielny projekt Landing Page'a dla aplikacji RepsCounter. Został przygotowany jako osobna aplikacja w architekturze monorepo.
 
 ## Technologie
 - React 18

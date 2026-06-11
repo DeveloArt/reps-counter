@@ -1,7 +1,7 @@
-# FitCounter - Rozszerzenie Chrome (Plan Wdrożenia)
+# RepsCounter - Rozszerzenie Chrome (Plan Wdrożenia)
 
 ## 1. Koncepcja i Działanie
-Rozszerzenie Chrome dla FitCounter to przeniesienie obecnej aplikacji PWA do formy wygodnego pop-upu (np. 400x600 px) dostępnego po kliknięciu ikony na pasku przeglądarki. 
+Rozszerzenie Chrome dla RepsCounter to przeniesienie obecnej aplikacji PWA do formy wygodnego pop-upu (np. 400x600 px) dostępnego po kliknięciu ikony na pasku przeglądarki. 
 Głównym celem jest umożliwienie użytkownikom szybkiego logowania ćwiczeń (np. podczas przerwy w pracy przy komputerze) bez konieczności otwierania nowej karty czy telefonu.
 
 ### Główne założenia:
@@ -45,5 +45,5 @@ Głównym celem jest umożliwienie użytkownikom szybkiego logowania ćwiczeń (
 ### Etap 5: Testowanie i Publikacja
 *   [ ] **Testowanie lokalne:** Załadowanie rozpakowanego rozszerzenia (Load unpacked) w `chrome://extensions/`.
 *   [ ] **Testy wydajnościowe:** Sprawdzenie, czy animacje (Framer Motion) działają płynnie w popupie.
-*   [ ] **Przygotowanie paczki:** Zbudowanie wersji produkcyjnej (`pnpm run build`) i spakowanie do pliku `.zip`.
+*   [ ] **Przygotowanie paczki:** Zbudowanie wersji produkcyjnej (`npm run build`) i spakowanie do pliku `.zip`.
 *   [ ] **Chrome Web Store:** Przygotowanie grafik, opisów i polityki prywatności do publikacji w sklepie.

@@ -1,6 +1,6 @@
-# Architektura Monorepo dla FitCounter
+# Architektura Monorepo dla RepsCounter
 
-Ten dokument opisuje docelową strukturę monorepo dla projektu FitCounter, która pozwala na współdzielenie kodu pomiędzy wieloma platformami (PWA, Landing Page, Rozszerzenie Chrome, React Native).
+Ten dokument opisuje docelową strukturę monorepo dla projektu RepsCounter, która pozwala na współdzielenie kodu pomiędzy wieloma platformami (PWA, Landing Page, Rozszerzenie Chrome, React Native).
 
 ## Dlaczego Monorepo?
 Dzięki monorepo (np. z użyciem **Turborepo** lub **npm/yarn workspaces**) możemy:
@@ -12,7 +12,7 @@ Dzięki monorepo (np. z użyciem **Turborepo** lub **npm/yarn workspaces**) moż
 ## Struktura Katalogów
 
 ```text
-fitcounter-monorepo/
+repscounter-monorepo/
 ├── apps/
 │   ├── pwa/                 # Główna aplikacja PWA (React + Vite)
 │   ├── landing/             # Strona Landing Page (np. Astro, Next.js lub Vite)
@@ -45,16 +45,16 @@ Zestaw komponentów React. Ponieważ PWA, Landing Page i Chrome Extension używa
 ## Opis Aplikacji (Apps)
 
 ### `apps/pwa`
-Obecna aplikacja, którą właśnie rozwijamy. Importuje `@fitcounter/core` oraz `@fitcounter/ui`. Służy jako pełnoprawny dashboard dla użytkownika.
+Obecna aplikacja, którą właśnie rozwijamy. Importuje `@repscounter/core` oraz `@repscounter/ui`. Służy jako pełnoprawny dashboard dla użytkownika.
 
 ### `apps/landing`
-Strona wizytówkowa. Może być wyciągnięta do osobnego projektu (np. w Next.js dla lepszego SEO), importując jedynie komponenty z `@fitcounter/ui` dla spójnego wyglądu.
+Strona wizytówkowa. Może być wyciągnięta do osobnego projektu (np. w Next.js dla lepszego SEO), importując jedynie komponenty z `@repscounter/ui` dla spójnego wyglądu.
 
 ### `apps/chrome-extension`
-Rozszerzenie, które pozwala na szybkie logowanie nawyków bez otwierania nowej karty. Korzysta z `@fitcounter/core` do zapisu danych. Jeśli użyjemy Plasmo, możemy łatwo integrować Reacta.
+Rozszerzenie, które pozwala na szybkie logowanie nawyków bez otwierania nowej karty. Korzysta z `@repscounter/core` do zapisu danych. Jeśli użyjemy Plasmo, możemy łatwo integrować Reacta.
 
 ### `apps/react-native`
-Natywna aplikacja mobilna (iOS/Android) zbudowana w Expo. Korzysta z `@fitcounter/core` (Dexie.js wspiera React Native poprzez odpowiednie adaptery lub możemy użyć SQLite z tym samym interfejsem).
+Natywna aplikacja mobilna (iOS/Android) zbudowana w Expo. Korzysta z `@repscounter/core` (Dexie.js wspiera React Native poprzez odpowiednie adaptery lub możemy użyć SQLite z tym samym interfejsem).
 
 ## Jak zacząć migrację?
 W środowisku lokalnym (np. VS Code) wykonaj następujące kroki:
