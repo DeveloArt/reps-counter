@@ -1,48 +1,51 @@
 {
-  "name": "react-example",
+  "name": "fitcounter-monorepo",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "1.0.0",
+  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
-    "dev": "vite --port=3000 --host=0.0.0.0",
-    "build": "vite build",
-    "preview": "vite preview",
-    "clean": "rm -rf dist",
-    "lint": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@google/genai": "^1.29.0",
-    "@tailwindcss/vite": "^4.1.14",
-    "@vitejs/plugin-react": "^5.0.4",
-    "better-sqlite3": "^12.4.1",
-    "canvas-confetti": "^1.9.4",
-    "clsx": "^2.1.1",
-    "date-fns": "^4.1.0",
-    "dotenv": "^17.2.3",
-    "express": "^4.21.2",
-    "i18next": "^25.8.14",
-    "i18next-browser-languagedetector": "^8.2.1",
-    "lucide-react": "^0.546.0",
-    "motion": "^12.23.24",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-i18next": "^16.5.6",
-    "react-router-dom": "^7.13.1",
-    "recharts": "^3.8.0",
-    "tailwind-merge": "^3.5.0",
-    "vite": "^6.2.0"
+    "dev": "npm run dev --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "build:check": "npm run build:landing && npm run build:pwa",
+    "dev:pwa": "npm run dev -w @fitcounter/pwa",
+    "dev:landing": "npm run dev -w fitcounter-landing",
+    "dev:mobile": "npm run start -w @fitcounter/mobile",
+    "build:pwa": "npm run build -w @fitcounter/pwa",
+    "build:landing": "npm run build -w fitcounter-landing",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "test": "npm run test --workspaces --if-present",
+    "test:e2e": "npm run test:e2e -w @fitcounter/pwa",
+    "prepare": "node -e \"if (!process.env.CI && !process.env.VERCEL) { require('child_process').execSync('lefthook install', {stdio: 'inherit'}) }\""
   },
   "devDependencies": {
-    "@types/canvas-confetti": "^1.9.0",
-    "@types/express": "^4.17.21",
-    "@types/node": "^22.14.0",
-    "autoprefixer": "^10.4.21",
-    "dexie": "^4.3.0",
-    "dexie-react-hooks": "^4.2.0",
-    "tailwindcss": "^4.1.14",
-    "tsx": "^4.21.0",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.0",
-    "vite-plugin-pwa": "^1.2.0"
+    "@biomejs/biome": "^1.9.0",
+    "lefthook": "^1.10.0",
+    "typescript": "~5.8.2"
+  },
+  "pnpm": {
+    "overrides": {
+      "react": "19.1.0",
+      "react-native": "0.81.5",
+      "react-dom": "19.1.0"
+    },
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "@parcel/watcher",
+      "@swc/core",
+      "detox",
+      "dtrace-provider",
+      "esbuild",
+      "lefthook",
+      "lmdb",
+      "msgpackr-extract",
+      "protobufjs",
+      "sharp",
+      "unrs-resolver"
+    ]
+  },
+  "dependencies": {
+    "sharp": "^0.34.5"
   }
 }

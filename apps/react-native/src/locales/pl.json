@@ -9,7 +9,17 @@
     "close": "Zamknij",
     "loading": "Ładowanie...",
     "error": "Błąd",
-    "success": "Sukces"
+    "success": "Sukces",
+    "create": "Utwórz",
+    "active": "Aktywny",
+    "paused": "Wstrzymany",
+    "all": "Wszystkie",
+    "none": "Brak",
+    "some": "Niektóre",
+    "fillAllFields": "Wypełnij wszystkie wymagane pola",
+    "confirmDelete": "Czy na pewno chcesz to usunąć?",
+    "deleteSuccess": "Pomyślnie usunięto",
+    "saveSuccess": "Pomyślnie zapisano"
   },
   "nav": {
     "home": "Start",
@@ -53,15 +63,7 @@
     "total": "Razem",
     "totalReps": "Łącznie Powtórzeń",
     "totalMinutes": "Łącznie Minut",
-    "active": "Aktywny",
-    "recentEntries": "Ostatnie wpisy",
-    "noEntries": "Brak wpisów w wybranym okresie.",
-    "editEntry": "Edytuj wpis",
-    "confirmDeleteEntry": "Czy na pewno chcesz usunąć ten wpis?",
-    "date": "Data",
-    "amount": "Ilość",
-    "exercise": "Ćwiczenie",
-    "loadMore": "Pokaż więcej"
+    "active": "Aktywny"
   },
   "goals": {
     "title": "Cele",
@@ -78,16 +80,34 @@
     "createOne": "Stwórz nowy!",
     "createFirst": "Stwórz swój pierwszy cel!",
     "confirmDelete": "Czy na pewno chcesz usunąć ten cel?",
-    "noGoals": "Brak aktywnych celów.",
+    "noGoals": "Brak celów",
     "when": "Gdy",
     "dailyGoal": "Cel Codzienny",
     "weeklyGoal": "Cel Tygodniowy",
     "daily": "Dzienny",
     "weekly": "Tygodniowy",
+    "monthly": "Miesięczny",
     "enterTitle": "Nawyk, który chcesz dodać",
     "triggerLabel": "Sygnał (Gdy...)",
     "triggerPlaceholder": "np. Włączam mikrofalę",
-    "trigger": "Sygnał"
+    "trigger": "Sygnał",
+    "newGoal": "Nowy Cel",
+    "editGoal": "Edytuj Cel",
+    "deleteGoal": "Usuń Cel",
+    "deleteGoalConfirm": "Czy na pewno chcesz usunąć ten cel?",
+    "exercise": "Ćwiczenie",
+    "metric": "Metryka",
+    "target": "Cel",
+    "goalTitle": "Tytuł Celu (Opcjonalnie)",
+    "enterGoalTitle": "Wpisz tytuł",
+    "createGoal": "Utwórz Cel",
+    "saveGoal": "Zapisz",
+    "activeStatus": "Aktywny",
+    "pausedStatus": "Wstrzymany",
+    "activeDescription": "Cel jest obecnie aktywny",
+    "pausedDescription": "Cel jest wstrzymany",
+    "allGoals": "Wszystkie Cele",
+    "workouts": "Treningi"
   },
   "settings": {
     "title": "Ustawienia",
@@ -109,7 +129,7 @@
     "importDataDesc": "Przywróć z pliku .csv",
     "resetData": "Zresetuj Wszystkie Dane",
     "resetDataDesc": "Ta akcja jest nieodwracalna",
-    "about": "O Liczniku Powtórzeń",
+    "about": "O FitCounter",
     "version": "Wersja",
     "terms": "Warunki Użytkowania",
     "privacy": "Polityka Prywatności",
@@ -118,19 +138,20 @@
       "min": "1 raz",
       "max": "10 razy"
     },
-    "alerts": {
-      "notificationsNotSupported": "Ta przeglądarka nie obsługuje powiadomień",
-      "notificationsBlocked": "Powiadomienia są zablokowane. Włącz je w ustawieniach przeglądarki.",
-      "resetFailed": "Nie udało się zresetować danych"
-    },
     "languages": {
       "english": "Angielski",
       "polish": "Polski"
+    },
+    "alerts": {
+      "resetSuccess": "Dane zostały zresetowane",
+      "resetSuccessRestart": "Dane zostały zresetowane. Uruchom ponownie aplikację.",
+      "resetFailed": "Nie udało się zresetować danych"
     }
   },
   "modals": {
     "addExercise": {
       "title": "Nowe Ćwiczenie",
+      "editTitle": "Edytuj ćwiczenie",
       "nameLabel": "Nazwa Ćwiczenia",
       "namePlaceholder": "Nazwa Ćwiczenia",
       "colorLabel": "Kolor",
@@ -178,11 +199,11 @@
     "effectiveDate": "Data Obowiązywania",
     "section1": {
       "title": "1. Akceptacja Warunków",
-      "content": "Uzyskując dostęp i korzystając z aplikacji Licznik Powtórzeń, zgadzasz się na przestrzeganie niniejszych Warunków Użytkowania."
+      "content": "Uzyskując dostęp i korzystając z aplikacji FitCounter, zgadzasz się na przestrzeganie niniejszych Warunków Użytkowania."
     },
     "section2": {
       "title": "2. Wyłączenie Odpowiedzialności",
-      "content": "Licznik Powtórzeń jest dostarczany „tak jak jest” bez żadnych gwarancji. Nie ponosimy odpowiedzialności za jakiekolwiek szkody, problemy zdrowotne lub utratę danych wynikające z korzystania z tej aplikacji. Używasz jej na własne ryzyko."
+      "content": "FitCounter jest dostarczany „tak jak jest” bez żadnych gwarancji. Nie ponosimy odpowiedzialności za jakiekolwiek szkody, problemy zdrowotne lub utratę danych wynikające z korzystania z tej aplikacji. Używasz jej na własne ryzyko."
     },
     "section3": {
       "title": "3. Przechowywanie Danych",
@@ -202,7 +223,7 @@
     "effectiveDate": "Data Obowiązywania",
     "section1": {
       "title": "1. Gromadzenie Danych",
-      "content": "Licznik Powtórzeń nie gromadzi, nie przesyła ani nie udostępnia żadnych danych osobowych. Aplikacja działa całkowicie offline."
+      "content": "FitCounter nie gromadzi, nie przesyła ani nie udostępnia żadnych danych osobowych. Aplikacja działa całkowicie offline."
     },
     "section2": {
       "title": "2. Lokalne Przechowywanie",
@@ -219,6 +240,17 @@
     "section5": {
       "title": "5. Kontakt",
       "content": "Jeśli masz jakiekolwiek pytania dotyczące tej Polityki Prywatności, skontaktuj się z nami."
+    }
+  },
+  "components": {
+    "manualEntry": {
+      "placeholder": "np. 60"
+    }
+  },
+  "exercises": {
+    "notFound": "Nie znaleziono ćwiczenia",
+    "alerts": {
+      "enterName": "Podaj nazwę ćwiczenia"
     }
   }
 }
