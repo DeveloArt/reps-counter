@@ -280,11 +280,11 @@ export default function HomePage() {
           <div className="absolute -right-4 -bottom-4 size-32 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
         </motion.div>
 
-        {/* Profile Promo Banner */}
-        <ProfilePromoBanner />
+        {/* Profile Promo Banner (zakomentowany na ten moment) */}
+        {/* <ProfilePromoBanner /> */}
 
-        {/* Ad Banner */}
-        <AdBanner className="!px-0" adSlot="9872037035" />
+        {/* Ad Banner (zakomentowany na ten moment) */}
+        {/* <AdBanner className="!px-0" adSlot="9872037035" /> */}
 
         {/* Quick Add Section */}
         <div>
