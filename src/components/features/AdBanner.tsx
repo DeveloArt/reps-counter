@@ -1,51 +1,107 @@
-import { ExternalLink, X } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import { ExternalLink } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
 
 interface AdBannerProps {
   className?: string;
   adClient?: string;
   adSlot?: string;
+  adFormat?: 'auto' | 'horizontal' | 'rectangle' | 'vertical';
+  maxHeight?: number;
 }
 
 export function AdBanner({ 
   className = "", 
-  adClient = "ca-pub-XXXXXXXXXXXXXXXX", // Tutaj wpiszesz swój ID
-  adSlot = "1234567890" // Tutaj wpiszesz ID jednostki
+  adClient = "ca-pub-2472121183637363", 
+  adSlot = "3946895151",
+  adFormat = "horizontal",
+  maxHeight = 100
 }: AdBannerProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [isAdSenseLoaded, setIsAdSenseLoaded] = useState(false);
+  const insRef = useRef<HTMLModElement>(null);
+  const pushedRef = useRef(false);
 
   useEffect(() => {
-    try {
-      // @ts-ignore
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
-      setIsAdSenseLoaded(true);
-    } catch (e) {
-      console.error("AdSense error:", e);
-      setIsAdSenseLoaded(false);
-    }
-  }, []);
+    if (!isVisible) return;
+
+    let timeoutId: any;
+    let attempts = 0;
+    const maxAttempts = 15;
+
+    const tryInitAd = () => {
+      const insEl = insRef.current;
+      if (!insEl) return;
+
+      // Sprawdź czy reklama została już zainicjalizowana przez system AdSense
+      if (insEl.getAttribute('data-adsbygoogle-status') === 'done' || pushedRef.current) {
+        setIsAdSenseLoaded(true);
+        return;
+      }
+
+      // Sprawdź czy element ma poprawną szerokość (zapobiega błędowi availableWidth=0)
+      if (insEl.offsetWidth === 0) {
+        attempts++;
+        if (attempts < maxAttempts) {
+          timeoutId = setTimeout(tryInitAd, 150);
+        }
+        return;
+      }
+
+      try {
+        // Dodatkowa walidacja przed pushnięciem
+        if (insEl.getAttribute('data-adsbygoogle-status') !== 'done' && !pushedRef.current) {
+          pushedRef.current = true;
+          // @ts-ignore
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+          setIsAdSenseLoaded(true);
+        }
+      } catch (e: any) {
+        const errorMsg = e?.message || String(e);
+        // Tłumimy błędy ponownego ładowania tego samego slotu
+        if (!errorMsg.includes("already have ads")) {
+          console.warn("Google AdSense init warning:", errorMsg);
+        }
+        setIsAdSenseLoaded(true); // Zapobiegamy pokazywaniu fallbecka jeśli skrypt działa ale ma ostrzeżenia
+      }
+    };
+
+    // Opóźnienie startowe pozwalające na pełne ułożenie layoutu (layout pass)
+    timeoutId = setTimeout(tryInitAd, 200);
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [adSlot, isVisible]);
 
   if (!isVisible) return null;
 
   return (
     <div className={`px-4 py-2 w-full flex flex-col items-center ${className}`}>
       {/* Informacja o reklamie */}
-      <div className="w-full flex justify-between items-center px-2 mb-1">
+      <div className="w-full flex justify-start items-center px-2 mb-1">
         <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">Reklama</span>
-        <button onClick={() => setIsVisible(false)} className="text-muted-foreground hover:text-foreground">
-          <X className="size-3" />
-        </button>
       </div>
 
-      <div className="relative w-full bg-muted/20 border border-border/50 rounded-xl overflow-hidden min-h-[100px] flex items-center justify-center">
+      <div 
+        className="relative w-full bg-muted/20 border border-border/50 rounded-xl overflow-hidden min-h-[100px] flex items-center justify-center"
+        style={{ maxHeight: maxHeight ? `${maxHeight}px` : undefined }}
+      >
         {/* Prawdziwa jednostka AdSense */}
-        <ins className="adsbygoogle"
-             style={{ display: 'block', textAlign: 'center' }}
+        <ins 
+             ref={insRef}
+             key={adSlot}
+             className="adsbygoogle"
+             style={{ 
+               display: 'block', 
+               textAlign: 'center', 
+               width: '100%', 
+               minWidth: '250px', 
+               maxHeight: maxHeight ? `${maxHeight}px` : undefined 
+             }}
              data-ad-client={adClient}
              data-ad-slot={adSlot}
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
+             data-ad-format={adFormat}
+             data-full-width-responsive={adFormat === 'horizontal' ? "true" : "false"}></ins>
 
         {/* Fallback - widoczny jeśli AdSense nie zadziała lub nie ma klucza */}
         {!isAdSenseLoaded && (

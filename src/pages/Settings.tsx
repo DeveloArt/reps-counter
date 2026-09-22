@@ -1,6 +1,7 @@
 import { ArrowLeft, Sun, Moon, Monitor, Info, ChevronRight, Trash2, Download, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
+import { AdBanner } from '@/components/features/AdBanner';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@/context/ThemeContext';
@@ -243,6 +244,11 @@ export default function SettingsPage() {
             </div>
             <ChevronRight className="size-5 text-muted-foreground" />
           </button>
+        </div>
+
+        {/* Kwadratowa reklama AdSense */}
+        <div className="mt-4">
+          <AdBanner className="!px-0" adSlot="3946895151" adFormat="rectangle" maxHeight={300} />
         </div>
 
         {/* About Section */}

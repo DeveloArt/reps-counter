@@ -6,7 +6,6 @@ import { QuickLogModal } from '@/components/features/QuickLogModal';
 import { LogEntryModal } from '@/components/features/LogEntryModal';
 import { type Exercise } from '@/db/db';
 
-import { AdBanner } from '@/components/features/AdBanner';
 import { CookieBanner } from '@/components/ui/CookieBanner';
 
 export function Layout() {

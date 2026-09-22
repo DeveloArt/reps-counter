@@ -53,15 +53,7 @@
     "total": "Total",
     "totalReps": "Total Reps",
     "totalMinutes": "Total Minutes",
-    "active": "Active",
-    "recentEntries": "Recent entries",
-    "noEntries": "No entries in the selected period.",
-    "editEntry": "Edit entry",
-    "confirmDeleteEntry": "Are you sure you want to delete this entry?",
-    "date": "Date",
-    "amount": "Amount",
-    "exercise": "Exercise",
-    "loadMore": "Show more"
+    "active": "Active"
   },
   "goals": {
     "title": "Goals",
@@ -112,21 +104,7 @@
     "about": "About Reps Counter",
     "version": "Version",
     "terms": "Terms of Use",
-    "privacy": "Privacy Policy",
-    "productName": "FitCounter Pro",
-    "frequency": {
-      "min": "1 time",
-      "max": "10 times"
-    },
-    "alerts": {
-      "notificationsNotSupported": "This browser does not support desktop notifications",
-      "notificationsBlocked": "Notifications are blocked. Please enable them in your browser settings.",
-      "resetFailed": "Failed to reset data"
-    },
-    "languages": {
-      "english": "English",
-      "polish": "Polish"
-    }
+    "privacy": "Privacy Policy"
   },
   "modals": {
     "addExercise": {
@@ -181,12 +159,12 @@
       "content": "By accessing and using the Reps Counter application, you agree to be bound by these Terms of Use."
     },
     "section2": {
-      "title": "2. Disclaimer of Liability",
-      "content": "Reps Counter is provided \"as is\" without any warranties. We are not responsible for any damages, health issues, or data loss resulting from the use of this application. Use it at your own risk."
+      "title": "2. Disclaimer of Liability and Advertisements",
+      "content": "Reps Counter is provided \"as is\" without any warranties. We are not responsible for any damages, health issues, or data loss resulting from the use of this application. Advertisements shown in the application are served by third parties (Google AdSense), and we are not responsible for their content. Use it at your own risk."
     },
     "section3": {
-      "title": "3. Data Storage",
-      "content": "All data is stored locally on your device. We do not transmit, store, or process your personal data on external servers."
+      "title": "3. Data Storage and External Services",
+      "content": "Most of your workout and workout-related data is stored locally on your device. However, the app loads premium advertisement scripts from Google AdSense in order to fund and maintain the project."
     },
     "section4": {
       "title": "4. Dispute Resolution",
@@ -202,23 +180,23 @@
     "effectiveDate": "Effective Date",
     "section1": {
       "title": "1. Data Collection",
-      "content": "Reps Counter does not collect, transmit, or share any personal information. The application operates entirely offline."
+      "content": "Your fitness data, goals, and logs are not collected, processed or stored on any external servers by us. However, the application may collect or transmit anonymous technical data required to show advertisements and ensure correct page delivery."
     },
     "section2": {
       "title": "2. Local Storage",
       "content": "All workout logs, goals, and settings are stored locally in your device's memory (IndexedDB/LocalStorage). You have full control over your data."
     },
     "section3": {
-      "title": "3. No Third-Party Sharing",
-      "content": "Since we do not collect data, we do not share any data with third parties, advertisers, or analytics providers."
+      "title": "3. Personalized Ads and Cookies (Google AdSense)",
+      "content": "This application displays advertisements served by Google AdSense. Google, as a third-party vendor, uses cookies to serve ads on this site. Google's use of advertising cookies enables it and its partners to serve ads to users based on their visit to this site and/or other sites on the Internet. Users may opt out of personalized advertising by visiting Google Ads Settings (adssettings.google.com) or by visiting www.aboutads.info."
     },
     "section4": {
-      "title": "4. Data Security",
-      "content": "Your data remains on your device. We recommend securing your device with a passcode or biometrics to protect your information."
+      "title": "4. Data Security and Isolation",
+      "content": "Your local data is protected by safe browser sandbox mechanisms. We recommend securing your physical device using passcodes or biometric scanners to protect your data."
     },
     "section5": {
       "title": "5. Contact",
-      "content": "If you have any questions about this Privacy Policy, please contact us."
+      "content": "If you have any questions regarding this Privacy Policy, or want to discuss details of your privacy, please contact us at kontakt@licznikpowtorzen.pl."
     }
   }
 }

@@ -1,14 +1,14 @@
-import { ArrowLeft, TrendingUp, Dumbbell, Activity, Timer, Edit2, Trash2 } from 'lucide-react';
+import { ArrowLeft, TrendingUp, Dumbbell, Activity, Timer } from 'lucide-react';
 import { Area, AreaChart, Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
+import { AdBanner } from '@/components/features/AdBanner';
 import { useState, useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { db, type Exercise, type LogEntry } from '@/db/db';
+import { db } from '@/db/db';
 import { startOfDay, endOfDay, subDays, isSameDay, startOfMonth, endOfMonth, subMonths, startOfYear, endOfYear, subYears, eachMonthOfInterval, startOfWeek, endOfWeek, format, eachDayOfInterval, subWeeks } from 'date-fns';
 import { pl, enUS } from 'date-fns/locale';
 import { useNavigate } from 'react-router-dom';
-import { EditLogModal } from '@/components/features/EditLogModal';
 
 export default function StatsPage() {
   const { t, i18n } = useTranslation();
@@ -17,68 +17,7 @@ export default function StatsPage() {
   const [activityMetric, setActivityMetric] = useState<'reps' | 'time'>('reps');
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  const [selectedLogToEdit, setSelectedLogToEdit] = useState<LogEntry | null>(null);
-  const [selectedExerciseForLog, setSelectedExerciseForLog] = useState<Exercise | null>(null);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(10);
-
   const locale = i18n.language === 'pl' ? pl : enUS;
-
-  const getIcon = (iconName: string) => {
-    switch (iconName) {
-      case 'Dumbbell': return Dumbbell;
-      case 'Activity': return Activity;
-      case 'Timer': return Timer;
-      default: return Activity;
-    }
-  };
-
-  const formatLogValue = (value: number, unit: 'reps' | 'seconds') => {
-    if (unit === 'reps') {
-      return `${value} ${t('home.reps').toLowerCase()}`;
-    }
-    const minutes = Math.floor(value / 60);
-    const seconds = value % 60;
-    if (minutes > 0) {
-      return `${minutes}m ${seconds > 0 ? `${seconds}s` : ''}`;
-    }
-    return `${seconds}s`;
-  };
-
-  const formatLogDate = (dateVal: Date | number) => {
-    const date = new Date(dateVal);
-    const now = new Date();
-    if (isSameDay(date, now)) {
-      return i18n.language === 'pl' 
-        ? `Dzisiaj, ${format(date, 'HH:mm')}` 
-        : `Today, ${format(date, 'HH:mm')}`;
-    }
-    const yesterday = subDays(now, 1);
-    if (isSameDay(date, yesterday)) {
-      return i18n.language === 'pl' 
-        ? `Wczoraj, ${format(date, 'HH:mm')}` 
-        : `Yesterday, ${format(date, 'HH:mm')}`;
-    }
-    return format(date, 'd MMMM, HH:mm', { locale });
-  };
-
-  const handleEditClick = (log: LogEntry & { exercise: Exercise }) => {
-    setSelectedLogToEdit(log);
-    setSelectedExerciseForLog(log.exercise);
-    setIsEditModalOpen(true);
-  };
-
-  const handleDeleteDirect = async (e: React.MouseEvent, logId: string) => {
-    e.stopPropagation();
-    if (window.confirm(t('stats.confirmDeleteEntry'))) {
-      try {
-        await db.logs.delete(logId);
-      } catch (error) {
-        console.error("Failed to delete log:", error);
-        alert(t('common.error'));
-      }
-    }
-  };
 
   // Force update current date when app becomes visible or on interval
   useEffect(() => {
@@ -245,25 +184,13 @@ export default function StatsPage() {
         }
     }
 
-    const recentLogs = logs
-      .map(l => {
-        const ex = exercises.find(e => e.id === l.exerciseId);
-        return {
-          ...l,
-          exercise: ex
-        };
-      })
-      .filter((l): l is LogEntry & { exercise: Exercise } => !!l.exercise)
-      .sort((a, b) => b.timestamp - a.timestamp);
-
     return {
         totalReps,
         avgRepsPerDay,
         totalMinutes,
         avgMinutesPerDay,
         dailyData,
-        weeklyData,
-        recentLogs
+        weeklyData
     };
   }, [activeTab, activityMetric, currentDate, locale]);
 
@@ -422,6 +349,9 @@ export default function StatsPage() {
           </div>
         </div>
 
+        {/* Ad Banner pod dzienna aktywnoscia */}
+        <AdBanner className="!px-0 mt-2" adSlot="3946895151" />
+
         {/* Bar Chart Section */}
         <div className="flex flex-col gap-4 bg-card p-4 rounded-xl shadow-sm border border-border">
           <div className="flex flex-col gap-4">
@@ -478,84 +408,7 @@ export default function StatsPage() {
             </ResponsiveContainer>
           </div>
         </div>
-
-        {/* Recent Entries Section */}
-        <div className="flex flex-col gap-4 bg-card p-4 rounded-xl shadow-sm border border-border">
-          <p className="text-foreground text-base font-semibold">{t('stats.recentEntries')}</p>
-          
-          {!stats?.recentLogs || stats.recentLogs.length === 0 ? (
-            <p className="text-muted-foreground text-sm text-center py-4">{t('stats.noEntries')}</p>
-          ) : (
-            <div className="flex flex-col gap-3">
-              {stats.recentLogs.slice(0, visibleCount).map((log) => {
-                const Icon = getIcon(log.exercise.icon);
-                return (
-                  <div 
-                    key={log.id} 
-                    className="flex items-center justify-between p-3 rounded-xl bg-muted/40 hover:bg-muted/65 transition-colors border border-transparent hover:border-border group animate-fade-in"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div 
-                        className="size-10 rounded-lg flex items-center justify-center shrink-0" 
-                        style={{ backgroundColor: `${log.exercise.color}15`, color: log.exercise.color }}
-                      >
-                        <Icon className="size-5" />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-bold text-foreground leading-snug">{log.exercise.name}</span>
-                        <span className="text-xs text-muted-foreground">{formatLogDate(log.date)}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-3 shrink-0">
-                      <span className="text-sm font-bold text-foreground">
-                        {formatLogValue(log.value, log.exercise.unit)}
-                      </span>
-                      
-                      <div className="flex items-center gap-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
-                          onClick={() => handleEditClick(log)}
-                          className="p-1.5 rounded-lg text-muted-foreground hover:bg-primary/10 hover:text-primary transition-colors cursor-pointer"
-                          title={t('common.edit')}
-                        >
-                          <Edit2 className="size-4" />
-                        </button>
-                        <button
-                          onClick={(e) => handleDeleteDirect(e, log.id)}
-                          className="p-1.5 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors cursor-pointer"
-                          title={t('common.delete')}
-                        >
-                          <Trash2 className="size-4" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-
-              {stats.recentLogs.length > visibleCount && (
-                <button
-                  onClick={() => setVisibleCount(prev => prev + 10)}
-                  className="w-full py-2.5 mt-2 rounded-xl border border-dashed border-border hover:bg-muted text-muted-foreground hover:text-foreground text-xs font-bold transition-colors cursor-pointer"
-                >
-                  {t('stats.loadMore')}
-                </button>
-              )}
-            </div>
-          )}
-        </div>
       </div>
-
-      <EditLogModal
-        isOpen={isEditModalOpen}
-        onClose={() => {
-          setIsEditModalOpen(false);
-          setSelectedLogToEdit(null);
-          setSelectedExerciseForLog(null);
-        }}
-        logEntry={selectedLogToEdit}
-        exercise={selectedExerciseForLog}
-      />
     </div>
   );
 }
