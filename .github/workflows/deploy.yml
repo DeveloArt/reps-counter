@@ -17,7 +17,7 @@ jobs:
       - name: ⚙️ Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Najnowsza stabilna wersja Node.js
+          node-version: '22'
           cache: 'npm'
 
       - name: 📦 Install dependencies
@@ -27,7 +27,7 @@ jobs:
         run: npm run build
 
       - name: 🚀 Sync files to Main Domain
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
@@ -46,7 +46,7 @@ jobs:
         run: sleep 10
 
       - name: 🚀 Sync files to Subdomain
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
