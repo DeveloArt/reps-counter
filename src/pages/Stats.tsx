@@ -2,7 +2,6 @@ import { ArrowLeft, TrendingUp, Dumbbell, Activity, Timer } from 'lucide-react';
 import { Area, AreaChart, Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
-import { AdBanner } from '@/components/features/AdBanner';
 import { useState, useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/db/db';
@@ -348,9 +347,6 @@ export default function StatsPage() {
             </ResponsiveContainer>
           </div>
         </div>
-
-        {/* Ad Banner pod dzienna aktywnoscia */}
-        <AdBanner className="!px-0 mt-2" adSlot="3946895151" />
 
         {/* Bar Chart Section */}
         <div className="flex flex-col gap-4 bg-card p-4 rounded-xl shadow-sm border border-border">

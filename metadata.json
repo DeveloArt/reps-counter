@@ -1,5 +1,5 @@
 {
-  "name": "reps counter",
-  "description": "",
+  "name": "Licznik Powtórzeń",
+  "description": "Licznik Powtórzeń - Aplikacja PWA do śledzenia mikrotrenigów i codziennych nawyków treningowych (pompki, przysiady, podciągnięcia). Działa offline, 100% prywatności.",
   "requestFramePermissions": []
 }
