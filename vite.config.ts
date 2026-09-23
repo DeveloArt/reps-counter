@@ -39,6 +39,7 @@ export default defineConfig(({mode}) => {
     ],
     define: {
       'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
+      'process.env.APP_ENV': JSON.stringify(env.APP_ENV || env.VITE_APP_ENV || ''),
     },
     resolve: {
       alias: {

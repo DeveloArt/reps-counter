@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Dumbbell, Activity, Target, Smartphone, Zap, ShieldCheck, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { APP_URL, IS_PRODUCTION } from '@/lib/config';
 
 export default function LandingPage() {
-  const APP_URL = "https://pwa.licznikpowtorzen.pl";
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans selection:bg-primary/30">
@@ -190,7 +190,7 @@ export default function LandingPage() {
             Zainstaluj aplikację bezpośrednio z przeglądarki na ekranie głównym swojego telefonu.
           </p>
           <div className="flex items-center justify-center gap-2 bg-muted p-4 rounded-xl font-mono text-sm mb-6 select-all">
-            pwa.licznikpowtorzen.pl
+            {IS_PRODUCTION ? 'pwa.licznikpowtorzen.pl' : 'localhost:3000/app (lokalnie)'}
           </div>
           <a 
             href={APP_URL}
