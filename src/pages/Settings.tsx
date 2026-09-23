@@ -1,7 +1,6 @@
 import { ArrowLeft, Sun, Moon, Monitor, Info, ChevronRight, Trash2, Download, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
-import { AdBanner } from '@/components/features/AdBanner';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@/context/ThemeContext';
@@ -246,11 +245,6 @@ export default function SettingsPage() {
           </button>
         </div>
 
-        {/* Kwadratowa reklama AdSense */}
-        <div className="mt-4">
-          <AdBanner className="!px-0" adSlot="3946895151" adFormat="rectangle" maxHeight={300} />
-        </div>
-
         {/* About Section */}
         <div className="px-4 pt-8 pb-2">
           <h3 className="text-foreground text-sm font-semibold uppercase tracking-wider opacity-60">{t('settings.about')}</h3>
@@ -258,7 +252,7 @@ export default function SettingsPage() {
         <div className="mx-4 mb-8 p-6 rounded-xl bg-gradient-to-br from-primary to-primary/80 text-white relative overflow-hidden shadow-lg">
           <div className="relative z-10">
             <h4 className="text-lg font-bold">RepsCounter Pro</h4>
-            <p className="text-sm opacity-90 mt-1">{t('settings.version')} 2.4.1 (Build 402)</p>
+            <p className="text-sm opacity-90 mt-1">{t('settings.version')} 1.0.1</p>
             <div className="mt-4 flex gap-3">
               <Link to="/app/terms" className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-xs font-medium backdrop-blur-sm transition-colors">{t('settings.terms')}</Link>
               <Link to="/app/privacy" className="bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-xs font-medium backdrop-blur-sm transition-colors">{t('settings.privacy')}</Link>
