@@ -204,7 +204,7 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="py-12 border-t border-border text-center text-muted-foreground text-sm">
-        <p className="mb-4">© {new Date().getFullYear()} LicznikPowtórzeń.pl • v1.0.1. Zbudowane dla lepszych nawyków.</p>
+        <p className="mb-4">© {new Date().getFullYear()} LicznikPowtórzeń.pl • v1.0.2. Zbudowane dla lepszych nawyków.</p>
         <div className="flex justify-center gap-6 text-xs mb-4">
           <Link to="/app/terms" className="hover:text-foreground transition-colors font-semibold">Regulamin</Link>
           <Link to="/app/privacy" className="hover:text-foreground transition-colors font-semibold">Polityka Prywatności</Link>
