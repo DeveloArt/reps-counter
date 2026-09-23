@@ -25,6 +25,8 @@ jobs:
 
       - name: 🏗️ Build project
         run: npm run build
+        env:
+          VITE_APP_ENV: production
 
       - name: 🚀 Sync files to Main Domain
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
