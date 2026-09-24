@@ -1,0 +1,216 @@
+{
+  "common": {
+    "back": "Atrás",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Añadir",
+    "close": "Cerrar",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito"
+  },
+  "nav": {
+    "home": "Inicio",
+    "stats": "Estadísticas",
+    "add": "Añadir",
+    "goals": "Objetivos",
+    "settings": "Ajustes",
+    "logWorkout": "Registrar entrenamiento"
+  },
+  "home": {
+    "hello": "¡Hola!",
+    "streak": "días seguidos",
+    "complete": "Completado",
+    "keepGoing": "Vas muy bien, ¡sigue así!",
+    "progressZero": "Solo empieza, haz al menos una.",
+    "progressStarted": "Bien, va bien. Ya ves que lograste empezar, ¡eres genial! ¡Hagamos unas pocas más!",
+    "viewAll": "Ver todo",
+    "dailyGoal": "Objetivo diario",
+    "noActiveGoals": "Sin objetivos activos",
+    "setGoalsPrompt": "Toca aquí para crear un objetivo en la pestaña Objetivos.",
+    "goalReached": "¡Objetivo de hoy completado! ¡Buen trabajo!",
+    "quickAdd": "Añadir rápido",
+    "weeklyPerformance": "Rendimiento semanal",
+    "addExercise": "Añadir ejercicio",
+    "logWorkout": "Registrar entrenamiento",
+    "reps": "Reps",
+    "mins": "Mins",
+    "seconds": "Segundos",
+    "confirmDeleteExercise": "¿Seguro que quieres eliminar este ejercicio?"
+  },
+  "stats": {
+    "title": "Estadísticas",
+    "week": "Semana",
+    "month": "Mes",
+    "year": "Año",
+    "totalExercises": "Ejercicios totales",
+    "avgPerDay": "Promedio por día",
+    "totalVolume": "Volumen total",
+    "bestDay": "Mejor día",
+    "dailyActivity": "Actividad diaria",
+    "weeklyComparison": "Comparación semanal",
+    "overallProgress": "Progreso general",
+    "perExerciseBreakdown": "Desglose por ejercicio",
+    "vsLastPeriod": "vs periodo anterior",
+    "repsTotal": "Reps totales",
+    "total": "Total",
+    "totalReps": "Reps totales",
+    "totalMinutes": "Minutos totales",
+    "active": "Activo"
+  },
+  "goals": {
+    "title": "Objetivos",
+    "overallProgress": "Progreso general",
+    "activeGoals": "Objetivos activos",
+    "addGoal": "Añadir objetivo",
+    "goalHistory": "Historial de objetivos",
+    "history": "Historial",
+    "completed": "Completados",
+    "inProgress": "En progreso",
+    "goal": "Objetivo",
+    "keepGoing": "¡Sigue adelante!",
+    "noActiveGoals": "No hay objetivos activos.",
+    "createOne": "¡Crea uno!",
+    "createFirst": "¡Crea tu primer objetivo!",
+    "confirmDelete": "¿Seguro que quieres eliminar este objetivo?",
+    "noGoals": "No hay objetivos activos.",
+    "when": "Cuando",
+    "dailyGoal": "Objetivo diario",
+    "weeklyGoal": "Objetivo semanal",
+    "daily": "Diario",
+    "weekly": "Semanal",
+    "enterTitle": "Hábito a incorporar",
+    "triggerLabel": "Disparador (Cuando yo...)",
+    "triggerPlaceholder": "ej. Enciendo el microondas",
+    "trigger": "Disparador",
+    "weekDays": [
+      "Lu",
+      "Ma",
+      "Mi",
+      "Ju",
+      "Vi",
+      "Sá",
+      "Do"
+    ]
+  },
+  "settings": {
+    "title": "Ajustes",
+    "reminders": "Recordatorios",
+    "dailyNotifications": "Notificaciones diarias",
+    "dailyNotificationsDesc": "Recibe avisos para registrar tus ejercicios",
+    "reminderFrequency": "Frecuencia de recordatorios",
+    "reminderTime": "Hora del recordatorio",
+    "reminderTimeDesc": "Cuándo enviar el primer recordatorio",
+    "appearance": "Apariencia",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema",
+    "language": "Idioma",
+    "dataManagement": "Gestión de datos",
+    "exportCSV": "Exportar a CSV",
+    "exportCSVDesc": "Copia de seguridad de tus datos locales",
+    "importData": "Importar datos",
+    "importDataDesc": "Restaurar desde archivo .csv",
+    "resetData": "Restablecer todos los datos",
+    "resetDataDesc": "Esta acción es permanente",
+    "about": "Acerca de Reps Counter",
+    "version": "Versión",
+    "terms": "Términos de uso",
+    "privacy": "Política de privacidad"
+  },
+  "modals": {
+    "addExercise": {
+      "title": "Nuevo ejercicio",
+      "nameLabel": "Nombre del ejercicio",
+      "namePlaceholder": "Nombre del ejercicio",
+      "colorLabel": "Color",
+      "color": "Color",
+      "iconLabel": "Icono",
+      "icon": "Icono",
+      "unitLabel": "Unidad",
+      "unit": "Unidad",
+      "reps": "Reps",
+      "time": "Tiempo",
+      "create": "Crear ejercicio"
+    },
+    "logEntry": {
+      "title": "Registrar entrada",
+      "addNewEntry": "Añadir nueva entrada",
+      "reps": "Reps",
+      "time": "Tiempo",
+      "manualEntry": "Entrada manual (segundos)",
+      "saveWorkout": "Guardar entrenamiento",
+      "start": "Iniciar",
+      "stop": "Detener",
+      "reset": "Reiniciar",
+      "save": "Guardar",
+      "cancel": "Cancelar"
+    },
+    "addGoal": {
+      "title": "Añadir nuevo objetivo",
+      "goalType": "Tipo de objetivo",
+      "daily": "Diario",
+      "weekly": "Semanal",
+      "targetExercise": "Ejercicio objetivo",
+      "metric": "Métrica",
+      "target": "Meta",
+      "goalTitle": "Hábito a incorporar",
+      "triggerLabel": "Disparador (Cuando yo...)",
+      "triggerPlaceholder": "ej. Enciendo el microondas",
+      "create": "Crear objetivo",
+      "selectExercise": "Selecciona un ejercicio",
+      "enterTitle": "Normalmente después de pulsar inicio en el microondas hago...",
+      "newGoal": "Nuevo objetivo"
+    }
+  },
+  "terms": {
+    "title": "Términos de uso",
+    "effectiveDate": "Fecha de entrada en vigor",
+    "section1": {
+      "title": "1. Aceptación de los términos",
+      "content": "Al acceder y utilizar la aplicación Reps Counter, aceptas quedar sujeto a estos Términos de uso."
+    },
+    "section2": {
+      "title": "2. Exención de responsabilidad y publicidad",
+      "content": "Reps Counter se proporciona \"tal cual\" sin garantías de ningún tipo. No somos responsables de daños, problemas de salud o pérdidas de datos derivados del uso de esta aplicación. Los anuncios mostrados provienen de terceros (Google AdSense) y no nos hacemos responsables de su contenido. El uso es bajo tu propia responsabilidad."
+    },
+    "section3": {
+      "title": "3. Almacenamiento de datos y servicios externos",
+      "content": "La mayor parte de los datos de tus entrenamientos se almacenan localmente en tu dispositivo. Sin embargo, la app carga scripts de publicidad de Google AdSense para financiar y mantener el proyecto."
+    },
+    "section4": {
+      "title": "4. Resolución de disputas",
+      "content": "Cualquier controversia derivada del uso de esta aplicación se resolverá exclusivamente en los tribunales competentes de Gdańsk, Polonia."
+    },
+    "section5": {
+      "title": "5. Modificaciones de los términos",
+      "content": "Nos reservamos el derecho de modificar estos términos en cualquier momento. El uso continuado de la aplicación constituye la aceptación de los nuevos términos."
+    }
+  },
+  "privacy": {
+    "title": "Política de privacidad",
+    "effectiveDate": "Fecha de entrada en vigor",
+    "section1": {
+      "title": "1. Recopilación de datos",
+      "content": "Tus datos de entrenamiento, objetivos y registros no se recopilan, procesan ni almacenan en servidores externos por nuestra parte. No obstante, la aplicación puede recopilar o transmitir datos técnicos anónimos requeridos para mostrar anuncios y asegurar la correcta entrega de las páginas."
+    },
+    "section2": {
+      "title": "2. Almacenamiento local",
+      "content": "Todos los registros de entrenamiento, objetivos y configuraciones se almacenan localmente en la memoria de tu dispositivo (IndexedDB/LocalStorage). Tienes control total sobre tus datos."
+    },
+    "section3": {
+      "title": "3. Anuncios personalizados y cookies (Google AdSense)",
+      "content": "Esta aplicación muestra anuncios servidos por Google AdSense. Google utiliza cookies para mostrar anuncios en este sitio. El uso de cookies publicitarias permite a Google y a sus socios mostrar anuncios a los usuarios según sus visitas a este y otros sitios en Internet. Los usuarios pueden inhabilitar la publicidad personalizada en Google Ads Settings (adssettings.google.com) o en www.aboutads.info."
+    },
+    "section4": {
+      "title": "4. Seguridad y aislamiento de datos",
+      "content": "Tus datos locales están protegidos por los mecanismos seguros del navegador. Recomendamos proteger tu dispositivo físico mediante contraseñas o lectores biométricos."
+    },
+    "section5": {
+      "title": "5. Contacto",
+      "content": "Si tienes preguntas sobre esta Política de privacidad o deseas más detalles, contáctanos en kontakt@licznikpowtorzen.pl."
+    }
+  }
+}

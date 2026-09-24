@@ -23,9 +23,14 @@
     "hello": "Hello!",
     "streak": "days streak",
     "complete": "Complete",
-    "keepGoing": "Keep going! You're doing great today.",
+    "keepGoing": "You're doing great, keep going.",
+    "progressZero": "Just start, just do one.",
+    "progressStarted": "Okay, it's good. As you can see, you managed to start, you're awesome! Let's do a few more.",
     "viewAll": "View All",
     "dailyGoal": "Daily Goal",
+    "noActiveGoals": "No active goals",
+    "setGoalsPrompt": "Tap here to create a goal in the Goals tab.",
+    "goalReached": "Goal achieved today! Great job!",
     "quickAdd": "Quick Add",
     "weeklyPerformance": "Weekly Performance",
     "addExercise": "Add Exercise",
@@ -79,7 +84,16 @@
     "enterTitle": "Habit to add",
     "triggerLabel": "Trigger (When I...)",
     "triggerPlaceholder": "e.g. Turn on the microwave",
-    "trigger": "Trigger"
+    "trigger": "Trigger",
+    "weekDays": [
+      "Mo",
+      "Tu",
+      "We",
+      "Th",
+      "Fr",
+      "Sa",
+      "Su"
+    ]
   },
   "settings": {
     "title": "Settings",

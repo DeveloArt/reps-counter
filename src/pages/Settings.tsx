@@ -201,26 +201,32 @@ export default function SettingsPage() {
           <h3 className="text-foreground text-sm font-semibold uppercase tracking-wider opacity-60">{t('settings.language')}</h3>
         </div>
         <div className="px-4 grid grid-cols-2 gap-3">
-          <button 
-            onClick={() => changeLanguage('en')}
-            className={cn(
-              "flex items-center gap-3 p-4 rounded-xl border-2 transition-all",
-              i18n.language === 'en' ? "bg-primary/5 border-primary" : "border-transparent bg-card hover:bg-muted"
-            )}
-          >
-            <div className="size-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-xs">EN</div>
-            <span className={cn("text-sm font-medium", i18n.language === 'en' ? "font-bold text-foreground" : "text-muted-foreground")}>English</span>
-          </button>
-          <button 
-            onClick={() => changeLanguage('pl')}
-            className={cn(
-              "flex items-center gap-3 p-4 rounded-xl border-2 transition-all",
-              i18n.language === 'pl' ? "bg-primary/5 border-primary" : "border-transparent bg-card hover:bg-muted"
-            )}
-          >
-            <div className="size-8 rounded-full bg-red-100 flex items-center justify-center text-red-600 font-bold text-xs">PL</div>
-            <span className={cn("text-sm font-medium", i18n.language === 'pl' ? "font-bold text-foreground" : "text-muted-foreground")}>Polski</span>
-          </button>
+          {[
+            { code: 'pl', label: 'Polski', badge: 'PL', color: 'bg-red-100 text-red-600 dark:bg-red-950 dark:text-red-400' },
+            { code: 'en', label: 'English', badge: 'EN', color: 'bg-blue-100 text-blue-600 dark:bg-blue-950 dark:text-blue-400' },
+            { code: 'es', label: 'Español', badge: 'ES', color: 'bg-amber-100 text-amber-600 dark:bg-amber-950 dark:text-amber-400' },
+            { code: 'de', label: 'Deutsch', badge: 'DE', color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-400' },
+            { code: 'fr', label: 'Français', badge: 'FR', color: 'bg-indigo-100 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-400' },
+          ].map((lang) => {
+            const isSelected = (i18n.language || '').startsWith(lang.code);
+            return (
+              <button 
+                key={lang.code}
+                onClick={() => changeLanguage(lang.code)}
+                className={cn(
+                  "flex items-center gap-3 p-3.5 rounded-xl border-2 transition-all",
+                  isSelected ? "bg-primary/5 border-primary shadow-sm" : "border-border/60 bg-card hover:bg-muted"
+                )}
+              >
+                <div className={cn("size-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0", lang.color)}>
+                  {lang.badge}
+                </div>
+                <span className={cn("text-sm truncate", isSelected ? "font-bold text-foreground" : "font-medium text-muted-foreground")}>
+                  {lang.label}
+                </span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Data Management Section */}

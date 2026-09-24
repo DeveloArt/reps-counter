@@ -1,0 +1,216 @@
+{
+  "common": {
+    "back": "Zurück",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "add": "Hinzufügen",
+    "close": "Schließen",
+    "loading": "Wird geladen...",
+    "error": "Fehler",
+    "success": "Erfolg"
+  },
+  "nav": {
+    "home": "Start",
+    "stats": "Statistiken",
+    "add": "Hinzufügen",
+    "goals": "Ziele",
+    "settings": "Einstellungen",
+    "logWorkout": "Training eintragen"
+  },
+  "home": {
+    "hello": "Hallo!",
+    "streak": "Tage in Folge",
+    "complete": "Abgeschlossen",
+    "keepGoing": "Du machst das großartig, weiter so.",
+    "progressZero": "Fang einfach an, mach nur eine Wiederholung.",
+    "progressStarted": "Okay, sieht gut aus. Du siehst, du hast es geschafft anzufangen, du bist super! Lass uns noch ein paar machen!",
+    "viewAll": "Alle anzeigen",
+    "dailyGoal": "Tagesziel",
+    "noActiveGoals": "Keine aktiven Ziele",
+    "setGoalsPrompt": "Tippe hier, um im Reiter Ziele ein neues Ziel festzulegen.",
+    "goalReached": "Heutiges Ziel erreicht! Glückwunsch!",
+    "quickAdd": "Schnell hinzufügen",
+    "weeklyPerformance": "Wochenleistung",
+    "addExercise": "Übung hinzufügen",
+    "logWorkout": "Training eintragen",
+    "reps": "Wdh.",
+    "mins": "Min.",
+    "seconds": "Sekunden",
+    "confirmDeleteExercise": "Möchtest du diese Übung wirklich löschen?"
+  },
+  "stats": {
+    "title": "Statistiken",
+    "week": "Woche",
+    "month": "Monat",
+    "year": "Jahr",
+    "totalExercises": "Übungen gesamt",
+    "avgPerDay": "Ø pro Tag",
+    "totalVolume": "Gesamtvolumen",
+    "bestDay": "Bester Tag",
+    "dailyActivity": "Tagesaktivität",
+    "weeklyComparison": "Wochenvergleich",
+    "overallProgress": "Gesamtfortschritt",
+    "perExerciseBreakdown": "Aufschlüsselung nach Übung",
+    "vsLastPeriod": "im Vergleich zum Vorzeitraum",
+    "repsTotal": "Wiederholungen gesamt",
+    "total": "Gesamt",
+    "totalReps": "Wdh. gesamt",
+    "totalMinutes": "Minuten gesamt",
+    "active": "Aktiv"
+  },
+  "goals": {
+    "title": "Ziele",
+    "overallProgress": "Gesamtfortschritt",
+    "activeGoals": "Aktive Ziele",
+    "addGoal": "Ziel hinzufügen",
+    "goalHistory": "Ziel-Verlauf",
+    "history": "Verlauf",
+    "completed": "Abgeschlossen",
+    "inProgress": "In Bearbeitung",
+    "goal": "Ziel",
+    "keepGoing": "Dranbleiben!",
+    "noActiveGoals": "Keine aktiven Ziele vorhanden.",
+    "createOne": "Erstelle eins!",
+    "createFirst": "Erstelle dein erstes Ziel!",
+    "confirmDelete": "Möchtest du dieses Ziel wirklich löschen?",
+    "noGoals": "Keine aktiven Ziele vorhanden.",
+    "when": "Wenn",
+    "dailyGoal": "Tagesziel",
+    "weeklyGoal": "Wochenziel",
+    "daily": "Täglich",
+    "weekly": "Wöchentlich",
+    "enterTitle": "Neue Gewohnheit",
+    "triggerLabel": "Auslöser (Wenn ich...)",
+    "triggerPlaceholder": "z. B. Die Mikrowelle einschalte",
+    "trigger": "Auslöser",
+    "weekDays": [
+      "Mo",
+      "Di",
+      "Mi",
+      "Do",
+      "Fr",
+      "Sa",
+      "So"
+    ]
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "reminders": "Erinnerungen",
+    "dailyNotifications": "Tägliche Benachrichtigungen",
+    "dailyNotificationsDesc": "Erhalte Erinnerungen zur Erfassung deiner Fitnessdaten",
+    "reminderFrequency": "Erinnerungshäufigkeit",
+    "reminderTime": "Erinnerungszeit",
+    "reminderTimeDesc": "Wann die erste Erinnerung gesendet wird",
+    "appearance": "Erscheinungsbild",
+    "light": "Hell",
+    "dark": "Dunkel",
+    "system": "System",
+    "language": "Sprache",
+    "dataManagement": "Datenverwaltung",
+    "exportCSV": "Als CSV exportieren",
+    "exportCSVDesc": "Sichere deine lokalen Daten",
+    "importData": "Daten importieren",
+    "importDataDesc": "Aus einer .csv-Datei wiederherstellen",
+    "resetData": "Alle Daten zurücksetzen",
+    "resetDataDesc": "Diese Aktion kann nicht rückgängig gemacht werden",
+    "about": "Über Reps Counter",
+    "version": "Version",
+    "terms": "Nutzungsbedingungen",
+    "privacy": "Datenschutzerklärung"
+  },
+  "modals": {
+    "addExercise": {
+      "title": "Neue Übung",
+      "nameLabel": "Name der Übung",
+      "namePlaceholder": "Name der Übung",
+      "colorLabel": "Farbe",
+      "color": "Farbe",
+      "iconLabel": "Symbol",
+      "icon": "Symbol",
+      "unitLabel": "Einheit",
+      "unit": "Einheit",
+      "reps": "Wdh.",
+      "time": "Zeit",
+      "create": "Übung erstellen"
+    },
+    "logEntry": {
+      "title": "Eintrag erfassen",
+      "addNewEntry": "Neuen Eintrag hinzufügen",
+      "reps": "Wdh.",
+      "time": "Zeit",
+      "manualEntry": "Manuelle Eingabe (Sekunden)",
+      "saveWorkout": "Training speichern",
+      "start": "Start",
+      "stop": "Stopp",
+      "reset": "Zurücksetzen",
+      "save": "Speichern",
+      "cancel": "Abbrechen"
+    },
+    "addGoal": {
+      "title": "Neues Ziel hinzufügen",
+      "goalType": "Ziel-Typ",
+      "daily": "Täglich",
+      "weekly": "Wöchentlich",
+      "targetExercise": "Ziel-Übung",
+      "metric": "Messgröße",
+      "target": "Zielwert",
+      "goalTitle": "Neue Gewohnheit",
+      "triggerLabel": "Auslöser (Wenn ich...)",
+      "triggerPlaceholder": "z. B. Die Mikrowelle einschalte",
+      "create": "Ziel erstellen",
+      "selectExercise": "Wähle eine Übung",
+      "enterTitle": "Normalerweise mache ich nach dem Starten der Mikrowelle...",
+      "newGoal": "Neues Ziel"
+    }
+  },
+  "terms": {
+    "title": "Nutzungsbedingungen",
+    "effectiveDate": "Gültig ab",
+    "section1": {
+      "title": "1. Zustimmung zu den Bedingungen",
+      "content": "Durch den Zugriff auf und die Nutzung der Anwendung Reps Counter erklärst du dich mit diesen Nutzungsbedingungen einverstanden."
+    },
+    "section2": {
+      "title": "2. Haftungsausschluss und Werbung",
+      "content": "Reps Counter wird \"wie besehen\" ohne jegliche Gewährleistung bereitgestellt. Wir haften nicht für Schäden, Gesundheitsprobleme oder Datenverlust, die sich aus der Nutzung dieser Anwendung ergeben. Eingeblendete Werbeanzeigen stammen von Drittanbietern (Google AdSense); für deren Inhalte übernehmen wir keine Verantwortung. Die Nutzung erfolgt auf eigenes Risiko."
+    },
+    "section3": {
+      "title": "3. Datenspeicherung und externe Dienste",
+      "content": "Die meisten deiner Trainingsdaten werden lokal auf deinem Gerät gespeichert. Die App lädt jedoch Werbeskripte von Google AdSense, um den Betrieb und die Weiterentwicklung des Projekts zu finanzieren."
+    },
+    "section4": {
+      "title": "4. Gerichtsstand",
+      "content": "Jegliche Streitigkeiten aus der Nutzung dieser Anwendung unterliegen ausschließlich den zuständigen Gerichten in Danzig (Gdańsk), Polen."
+    },
+    "section5": {
+      "title": "5. Änderungen der Bedingungen",
+      "content": "Wir behalten uns das Recht vor, diese Bedingungen jederzeit zu ändern. Die weitere Nutzung der Anwendung gilt als Annahme der aktualisierten Bedingungen."
+    }
+  },
+  "privacy": {
+    "title": "Datenschutzerklärung",
+    "effectiveDate": "Gültig ab",
+    "section1": {
+      "title": "1. Datenerhebung",
+      "content": "Deine Trainingsdaten, Ziele und Einträge werden von uns nicht auf externen Servern erhoben, verarbeitet oder gespeichert. Die Anwendung kann jedoch anonyme technische Daten übertragen, die für die Anzeigenschaltung und die ordnungsgemäße Bereitstellung der Website erforderlich sind."
+    },
+    "section2": {
+      "title": "2. Lokale Speicherung",
+      "content": "Alle Trainingsprotokolle, Ziele und Einstellungen werden lokal im Speicher deines Geräts (IndexedDB/LocalStorage) gesichert. Du behältst die volle Kontrolle über deine Daten."
+    },
+    "section3": {
+      "title": "3. Personalisierte Werbung und Cookies (Google AdSense)",
+      "content": "Diese Anwendung blendet Werbung über Google AdSense ein. Google verwendet Cookies, um Anzeigen basierend auf früheren Besuchen auf dieser oder anderen Websites zu schalten. Nutzer können personalisierte Werbung in den Google-Anzeigeneinstellungen (adssettings.google.com) oder unter www.aboutads.info deaktivieren."
+    },
+    "section4": {
+      "title": "4. Datensicherheit und Isolation",
+      "content": "Deine lokalen Daten sind durch Sandbox-Mechanismen moderner Webbrowser geschützt. Wir empfehlen, dein physisches Gerät zusätzlich mit PIN oder biometrischer Sperre zu sichern."
+    },
+    "section5": {
+      "title": "5. Kontakt",
+      "content": "Wenn du Fragen zu dieser Datenschutzerklärung hast, wende dich gerne an kontakt@licznikpowtorzen.pl."
+    }
+  }
+}

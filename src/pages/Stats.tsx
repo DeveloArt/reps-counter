@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/db/db';
 import { startOfDay, endOfDay, subDays, isSameDay, startOfMonth, endOfMonth, subMonths, startOfYear, endOfYear, subYears, eachMonthOfInterval, startOfWeek, endOfWeek, format, eachDayOfInterval, subWeeks } from 'date-fns';
-import { pl, enUS } from 'date-fns/locale';
+import { getDateLocale } from '@/lib/dateLocale';
 import { useNavigate } from 'react-router-dom';
 
 export default function StatsPage() {
@@ -17,7 +17,7 @@ export default function StatsPage() {
   const [activityMetric, setActivityMetric] = useState<'reps' | 'time'>('reps');
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  const locale = i18n.language === 'pl' ? pl : enUS;
+  const locale = getDateLocale(i18n.language);
 
   // Force update current date when app becomes visible or on interval
   useEffect(() => {

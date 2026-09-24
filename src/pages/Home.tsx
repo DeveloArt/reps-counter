@@ -5,8 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, type Exercise } from '@/db/db';
 import { startOfDay, endOfDay, subDays, isSameDay, format, eachDayOfInterval } from 'date-fns';
+import { getDateLocale } from '@/lib/dateLocale';
 import { cn } from '@/lib/utils';
-import { useOutletContext } from 'react-router-dom';
+import { Link, useLocation, useOutletContext } from 'react-router-dom';
 import { AdBanner } from '@/components/features/AdBanner';
 import { ProfilePromoBanner } from '@/components/features/ProfilePromoBanner';
 
@@ -16,8 +17,12 @@ interface LayoutContext {
 }
 
 export default function HomePage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { openAddExercise, openLogEntry } = useOutletContext<LayoutContext>();
+  const location = useLocation();
+  const isAppUrl = location.pathname.startsWith('/app');
+  const goalsPath = isAppUrl ? '/app/goals' : '/goals';
+
   const [weeklyMetric, setWeeklyMetric] = useState<'reps' | 'time'>('reps');
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -116,9 +121,10 @@ export default function HomePage() {
             }
             return acc;
         }, 0);
+        const dateLocale = getDateLocale(i18n.language);
         return {
-            day: format(day, 'EEEEE'), // Single letter day
-            fullDay: format(day, 'EEE'),
+            day: format(day, 'EEEEE', { locale: dateLocale }), // Single letter day
+            fullDay: format(day, 'EEE', { locale: dateLocale }),
             value: Math.round(value),
             isToday: isSameDay(day, currentDate)
         };
@@ -164,17 +170,15 @@ export default function HomePage() {
     return currentStreak;
   }, [currentDate]);
 
-  // Get user settings for goals (fallback)
-  const settings = useLiveQuery(() => db.settings.get(1));
-  const dailyGoals = useLiveQuery(() => db.goals.filter(g => g.type === 'daily' && g.isActive).toArray());
-
-  const dailyGoalReps = settings?.dailyGoalReps || 100;
-  const dailyGoalTime = settings?.dailyGoalTime || 600; // 10 mins
+  // Fetch active daily goals
+  const allGoals = useLiveQuery(() => db.goals.toArray());
+  const dailyGoals = allGoals?.filter(g => g.type === 'daily' && g.isActive);
+  const hasDailyGoals = Boolean(dailyGoals && dailyGoals.length > 0);
 
   // Calculate progress based on active daily goals
   let totalProgress = 0;
 
-  if (dailyGoals && dailyGoals.length > 0 && todayStats) {
+  if (hasDailyGoals && todayStats && dailyGoals) {
     const sumPercentages = dailyGoals.reduce((acc, goal) => {
       let currentValue = 0;
       
@@ -193,12 +197,15 @@ export default function HomePage() {
     }, 0);
 
     totalProgress = Math.round((sumPercentages / dailyGoals.length) * 100);
-  } else {
-    // Fallback to legacy settings if no specific goals exist
-    const progressReps = todayStats ? Math.min(100, (todayStats.totalReps / dailyGoalReps) * 100) : 0;
-    const progressTime = todayStats ? Math.min(100, (todayStats.totalTime / dailyGoalTime) * 100) : 0;
-    totalProgress = Math.round((progressReps + progressTime) / 2);
   }
+
+  const getProgressMessage = () => {
+    if (!hasDailyGoals) return t('home.setGoalsPrompt');
+    if (totalProgress >= 100) return t('home.goalReached');
+    if (totalProgress >= 50) return t('home.keepGoing');
+    if (totalProgress > 0) return t('home.progressStarted');
+    return t('home.progressZero');
+  };
 
   const getIcon = (iconName: string) => {
     switch (iconName) {
@@ -239,46 +246,65 @@ export default function HomePage() {
 
       <div className="px-4 py-2 space-y-6">
         {/* Daily Goal Card */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="relative overflow-hidden rounded-2xl bg-primary p-6 shadow-xl shadow-primary/10 text-white"
-        >
-          <div className="flex flex-col items-center">
-            <div className="flex w-full items-start justify-between">
-              <div className="flex flex-col gap-1 z-10">
-                <p className="text-white/80 text-sm font-medium">{t('home.dailyGoal')}</p>
-                <h3 className="text-2xl font-bold">{totalProgress}% {t('home.complete')}</h3>
-                <p className="text-white/80 text-xs mt-2 max-w-[160px]">
-                  {t('home.keepGoing')}
-                </p>
+        <Link to={goalsPath} className="block group focus:outline-none">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            className="relative overflow-hidden rounded-2xl bg-primary p-6 shadow-xl shadow-primary/10 text-white transition-all hover:shadow-2xl hover:shadow-primary/20 cursor-pointer"
+          >
+            <div className="flex flex-col items-center">
+              <div className="flex w-full items-start justify-between">
+                <div className="flex flex-col gap-1 z-10">
+                  <p className="text-white/80 text-sm font-medium">{t('home.dailyGoal')}</p>
+                  <h3 className="text-2xl font-bold">
+                    {hasDailyGoals ? `${totalProgress}% ${t('home.complete')}` : t('home.noActiveGoals')}
+                  </h3>
+                  <p className="text-white/80 text-xs mt-2 max-w-[170px] leading-relaxed">
+                    {getProgressMessage()}
+                  </p>
+                </div>
+                <div className="relative size-24 flex items-center justify-center shrink-0">
+                  <svg className="size-full -rotate-90">
+                    <circle className="text-white/10" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" strokeWidth="8"></circle>
+                    {hasDailyGoals && (
+                      <circle 
+                        className="text-white transition-all duration-500 ease-out" 
+                        cx="48" 
+                        cy="48" 
+                        fill="transparent" 
+                        r="40" 
+                        stroke="currentColor" 
+                        strokeDasharray="251.3" 
+                        strokeDashoffset={`${251.3 * (1 - totalProgress / 100)}`} 
+                        strokeLinecap="round" 
+                        strokeWidth="8"
+                      ></circle>
+                    )}
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <Zap className={cn("size-8 fill-white transition-transform group-hover:scale-110", !hasDailyGoals && "opacity-70")} />
+                  </div>
+                </div>
               </div>
-              <div className="relative size-24 flex items-center justify-center">
-                <svg className="size-full -rotate-90">
-                  <circle className="text-white/10" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" strokeWidth="8"></circle>
-                  <circle className="text-white" cx="48" cy="48" fill="transparent" r="40" stroke="currentColor" strokeDasharray="251.3" strokeDashoffset={`${251.3 * (1 - totalProgress / 100)}`} strokeLinecap="round" strokeWidth="8"></circle>
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Zap className="size-8 fill-white" />
+              
+              <div className="w-full mt-8 pt-6 border-t border-white/10 flex justify-between items-center px-8">
+                <div className="flex flex-col items-center gap-1">
+                  <span className="text-lg font-bold">{todayStats?.totalReps || 0}</span>
+                  <span className="text-[10px] text-white/60 uppercase font-bold tracking-widest">{t('home.reps')}</span>
+                </div>
+                <div className="w-px h-8 bg-white/10"></div>
+                <div className="flex flex-col items-center gap-1">
+                  <span className="text-lg font-bold">{Math.round((todayStats?.totalTime || 0) / 60)}</span>
+                  <span className="text-[10px] text-white/60 uppercase font-bold tracking-widest">{t('home.mins')}</span>
                 </div>
               </div>
             </div>
-            
-            <div className="w-full mt-8 pt-6 border-t border-white/10 flex justify-between items-center px-8">
-              <div className="flex flex-col items-center gap-1">
-                <span className="text-lg font-bold">{todayStats?.totalReps || 0}</span>
-                <span className="text-[10px] text-white/60 uppercase font-bold tracking-widest">Reps</span>
-              </div>
-              <div className="w-px h-8 bg-white/10"></div>
-              <div className="flex flex-col items-center gap-1">
-                <span className="text-lg font-bold">{Math.round((todayStats?.totalTime || 0) / 60)}</span>
-                <span className="text-[10px] text-white/60 uppercase font-bold tracking-widest">Mins</span>
-              </div>
-            </div>
-          </div>
-          {/* Decorative blur */}
-          <div className="absolute -right-4 -bottom-4 size-32 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
-        </motion.div>
+            {/* Decorative blur */}
+            <div className="absolute -right-4 -bottom-4 size-32 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
+          </motion.div>
+        </Link>
 
         {/* Profile Promo Banner (zakomentowany na ten moment) */}
         {/* <ProfilePromoBanner /> */}

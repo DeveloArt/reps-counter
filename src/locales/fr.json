@@ -1,0 +1,216 @@
+{
+  "common": {
+    "back": "Retour",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "close": "Fermer",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès"
+  },
+  "nav": {
+    "home": "Accueil",
+    "stats": "Statistiques",
+    "add": "Ajouter",
+    "goals": "Objectifs",
+    "settings": "Paramètres",
+    "logWorkout": "Enregistrer séance"
+  },
+  "home": {
+    "hello": "Bonjour !",
+    "streak": "jours d'affilée",
+    "complete": "Terminé",
+    "keepGoing": "Tu gères, continue comme ça.",
+    "progressZero": "Commence simplement, fais-en au moins une.",
+    "progressStarted": "C'est bien ! Tu vois, tu as réussi à commencer, tu es super ! Faisons-en encore quelques-unes !",
+    "viewAll": "Voir tout",
+    "dailyGoal": "Objectif quotidien",
+    "noActiveGoals": "Aucun objectif actif",
+    "setGoalsPrompt": "Appuie ici pour créer un objectif dans l'onglet Objectifs.",
+    "goalReached": "Objectif du jour atteint ! Félicitations !",
+    "quickAdd": "Ajout rapide",
+    "weeklyPerformance": "Performance hebdomadaire",
+    "addExercise": "Ajouter un exercice",
+    "logWorkout": "Enregistrer séance",
+    "reps": "Rép.",
+    "mins": "Min.",
+    "seconds": "Secondes",
+    "confirmDeleteExercise": "Es-tu sûr de vouloir supprimer cet exercice ?"
+  },
+  "stats": {
+    "title": "Statistiques",
+    "week": "Semaine",
+    "month": "Mois",
+    "year": "Année",
+    "totalExercises": "Exercices totaux",
+    "avgPerDay": "Moy. par jour",
+    "totalVolume": "Volume total",
+    "bestDay": "Meilleur jour",
+    "dailyActivity": "Activité quotidienne",
+    "weeklyComparison": "Comparaison hebdomadaire",
+    "overallProgress": "Progression globale",
+    "perExerciseBreakdown": "Détail par exercice",
+    "vsLastPeriod": "vs période précédente",
+    "repsTotal": "Répétitions totales",
+    "total": "Total",
+    "totalReps": "Rép. totales",
+    "totalMinutes": "Minutes totales",
+    "active": "Actif"
+  },
+  "goals": {
+    "title": "Objectifs",
+    "overallProgress": "Progression globale",
+    "activeGoals": "Objectifs actifs",
+    "addGoal": "Ajouter un objectif",
+    "goalHistory": "Historique des objectifs",
+    "history": "Historique",
+    "completed": "Terminés",
+    "inProgress": "En cours",
+    "goal": "Objectif",
+    "keepGoing": "Ne lâche rien !",
+    "noActiveGoals": "Aucun objectif actif.",
+    "createOne": "Créez-en un !",
+    "createFirst": "Créez votre premier objectif !",
+    "confirmDelete": "Es-tu sûr de vouloir supprimer cet objectif ?",
+    "noGoals": "Aucun objectif actif.",
+    "when": "Quand",
+    "dailyGoal": "Objectif quotidien",
+    "weeklyGoal": "Objectif hebdomadaire",
+    "daily": "Quotidien",
+    "weekly": "Hebdomadaire",
+    "enterTitle": "Nouvelle habitude",
+    "triggerLabel": "Déclencheur (Quand je...)",
+    "triggerPlaceholder": "ex. J'allume le micro-ondes",
+    "trigger": "Déclencheur",
+    "weekDays": [
+      "Lu",
+      "Ma",
+      "Me",
+      "Je",
+      "Ve",
+      "Sa",
+      "Di"
+    ]
+  },
+  "settings": {
+    "title": "Paramètres",
+    "reminders": "Rappels",
+    "dailyNotifications": "Notifications quotidiennes",
+    "dailyNotificationsDesc": "Recevez des rappels pour enregistrer vos données sportives",
+    "reminderFrequency": "Fréquence des rappels",
+    "reminderTime": "Heure du rappel",
+    "reminderTimeDesc": "Heure d'envoi du premier rappel",
+    "appearance": "Apparence",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système",
+    "language": "Langue",
+    "dataManagement": "Gestion des données",
+    "exportCSV": "Exporter en CSV",
+    "exportCSVDesc": "Sauvegarder vos données locales",
+    "importData": "Importer des données",
+    "importDataDesc": "Restaurer depuis un fichier .csv",
+    "resetData": "Réinitialiser toutes les données",
+    "resetDataDesc": "Cette action est irréversible",
+    "about": "À propos de Reps Counter",
+    "version": "Version",
+    "terms": "Conditions d'utilisation",
+    "privacy": "Politique de confidentialité"
+  },
+  "modals": {
+    "addExercise": {
+      "title": "Nouvel exercice",
+      "nameLabel": "Nom de l'exercice",
+      "namePlaceholder": "Nom de l'exercice",
+      "colorLabel": "Couleur",
+      "color": "Couleur",
+      "iconLabel": "Icône",
+      "icon": "Icône",
+      "unitLabel": "Unité",
+      "unit": "Unité",
+      "reps": "Rép.",
+      "time": "Temps",
+      "create": "Créer l'exercice"
+    },
+    "logEntry": {
+      "title": "Enregistrer une entrée",
+      "addNewEntry": "Ajouter une nouvelle entrée",
+      "reps": "Rép.",
+      "time": "Temps",
+      "manualEntry": "Saisie manuelle (secondes)",
+      "saveWorkout": "Enregistrer l'entraînement",
+      "start": "Démarrer",
+      "stop": "Arrêter",
+      "reset": "Réinitialiser",
+      "save": "Enregistrer",
+      "cancel": "Annuler"
+    },
+    "addGoal": {
+      "title": "Ajouter un nouvel objectif",
+      "goalType": "Type d'objectif",
+      "daily": "Quotidien",
+      "weekly": "Hebdomadaire",
+      "targetExercise": "Exercice ciblé",
+      "metric": "Métrique",
+      "target": "Cible",
+      "goalTitle": "Nouvelle habitude",
+      "triggerLabel": "Déclencheur (Quand je...)",
+      "triggerPlaceholder": "ex. J'allume le micro-ondes",
+      "create": "Créer l'objectif",
+      "selectExercise": "Sélectionner un exercice",
+      "enterTitle": "Habituellement, après avoir allumé le micro-ondes, je fais...",
+      "newGoal": "Nouvel objectif"
+    }
+  },
+  "terms": {
+    "title": "Conditions d'utilisation",
+    "effectiveDate": "Date d'effet",
+    "section1": {
+      "title": "1. Acceptation des conditions",
+      "content": "En accédant et en utilisant l'application Reps Counter, vous acceptez d'être lié par ces Conditions d'utilisation."
+    },
+    "section2": {
+      "title": "2. Exclusion de responsabilité et publicités",
+      "content": "Reps Counter est fourni \"tel quel\" sans aucune garantie. Nous déclinons toute responsabilité en cas de dommages, problèmes de santé ou perte de données résultant de l'utilisation de cette application. Les publicités affichées sont fournies par des tiers (Google AdSense) et nous ne sommes pas responsables de leur contenu. Vous utilisez l'application à vos propres risques."
+    },
+    "section3": {
+      "title": "3. Stockage des données et services externes",
+      "content": "La plupart de vos données d'entraînement sont stockées localement sur votre appareil. Cependant, l'application charge des scripts publicitaires de Google AdSense afin de financer et maintenir le projet."
+    },
+    "section4": {
+      "title": "4. Règlement des litiges",
+      "content": "Tout litige découlant de l'utilisation de cette application sera résolu exclusivement devant les tribunaux compétents de Gdańsk, en Pologne."
+    },
+    "section5": {
+      "title": "5. Modification des conditions",
+      "content": "Nous nous réservons le droit de modifier ces conditions à tout moment. L'utilisation continue de l'application constitue votre acceptation des nouvelles conditions."
+    }
+  },
+  "privacy": {
+    "title": "Politique de confidentialité",
+    "effectiveDate": "Date d'effet",
+    "section1": {
+      "title": "1. Collecte de données",
+      "content": "Vos données sportives, objectifs et historiques ne sont ni collectés, ni traités, ni stockés sur des serveurs externes par nos soins. Toutefois, l'application peut collecter ou transmettre des données techniques anonymes nécessaires à l'affichage des publicités et à la bonne diffusion des pages."
+    },
+    "section2": {
+      "title": "2. Stockage local",
+      "content": "Tous vos journaux d'entraînement, objectifs et paramètres sont enregistrés localement dans la mémoire de votre appareil (IndexedDB/LocalStorage). Vous gardez le contrôle total sur vos données."
+    },
+    "section3": {
+      "title": "3. Publicités personnalisées et cookies (Google AdSense)",
+      "content": "Cette application affiche des annonces diffusées par Google AdSense. Google utilise des cookies pour diffuser des annonces basées sur les visites antérieures des internautes sur ce site ou d'autres sites web. Les utilisateurs peuvent désactiver la publicité personnalisée dans les Paramètres des annonces Google (adssettings.google.com) ou sur www.aboutads.info."
+    },
+    "section4": {
+      "title": "4. Sécurité des données et isolation",
+      "content": "Vos données locales sont protégées par les mécanismes de sécurité isolés de votre navigateur web. Nous recommandons de sécuriser également l'accès à votre appareil physique."
+    },
+    "section5": {
+      "title": "5. Contact",
+      "content": "Si vous avez des questions concernant cette Politique de confidentialité, vous pouvez nous contacter à l'adresse kontakt@licznikpowtorzen.pl."
+    }
+  }
+}

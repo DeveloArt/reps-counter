@@ -5,7 +5,7 @@ import { AdBanner } from '@/components/features/AdBanner';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, type Goal } from '@/db/db';
 import { startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval, format, isSameDay, isToday, addMonths, subMonths } from 'date-fns';
-import { pl, enUS } from 'date-fns/locale';
+import { getDateLocale } from '@/lib/dateLocale';
 import { useState } from 'react';
 import { AddGoalModal } from '@/components/features/AddGoalModal';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +18,8 @@ export default function GoalsPage() {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedGoalFilter, setSelectedGoalFilter] = useState<string>('all');
   
-  const locale = i18n.language === 'pl' ? pl : enUS;
+  const locale = getDateLocale(i18n.language);
+  const weekDays = (t('goals.weekDays', { returnObjects: true }) as string[]) || ['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'Sb', 'Nd'];
 
   // Fetch all goals
   const goals = useLiveQuery(() => db.goals.toArray());
@@ -315,8 +316,8 @@ export default function GoalsPage() {
             )}
 
             <div className="grid grid-cols-7 gap-1 mb-2">
-              {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => (
-                <div key={i} className="text-center text-[10px] font-bold text-muted-foreground">
+              {weekDays.map((d, i) => (
+                <div key={i} className="text-center text-[10px] font-bold text-muted-foreground uppercase">
                   {d}
                 </div>
               ))}

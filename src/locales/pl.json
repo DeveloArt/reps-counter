@@ -23,9 +23,14 @@
     "hello": "Cześć!",
     "streak": "dni z rzędu",
     "complete": "Ukończono",
-    "keepGoing": "Tak trzymaj! Świetnie ci idzie.",
+    "keepGoing": "Świetnie ci idzie, tak trzymaj.",
+    "progressZero": "Po prostu zacznij, zrób chociaż jedno powtórzenie.",
+    "progressStarted": "Okej, jest dobrze. Jak widzisz, dałeś radę zacząć, jesteś super! Zróbmy jeszcze kilka!",
     "viewAll": "Zobacz Wszystkie",
     "dailyGoal": "Dzienny Cel",
+    "noActiveGoals": "Brak aktywnych celów",
+    "setGoalsPrompt": "Kliknij tutaj, aby dodać cel w zakładce Cele.",
+    "goalReached": "Cel na dziś zrealizowany! Gratulacje!",
     "quickAdd": "Szybkie Dodawanie",
     "weeklyPerformance": "Wyniki Tygodniowe",
     "addExercise": "Dodaj Ćwiczenie",
@@ -79,7 +84,16 @@
     "enterTitle": "Nawyk, który chcesz dodać",
     "triggerLabel": "Sygnał (Gdy...)",
     "triggerPlaceholder": "np. Włączam mikrofalę",
-    "trigger": "Sygnał"
+    "trigger": "Sygnał",
+    "weekDays": [
+      "Pn",
+      "Wt",
+      "Śr",
+      "Cz",
+      "Pt",
+      "Sb",
+      "Nd"
+    ]
   },
   "settings": {
     "title": "Ustawienia",
