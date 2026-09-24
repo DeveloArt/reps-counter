@@ -9,7 +9,16 @@
     "close": "Schließen",
     "loading": "Wird geladen...",
     "error": "Fehler",
-    "success": "Erfolg"
+    "success": "Erfolg",
+    "weekDays": [
+      "Mo",
+      "Di",
+      "Mi",
+      "Do",
+      "Fr",
+      "Sa",
+      "So"
+    ]
   },
   "nav": {
     "home": "Start",
@@ -84,16 +93,7 @@
     "enterTitle": "Neue Gewohnheit",
     "triggerLabel": "Auslöser (Wenn ich...)",
     "triggerPlaceholder": "z. B. Die Mikrowelle einschalte",
-    "trigger": "Auslöser",
-    "weekDays": [
-      "Mo",
-      "Di",
-      "Mi",
-      "Do",
-      "Fr",
-      "Sa",
-      "So"
-    ]
+    "trigger": "Auslöser"
   },
   "settings": {
     "title": "Einstellungen",

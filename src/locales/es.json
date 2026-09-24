@@ -9,7 +9,16 @@
     "close": "Cerrar",
     "loading": "Cargando...",
     "error": "Error",
-    "success": "Éxito"
+    "success": "Éxito",
+    "weekDays": [
+      "Lu",
+      "Ma",
+      "Mi",
+      "Ju",
+      "Vi",
+      "Sá",
+      "Do"
+    ]
   },
   "nav": {
     "home": "Inicio",
@@ -84,16 +93,7 @@
     "enterTitle": "Hábito a incorporar",
     "triggerLabel": "Disparador (Cuando yo...)",
     "triggerPlaceholder": "ej. Enciendo el microondas",
-    "trigger": "Disparador",
-    "weekDays": [
-      "Lu",
-      "Ma",
-      "Mi",
-      "Ju",
-      "Vi",
-      "Sá",
-      "Do"
-    ]
+    "trigger": "Disparador"
   },
   "settings": {
     "title": "Ajustes",

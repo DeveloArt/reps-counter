@@ -5,7 +5,7 @@ import { AdBanner } from '@/components/features/AdBanner';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, type Goal } from '@/db/db';
 import { startOfDay, endOfDay, startOfWeek, endOfWeek, startOfMonth, endOfMonth, eachDayOfInterval, format, isSameDay, isToday, addMonths, subMonths } from 'date-fns';
-import { getDateLocale } from '@/lib/dateLocale';
+import { getDateLocale, getWeekDays } from '@/lib/dateLocale';
 import { useState } from 'react';
 import { AddGoalModal } from '@/components/features/AddGoalModal';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +19,7 @@ export default function GoalsPage() {
   const [selectedGoalFilter, setSelectedGoalFilter] = useState<string>('all');
   
   const locale = getDateLocale(i18n.language);
-  const weekDays = (t('goals.weekDays', { returnObjects: true }) as string[]) || ['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'Sb', 'Nd'];
+  const weekDays = getWeekDays(i18n.language);
 
   // Fetch all goals
   const goals = useLiveQuery(() => db.goals.toArray());

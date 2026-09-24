@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, type Exercise } from '@/db/db';
 import { startOfDay, endOfDay, subDays, isSameDay, format, eachDayOfInterval } from 'date-fns';
-import { getDateLocale } from '@/lib/dateLocale';
+import { getDateLocale, get2LetterDay } from '@/lib/dateLocale';
 import { cn } from '@/lib/utils';
 import { Link, useLocation, useOutletContext } from 'react-router-dom';
 import { AdBanner } from '@/components/features/AdBanner';
@@ -123,7 +123,7 @@ export default function HomePage() {
         }, 0);
         const dateLocale = getDateLocale(i18n.language);
         return {
-            day: format(day, 'EEEEE', { locale: dateLocale }), // Single letter day
+            day: get2LetterDay(day, i18n.language),
             fullDay: format(day, 'EEE', { locale: dateLocale }),
             value: Math.round(value),
             isToday: isSameDay(day, currentDate)
@@ -418,9 +418,9 @@ export default function HomePage() {
                 </div>
             ))}
           </div>
-          <div className="flex justify-between mt-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-1">
+          <div className="flex justify-between mt-2 text-[10px] font-bold text-muted-foreground uppercase px-1">
             {weeklyPerformance?.data.map((day, index) => (
-                <span key={index} className={cn(day.isToday && "text-primary font-black")}>
+                <span key={index} className={cn("flex-1 text-center", day.isToday && "text-primary font-black")}>
                     {day.day}
                 </span>
             ))}

@@ -9,7 +9,16 @@
     "close": "Close",
     "loading": "Loading...",
     "error": "Error",
-    "success": "Success"
+    "success": "Success",
+    "weekDays": [
+      "Mo",
+      "Tu",
+      "We",
+      "Th",
+      "Fr",
+      "Sa",
+      "Su"
+    ]
   },
   "nav": {
     "home": "Home",
@@ -84,16 +93,7 @@
     "enterTitle": "Habit to add",
     "triggerLabel": "Trigger (When I...)",
     "triggerPlaceholder": "e.g. Turn on the microwave",
-    "trigger": "Trigger",
-    "weekDays": [
-      "Mo",
-      "Tu",
-      "We",
-      "Th",
-      "Fr",
-      "Sa",
-      "Su"
-    ]
+    "trigger": "Trigger"
   },
   "settings": {
     "title": "Settings",

@@ -9,7 +9,16 @@
     "close": "Fermer",
     "loading": "Chargement...",
     "error": "Erreur",
-    "success": "Succès"
+    "success": "Succès",
+    "weekDays": [
+      "Lu",
+      "Ma",
+      "Me",
+      "Je",
+      "Ve",
+      "Sa",
+      "Di"
+    ]
   },
   "nav": {
     "home": "Accueil",
@@ -84,16 +93,7 @@
     "enterTitle": "Nouvelle habitude",
     "triggerLabel": "Déclencheur (Quand je...)",
     "triggerPlaceholder": "ex. J'allume le micro-ondes",
-    "trigger": "Déclencheur",
-    "weekDays": [
-      "Lu",
-      "Ma",
-      "Me",
-      "Je",
-      "Ve",
-      "Sa",
-      "Di"
-    ]
+    "trigger": "Déclencheur"
   },
   "settings": {
     "title": "Paramètres",

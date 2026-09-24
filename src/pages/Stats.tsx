@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/db/db';
 import { startOfDay, endOfDay, subDays, isSameDay, startOfMonth, endOfMonth, subMonths, startOfYear, endOfYear, subYears, eachMonthOfInterval, startOfWeek, endOfWeek, format, eachDayOfInterval, subWeeks } from 'date-fns';
-import { getDateLocale } from '@/lib/dateLocale';
+import { getDateLocale, get2LetterDay } from '@/lib/dateLocale';
 import { useNavigate } from 'react-router-dom';
 
 export default function StatsPage() {
@@ -97,7 +97,7 @@ export default function StatsPage() {
                 if (activityMetric === 'time' && ex?.unit === 'seconds') return acc + (l.value / 60);
                 return acc;
             }, 0);
-            return { day: format(day, 'EEE', { locale }).toUpperCase(), value: Math.round(value) };
+            return { day: get2LetterDay(day, i18n.language), value: Math.round(value) };
         });
 
         // Weekly Comparison: Last 4 weeks

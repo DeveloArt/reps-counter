@@ -9,7 +9,16 @@
     "close": "Zamknij",
     "loading": "Ładowanie...",
     "error": "Błąd",
-    "success": "Sukces"
+    "success": "Sukces",
+    "weekDays": [
+      "Pn",
+      "Wt",
+      "Śr",
+      "Cz",
+      "Pt",
+      "Sb",
+      "Nd"
+    ]
   },
   "nav": {
     "home": "Start",
@@ -84,16 +93,7 @@
     "enterTitle": "Nawyk, który chcesz dodać",
     "triggerLabel": "Sygnał (Gdy...)",
     "triggerPlaceholder": "np. Włączam mikrofalę",
-    "trigger": "Sygnał",
-    "weekDays": [
-      "Pn",
-      "Wt",
-      "Śr",
-      "Cz",
-      "Pt",
-      "Sb",
-      "Nd"
-    ]
+    "trigger": "Sygnał"
   },
   "settings": {
     "title": "Ustawienia",
